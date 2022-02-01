@@ -1,0 +1,28 @@
+Query: {
+        users(){
+            return Users.query();
+        },
+        user(parent, args){
+            return Users.query().where('user_id', args.id);
+        },
+        blogs(){
+            return Blogs.query();
+        }
+    },
+    User: {
+        blogs: (parent,args) => {
+            return Blogs.query().where('buser_id',parent.user_id);
+        }
+    }
+
+
+    SingleBlog:{
+        withComments(parent){
+            return BlogCommentsModel.query().where('bcomment_id', parent.BlogComm);
+        }
+    },
+    BlogComment:{
+        replyComments(parent){
+            return replyCommentModel.query().where('rcomment_id', parent.replyComm_id);
+        }
+    },
