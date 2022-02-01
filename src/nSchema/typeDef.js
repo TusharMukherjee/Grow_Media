@@ -34,11 +34,13 @@ const typeDefs = gql`
     }
 
     type Blogs{
+        blog_id: ID!
         heading: String!
         content: String!
         b_image: String!
         tb_likes: Int!
         tb_comments: Int!
+        toSingleBlog: SingleBlog # to be parent
     }
 
     type SingleBlog{
@@ -101,7 +103,7 @@ const typeDefs = gql`
         skills: [String!]
     }
 
-    type search{
+    type search{ # cancel this query
         blogs: [Blogs] # to be parent
         users: [Users] # to be parent
     }
@@ -111,7 +113,6 @@ const typeDefs = gql`
         user(id: Int!): [User]
         blog(id: Int!): [SingleBlog!]!
         blogs: [Blogs!]!
-        search(searchString: String!): search!
 
         imgname: imgname!
     }

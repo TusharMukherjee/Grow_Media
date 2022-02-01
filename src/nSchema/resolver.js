@@ -11,7 +11,7 @@ const resolvers = {
         user(parent, args){
             return UsersModel.query().withGraphFetched('blogs').where('user_id','=',args.id);
         },
-        search(parent, args){
+        search(parent, args){ // cancel this function 
             return this.search;
             // const searchVar = args.searchString;
             // const searchNotSensitive = searchVar.toLowerCase();
