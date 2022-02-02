@@ -68,7 +68,7 @@ exports.up = async (knex) => {
           table.foreign('replyUser_id').references('user_id').inTable('users').onDelete('CASCADE').onUpdate('CASCADE');
           table.integer('parentComment_id').unsigned();
           table.foreign('parentComment_id').references('blog_id').inTable('blogs').onDelete('CASCADE').onUpdate('CASCADE');
-          table.string('replied_comment',200);
+          table.string('replied_comment',200); // add blog_id column
           table.timestamp('created_at').defaultTo(knex.fn.now());
           table.timestamp('updated_at').defaultTo(knex.fn.now());
         })
@@ -80,7 +80,7 @@ exports.up = async (knex) => {
           table.foreign('uUser_id').references('user_id').inTable('users').onDelete('CASCADE').onUpdate('CASCADE');
           table.integer('followers_id').unsigned();
           table.foreign('followers_id').references('user_id').inTable('users').onDelete('CASCADE').onUpdate('CASCADE');
-          table.integer('following_id').unsigned();
+          table.integer('following_id').unsigned(); // delete following check extra.txt
           table.foreign('following_id').references('user_id').inTable('users').onDelete('CASCADE').onUpdate('CASCADE');
           table.timestamp('created_at').defaultTo(knex.fn.now());
           table.timestamp('updated_at').defaultTo(knex.fn.now());

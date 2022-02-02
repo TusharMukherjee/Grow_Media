@@ -22,10 +22,10 @@ const typeDefs = gql`
         username: String!
         email: String!
         password: String!
-        bio: String!
-        link: String!
-        blogs: [Blogs!]! # to be parent
-        skills: [extraInfo!]! # to be parent
+        bio: String
+        link: String
+        blogs: [Blogs] # to be parent
+        skills: [extraInfo] # to be parent
     }
 
     type toFollow{
@@ -120,7 +120,11 @@ const typeDefs = gql`
     type Mutation{
         createUser(input: cuserInfo!): Users
         updateUser(input: upuserInfo!): Users
-        deleteUser(input: upuserInfo!): Users
+        deleteUser(input: upuserInfo!): User
+
+
+        createBlog(user_id: ID!, b_image: String, heading: String!, content:String!): Blogs
+        deleteBlog(user_id: ID!, blog_id: String!): Blogs
 
         likeBlog(user_id: ID!, blog_id: ID!): Blog_ID!
         unlikeBlog(user_id: ID!, blog_id: ID!): Blog_ID!
@@ -129,8 +133,8 @@ const typeDefs = gql`
         deleteComment(user_id: ID!, blog_id: ID!): Comment
         deleteReplyComment(user_id: ID!, blog_id: ID!, parentComment_id: ID!): ReplyComm
 
-        toFollow(user_id: ID!, followers_id: ID!): toFollow
-        toUnfollow(user_id: ID!, followers_id: ID!): toUnfollow
+        toFollow(user_id: ID!, followers_id: ID!): friends
+        toUnfollow(user_id: ID!, followers_id: ID!): friends
     }
 
     input cuserInfo{

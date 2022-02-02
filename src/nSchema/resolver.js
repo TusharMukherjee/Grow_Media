@@ -2,6 +2,8 @@ const {UsersModel} = require('../../sqlDB/models/users');
 const {BlogsModel} = require('../../sqlDB/models/blogsModel');
 const {BlogCommentsModel} = require('../../sqlDB/models/blogsComments');
 const {replyCommentModel} = require('../../sqlDB/models/replyComments');
+const {BlogLikesModel} = require('../../sqlDB/models/blogsLikes');
+const {FriendsModel} = require('../../sqlDB/models/friends');
 
 const resolvers = {
     Query: {
@@ -10,16 +12,6 @@ const resolvers = {
         },
         user(parent, args){
             return UsersModel.query().withGraphFetched('blogs').where('user_id','=',args.id);
-        },
-        search(parent, args){ // cancel this function 
-            return this.search;
-            // const searchVar = args.searchString;
-            // const searchNotSensitive = searchVar.toLowerCase();
-            // const searchedBlogs = BlogsModel.query().where('heading','like', `%${searchNotSensitive}%`, 'OR', 'content','like', `%${searchNotSensitive}%`);
-            // const searchedUsers = UsersModel.query().where('username', 'like', `%${searchNotSensitive}%`);
-            // return {
-            //     searchedBlogs, searchedUsers
-            // }
         },
         blog(parent, args){
             return BlogsModel.query()
@@ -32,6 +24,13 @@ const resolvers = {
         imgname(){
             const imgLink = "http://localhost:3001/uploads/269150.jpg";
             return {"img":imgLink};
+        }
+    },
+
+
+    User: {
+        blogs: async(parent) => {
+            return
         }
     },
 
@@ -56,8 +55,41 @@ const resolvers = {
             return updUser;
         },
 
-        likeBlog: async (parents,args) => {
 
+        createBlog: async (parent, args) => {
+            return BlogsModel.query().insert({"bluser_id": args.user_id, "b_immage": args.b_immage,"heading": args.heading, "content": args.content});
+        },
+        deleteBlog: async(parent,args) => {
+            return BlogsModel.query().delete().whereExists(BlogsModel.query().whereRaw('bluser_id',args.user_id,'AND','blog_id',args.blog_id));
+        },
+
+
+
+        likeBlog: async (parents,args) => {
+            return BlogLikesModel.query().insert({"bluser_id": args.user_id,"blblog_id": args.blog_id});
+        },
+        unlikeBlog: async (parents,args) => {
+            return BlogLikesModel.query().delete().where('bluser_id',args.user_id,'AND', 'blblog_id',args.blog_id);
+        },
+        commentBlog: async (parent,args) => {
+            return BlogCommentsModel.query().insert({"bluser_id": args.user_id, "blblog_id":args.blog_id, "blcomment":args.commentContent});
+        },
+        deleteComment: async (parents,args) => {
+            return BlogCommentsModel.query().delete().where('bluser_id',args.user_id,'AND', 'blblog_id',args.blog_id);
+        },
+        replyComm: async (parent,args) => {
+            return await replyCommentModel.query().insert({"bluser_id": args.user_id, "blblog_id":args.blog_id, "parentComment_id": args.parentComment_id, "replied_comment": args.commentContent});
+        },
+        deleteReplyComment: async (parents,args) => {
+            return BlogCommentsModel.query().delete().where('bluser_id',args.user_id,'AND', 'blblog_id',args.blog_id,'AND', 'parentComment_id',args.parentComment_id);
+        },
+
+
+        toFollow: async (parent, args) => {
+            return FriendsModel.query().insert({"uUser_id": args.user_id, "followers_id": args.followers_id});
+        },
+        toUnFollow: async (parent, args) => {
+            return FriendsModel.query().delete().whereExists(FriendsModel.query().whereRaw('uUser',args.user_id, 'AND', 'followers_id', args.followers_id));
         }
     }
 }
