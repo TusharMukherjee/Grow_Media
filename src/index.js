@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const {ApolloServer} = require('apollo-server-express');
+const {BlogsModel} = require('../sqlDB/models/blogsModel')
 
 
 const {typeDefs} = require('./nSchema/typeDef');
@@ -30,11 +31,12 @@ const main = async () => {
     //     res.json(ideas)
     // });
 
-    // // app.get('/user/:id', async (req, res) => {
-    // //     const {id} = req.params;
-    // //     const ideas = await Blogs.query().select('blogs.*').where('buser_id',id);
-    // //     res.json(ideas);
-    // // });
+    app.get('/user', async (req, res) => {
+        // const {id} = req.params;
+        const ideas = await BlogsModel.query().withGraphFetched('bcomments.[replyComments]');
+        // const ideas = await Blogs.query().select('blogs.*').where('buser_id',id);
+        res.json(ideas);
+    });
 
     app.get('/user/:id', async (req, res) => {
         const {id} = req.params;

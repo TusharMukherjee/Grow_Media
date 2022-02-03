@@ -37,8 +37,8 @@ class BlogsModel extends Model {
           relation: Model.HasManyRelation,
           modelClass: path.join(__dirname, './blogsComments'),
           join: {
-            from: 'bcomments.blblog_id',
-            to: 'blogs.blog_id'
+            from: 'blogs.blog_id',
+            to: 'bcomments.blblog_id'
           }
         }
       }
