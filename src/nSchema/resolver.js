@@ -16,15 +16,17 @@ const resolvers = {
         searchUser(parent, args){
             return UsersModel.query().where('username', 'LIKE', `%${args.searchkeyword}%`);
         },
-        blog(){
-            return BlogsModel.query()
-                                       .withGraphFetched('bcomments.[replyComments]');
+        blog(parent, args){
+            return BlogsModel.query().where('blog_id','=',args.id).withGraphFetched('bcomments.[replyComments]');
         },
         blogs(){
-            return BlogsModel.query();
+            return BlogsModel.query().withGraphFetched('users').modifyGraph('users', whereUser => { whereUser.select('user_id', 'profile_img', 'username') });
         },
         searchBlog(parent, args){
             return BlogsModel.query().where('heading', 'LIKE', `%${args.searchkeyword}%`).orWhere('content', 'LIKE', `%${args.searchkeyword}%`);
+        },
+        checksomeone_followers(parent, args){
+            return FriendsModel.query().where('followers_id',args.user_id).withGraphFetched('friendsUsers');
         },
         imgname(){
             const imgLink = "http://localhost:3001/uploads/269150.jpg";
@@ -95,10 +97,10 @@ const resolvers = {
             return BlogCommentsModel.query().delete().where('bluser_id',args.user_id).where('blblog_id',args.blog_id).where('bcomment_id',args.bcomment_id);
         },
         replyComm: async (parent,args) => {
-            return await replyCommentModel.query().insert({"bluser_id": args.user_id, "blblog_id":args.blog_id, "parentComment_id": args.parentComment_id, "replied_comment": args.commentContent});
+            return await replyCommentModel.query().insert({"replyUser_id": args.user_id, "parentComment_id": args.parentComment_id, "replied_comment": args.commentContent});
         },
         deleteReplyComment: async (parents,args) => {
-            return BlogCommentsModel.query().delete().where('bluser_id',args.user_id).where('blblog_id',args.blog_id).where('parentComment_id',args.parentComment_id);
+            return BlogCommentsModel.query().delete().where('rcomment_id',args.rcomment_id).where('replyUser_id',args.user_id).where('parentComment_id',args.parentComment_id);
         },
 
 
@@ -110,7 +112,7 @@ const resolvers = {
             return FriendsModel.query();
         },
         toUnfollow: async (parent, args) => {
-                await FriendsModel.query().delete().whereExists(FriendsModel.query().whereRaw('uUser',args.user_id, 'AND', 'followers_id', args.followers_id));
+                await FriendsModel.query().delete().where('uUser_id',[args.user_id]).where('followers_id', [args.followers_id]);
             return FriendsModel.query();
         }
     }

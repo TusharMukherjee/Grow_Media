@@ -33,14 +33,16 @@ const typeDefs = gql`
         followers_id: ID!
     }
 
+
+
     type Blogs{
+        users: [Users]
         blog_id: ID
         heading: String
         content: String
         b_image: String
         tb_likes: Int
         tb_comments: Int
-        toSingleBlog: SingleBlog # to be parent
     }
 
     type SingleBlog{
@@ -49,7 +51,7 @@ const typeDefs = gql`
         b_image: String
         tb_likes: Int
         tb_comments: Int
-        withComments: [BlogComment] # to be parent
+        bcomments: [BlogComment] # to be parent
     }
 
     type Blog_ID{
@@ -83,11 +85,11 @@ const typeDefs = gql`
         rcomment_id: ID
         replyUser_id: ID
         parentComment_id: ID
-        repliedComment: String
+        replied_comment: String
     }
 
     type friends{
-        mainUser_id: ID
+        friend_id: ID
         uUser_id: ID
         followers_id: ID
         following_id: ID
@@ -113,9 +115,12 @@ const typeDefs = gql`
         users: [Users!]!
         user(id: Int!): [User]
         searchUser(searchkeyword: String): [User]
-        blog: [SingleBlog]
+        blog(id: Int!): [SingleBlog]
         blogs: [Blogs!]!
         searchBlog(searchkeyword: String): [Blogs]
+
+        checksomeone_followers(user_id: ID!): [Users]
+
         imgname: imgname!
     }
 
@@ -131,8 +136,8 @@ const typeDefs = gql`
         likeBlog(user_id: Int, blog_id: Int): [BlogLikes]
         unlikeBlog(user_id: Int, blog_id: Int): BlogLikes
         commentBlog(user_id: ID!, blog_id: ID!, commentContent: String!): Comment
-        replyComm(user_id: ID!, blog_id: ID!, parentComment_id: ID!, commentContent: String!): ReplyComm
-        deleteComment(user_id: ID!, blog_id: ID!, bcomment_id: ID!): Comment
+        replyComm(user_id: ID!, parentComment_id: ID!, commentContent: String!): ReplyComm
+        deleteComment(rcomment_id: ID!, user_id: ID!, bcomment_id: ID!): Comment
         deleteReplyComment(user_id: ID!, blog_id: ID!, parentComment_id: ID!): ReplyComm
 
         toFollow(user_id: ID!, followers_id: ID!): friends

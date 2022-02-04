@@ -7,6 +7,7 @@ const {BlogsModel} = require('../sqlDB/models/blogsModel')
 const {typeDefs} = require('./nSchema/typeDef');
 const {resolvers} = require('./nSchema/resolver');
 const { Users } = require('../sqlDB/models/users');
+const { FriendsModel } = require('../sqlDB/models/friends');
 // const { default: knex } = require('knex');
 // const cors = require('cors');
 
@@ -33,7 +34,8 @@ const main = async () => {
 
     app.get('/user', async (req, res) => {
         // const {id} = req.params;
-        const ideas = await BlogsModel.query().withGraphFetched('bcomments.[replyComments]');
+        // const ideas = await BlogsModel.query().withGraphFetched('bcomments.[replyComments]');
+        const ideas = await BlogsModel.query().withGraphFetched('users').modifyGraph('users', whereUser => { whereUser.select('user_id', 'profile_img', 'username') });
         // const ideas = await Blogs.query().select('blogs.*').where('buser_id',id);
         res.json(ideas);
     });
@@ -42,7 +44,8 @@ const main = async () => {
         const {id} = req.params;
         // const usersblog = await Blogs.query().withGraphFetched('users').where('buser_id','=',id);
         // const usersblog = await Users.query().withGraphFetched('blogs').where('user_id','=',id);
-        const usersblog = await Users.relatedQuery('blogs').findById(id);
+        // const usersblog = await Users.relatedQuery('blogs').findById(id);
+        const usersblog = FriendsModel.query().select('uUser_id').where('followers_id',id).withGraphFetched('friendsUsers');
         // const usersblog = await Users.query().findById(id);
         // const tiko = await usersblog.$relatedQuery(blogs);
         // await usersblog.$relatedQuery('blogs');

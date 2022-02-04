@@ -19,7 +19,7 @@ class BlogsModel extends Model {
           relation: Model.HasManyRelation,
           modelClass: path.join(__dirname, './users'),
           join: {
-            from: 'blogs.buser_id',
+            from: 'blogs.bluser_id',
             to: 'users.user_id'
           }
         },
