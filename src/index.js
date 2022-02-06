@@ -45,7 +45,8 @@ const main = async () => {
         // const usersblog = await Blogs.query().withGraphFetched('users').where('buser_id','=',id);
         // const usersblog = await Users.query().withGraphFetched('blogs').where('user_id','=',id);
         // const usersblog = await Users.relatedQuery('blogs').findById(id);
-        const usersblog = FriendsModel.query().select('uUser_id').where('followers_id',id).withGraphFetched('friendsUsers');
+        // const usersblog = await FriendsModel.query().select('uUser_id').where('followers_id',id).withGraphFetched('friendsUsers');
+        const usersblog = await FriendsModel.query().select('followers_id').where('uUser_id',id).withGraphFetched('friendsFollowers');
         // const usersblog = await Users.query().findById(id);
         // const tiko = await usersblog.$relatedQuery(blogs);
         // await usersblog.$relatedQuery('blogs');

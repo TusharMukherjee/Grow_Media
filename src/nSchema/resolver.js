@@ -26,7 +26,10 @@ const resolvers = {
             return BlogsModel.query().where('heading', 'LIKE', `%${args.searchkeyword}%`).orWhere('content', 'LIKE', `%${args.searchkeyword}%`);
         },
         checksomeone_followers(parent, args){
-            return FriendsModel.query().where('followers_id',args.user_id).withGraphFetched('friendsUsers');
+            return FriendsModel.query().select('uUser_id').where('followers_id',args.user_id).withGraphFetched('friendsUsers');
+        },
+        checksomeone_following(parent, args){
+            return FriendsModel.query().select('followers_id').where('uUser_id',args.user_id).withGraphFetched('friendsFollowers');
         },
         imgname(){
             const imgLink = "http://localhost:3001/uploads/269150.jpg";

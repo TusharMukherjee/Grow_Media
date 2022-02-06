@@ -110,6 +110,30 @@ const typeDefs = gql`
         blogs: [Blogs] # to be parent
         users: [Users] # to be parent
     }
+    
+    type friendsUsers{
+        user_id: ID
+        profile_img: String
+        username: String
+    }
+
+    type friendsFollowers{
+        user_id: ID
+        profile_img: String
+        username: String
+    }
+
+
+    type checksomeone_followers{
+        uUser_id: ID
+        friendsUsers: [friendsUsers]
+    }
+
+    type checksomeone_following{
+        followers_id: ID
+        friendsFollowers: [friendsFollowers]
+        
+    }
 
     type Query{
         users: [Users!]!
@@ -119,7 +143,8 @@ const typeDefs = gql`
         blogs: [Blogs!]!
         searchBlog(searchkeyword: String): [Blogs]
 
-        checksomeone_followers(user_id: ID!): [Users]
+        checksomeone_followers(user_id: Int!): [checksomeone_followers]
+        checksomeone_following(user_id: Int!): [checksomeone_following]
 
         imgname: imgname!
     }

@@ -19,8 +19,8 @@ class FriendsModel extends Model {
           relation: Model.HasManyRelation,
           modelClass: path.join(__dirname, './users'),
           join: {
-            from: 'friends.uUser_id',
-            to: 'users.user_id'
+            from: 'users.user_id',
+            to: 'friends.uUser_id'
           }
         },
 
