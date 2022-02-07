@@ -33,10 +33,14 @@ const typeDefs = gql`
         followers_id: ID!
     }
 
-
+    type allSearchBlogsUsers{
+        user_id: ID
+        profileImg: String
+        username: String
+    }
 
     type Blogs{
-        users: [Users]
+        users: [allSearchBlogsUsers]
         blog_id: ID
         heading: String
         content: String

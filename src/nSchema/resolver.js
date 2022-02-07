@@ -8,35 +8,35 @@ const {FriendsModel} = require('../../sqlDB/models/friends');
 const resolvers = {
     Query: {
         users(){
-            return UsersModel.query();
+            return UsersModel.query(); /* Resolve all users  */
         },
         user(parent, args){
             return UsersModel.query().withGraphFetched('blogs').where('user_id','=',args.id);
-        },
+        }, /* Resolve Blogs of a particular user */
         searchUser(parent, args){
             return UsersModel.query().where('username', 'LIKE', `%${args.searchkeyword}%`);
-        },
+        }, /* search user with keyword "normal sql like function used" */
         blog(parent, args){
             return BlogsModel.query().where('blog_id','=',args.id).withGraphFetched('bcomments.[replyComments]');
-        },
+        }, /* Resolve A blog fully with comments and replied comments */
         blogs(){
             return BlogsModel.query().withGraphFetched('users').modifyGraph('users', whereUser => { whereUser.select('user_id', 'profile_img', 'username') });
-        },
+        }, /* Resolves all blogs of a particular user "HOMEPAGE OF A USER" */
         searchBlog(parent, args){
             return BlogsModel.query().where('heading', 'LIKE', `%${args.searchkeyword}%`).orWhere('content', 'LIKE', `%${args.searchkeyword}%`);
-        },
+        },/* Search a blog with keyword matching word in blog heading or content */
         checksomeone_followers(parent, args){
             return FriendsModel.query().select('uUser_id').where('followers_id',args.user_id).withGraphFetched('friendsUsers');
-        },
+        },/* Resolve and show someones followers using users ID */
         checksomeone_following(parent, args){
             return FriendsModel.query().select('followers_id').where('uUser_id',args.user_id).withGraphFetched('friendsFollowers');
-        },
+        },/* Resolves and shows someone following using users ID */
         imgname(){
             const imgLink = "http://localhost:3001/uploads/269150.jpg";
             return {"img":imgLink};
         }
     },
-
+// UsersModel.query().select('followers_id').where('uUser_id',args.user_id).withGraphFetched('blogs');
 
     Mutation: {
         createUser: async (parent, args) => {
