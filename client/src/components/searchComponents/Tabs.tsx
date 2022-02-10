@@ -1,15 +1,23 @@
 import React from 'react';
+import Editprofile from '../Editprofile';
+import { Link } from 'react-router-dom';
+
+
+
+import Posts from '../Posts';
 import People from './People';
 
 const Tabs:React.FC = () => {
   return (
-      <div className='bg-gray-400 border grid grid-cols-8'>
-        <div className='border grid grid-cols-4 h-10 col-span-8 mb-8 sticky top-12'>
-          <div className='col-span-2 border flex justify-center items-center'>Blogs</div>
-          <div className='col-span-2 border flex justify-center items-center'>People</div>
+        <div className='bg-gray-400 border grid grid-cols-4 mb-8 sticky top-12'>
+          <Link to="/search/blogs" className='col-span-2'>
+            <div className='bg-yellow-400 py-1 border flex justify-center items-center'>Blogs</div>
+          </Link>
+          <Link to="/search/people" className='col-span-2'>
+            <div className='bg-yellow-400 py-1 border flex justify-center items-center'>People</div>
+          </Link>
         </div>
-        <People/>
-      </div>
+      
   );
 };
 

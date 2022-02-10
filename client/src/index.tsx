@@ -2,21 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import Navbar from './components/Navbar';
-import Sidebar from './components/Sidebar';
-import Main from './components/Main';
-import MainSearch from './components/searchComponents/MainSearch';
 
 ReactDOM.render(
   <React.StrictMode>
-    <div>
-      <Navbar/>
-      <div className='grid grid-cols-8'>
-        <Sidebar/>
-        <MainSearch/>
-        {/* <Main/> */}
-      </div>
-    </div>
+    <App/>
   </React.StrictMode>,
   document.getElementById('root')
 );
