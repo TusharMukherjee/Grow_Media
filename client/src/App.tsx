@@ -13,6 +13,7 @@ import Searchposts from './components/Searchposts';
 import Followingspost from './components/Followingspost';
 import Editprofile from './components/Editprofile';
 import About from './components/About';
+import Readblog from './components/Readblog';
 
 
 function App() {
@@ -23,13 +24,14 @@ function App() {
         <Navbar/>
           {/* <Userhome/> */}
           <Routes>
-          <Route path = "/profile" element={<> <Userhome/> <div className='col-start-2 col-span-6 flex flex-col grid grid-cols-8'> <div className='col-start-2 col-span-6 flex flex-col justify-center items-center'> <Posts/> </div> </div> </>}/>
-          <Route path = "/profile/about" element={<> <Userhome/> <div className='col-start-2 col-span-6 flex flex-col grid grid-cols-8'> <About/> </div> </>}/>
-          <Route path = "/search/people" element={<> <div className='grid grid-cols-8'> <Sidebar/> <div className='bg-red-800 border col-start-3 col-span-6 flex flex-col'><People/></div> </div>  </>}/>
-          <Route path = "/search/blogs" element={<> <div className='grid grid-cols-8'> <Sidebar/> <div className='bg-red-800 border col-start-3 col-span-6 flex flex-col'><Searchposts/></div> </div>  </>}/>
-          <Route path = "/explore" element={<> <div className='grid grid-cols-8'> <Sidebar/> <div className='bg-red-800 border col-start-3 col-span-6 flex flex-col'><Posts/></div> </div>  </>}/>
-          <Route path = "/followingspost" element={<> <div className='grid grid-cols-8'> <Sidebar/> <div className='bg-red-800 border col-start-3 col-span-6 flex flex-col mt-8'><Followingspost/></div> </div>  </>}/>
-          <Route path = "/editprofile" element={<> <div className='grid grid-cols-8'> <Sidebar/> <div className='bg-red-800 border col-start-3 col-span-6 flex flex-col mt-8'><Editprofile/></div> </div>  </>}/>
+          <Route path = "/read" element={<Readblog/>}/>
+          <Route path = "/profile" element={<> <Userhome/> <div className='col-start-2 col-span-6 grid grid-cols-8'> <div className='col-start-2 col-span-6 flex flex-col justify-center items-center'> <Posts/> </div> </div> </>}/>
+          <Route path = "/profile/about" element={<> <Userhome/> <div className='col-start-2 col-span-6 grid grid-cols-8'> <About/> </div> </>}/>
+          <Route path = "/search/people" element={<> <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col'><People/></div> </div>  </>}/>
+          <Route path = "/search/blogs" element={<> <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col'><Searchposts/></div> </div>  </>}/>
+          <Route path = "/explore" element={<> <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col'><Posts/></div> </div>  </>}/>
+          <Route path = "/followingspost" element={<> <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col mt-8'><Followingspost/></div> </div>  </>}/>
+          <Route path = "/editprofile" element={<> <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col mt-8'><Editprofile/></div> </div>  </>}/>
           
           {/* <Main/> */}
           </Routes>
