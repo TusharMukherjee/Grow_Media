@@ -14,6 +14,7 @@ import Followingspost from './components/Followingspost';
 import Editprofile from './components/Editprofile';
 import About from './components/About';
 import Readblog from './components/Readblog';
+import Addblog from './components/Addblog';
 
 
 function App() {
@@ -30,8 +31,9 @@ function App() {
           <Route path = "/search/people" element={<> <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col'><People/></div> </div>  </>}/>
           <Route path = "/search/blogs" element={<> <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col'><Searchposts/></div> </div>  </>}/>
           <Route path = "/explore" element={<> <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col'><Posts/></div> </div>  </>}/>
-          <Route path = "/followingspost" element={<> <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col mt-8'><Followingspost/></div> </div>  </>}/>
-          <Route path = "/editprofile" element={<> <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col mt-8'><Editprofile/></div> </div>  </>}/>
+          <Route path = "/home" element={<> <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col mt-8'><Followingspost/></div> </div>  </>}/>
+          <Route path = "/editprofile" element={<> <div className='grid grid-cols-8 bg-white'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col my-8'><Editprofile/></div> </div>  </>}/>
+          <Route path = "/addblog" element={<> <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col bg-white'><Addblog/></div> </div>  </>}/>
           
           {/* <Main/> */}
           </Routes>
