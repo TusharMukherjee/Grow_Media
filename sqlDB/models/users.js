@@ -21,7 +21,7 @@ class UsersModel extends Model {
         modelClass: path.join(__dirname,'./blogsModel.js'),
         join: {
           from: 'users.user_id',
-          to: 'blogs.buser_id'
+          to: 'blogs.bluser_id'
         }
       },
 

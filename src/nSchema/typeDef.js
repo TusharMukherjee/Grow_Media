@@ -37,6 +37,7 @@ const typeDefs = gql`
         user_id: ID
         profileImg: String
         username: String
+        bio: String
     }
 
     type Blogs{
@@ -50,11 +51,13 @@ const typeDefs = gql`
     }
 
     type SingleBlog{
+        blog_id: String
         heading: String
         content: String
         b_image: String
         tb_likes: Int
         tb_comments: Int
+        users: [allSearchBlogsUsers]
         bcomments: [BlogComment] # to be parent
     }
 

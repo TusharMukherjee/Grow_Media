@@ -1,6 +1,20 @@
-import React from 'react'
+import React, { FC } from 'react'
 
-const Readwithcomment:React.FC = () => {
+// type owner = {
+//     users:{
+//         bio: string | null;
+//         username: string | undefined;
+//         user_id: string;
+//     }
+// }
+
+type getOwnerInfo = {
+    user_id:string;
+    username: string;
+    bio:string | null;
+}
+
+const Readwithcomment = (props:getOwnerInfo) => {
   return (
       <div className='sticky flex flex-col items-center'>
             <div className='flex flex-col items-center'>
@@ -8,11 +22,11 @@ const Readwithcomment:React.FC = () => {
                 <div className='flex flex-row items-center p-4'>
                     <div className='bg-teal-900 h-20 w-20 rounded-md'></div>
                     <div className='flex flex-col'>
-                    <h1 className='pl-4'>Tushar Mukherjee</h1>
+                    <h1 className='pl-4'>{props.username}</h1>
                     <p className='pl-4'>10K Followers</p> 
                     </div>
                 </div>
-                <p className='px-4 pb-4'>Lorem, ipsum dolor sit amet consectetur adipisicing elit. perferendis deleniti.</p>
+                <p className='px-4 pb-4'>{props.bio}</p>
                 <div className='pl-4 pb-4'>
                 <button className=' bg-teal-500 text-white px-2 py-1 rounded-md'>Follow</button> 
                 </div>

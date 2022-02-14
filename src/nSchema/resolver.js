@@ -17,7 +17,7 @@ const resolvers = {
             return UsersModel.query().where('username', 'LIKE', `%${args.searchkeyword}%`);
         }, /* search user with keyword "normal sql like function used" */
         blog(parent, args){
-            return BlogsModel.query().where('blog_id','=',args.id).withGraphFetched('bcomments.[replyComments]');
+            return BlogsModel.query().where('blog_id','=',args.id).withGraphFetched('[users,bcomments.[replyComments]]');
         }, /* Resolve A blog fully with comments and replied comments */
         blogs(){
             return BlogsModel.query().withGraphFetched('users').modifyGraph('users', whereUser => { whereUser.select('user_id', 'profile_img', 'username') });
@@ -63,7 +63,7 @@ const resolvers = {
             return BlogsModel.query().insert({"bluser_id": args.user_id, "b_immage": args.b_immage,"heading": args.heading, "content": args.content});
         },
         deleteBlog: async(parent,args) => {
-            return BlogsModel.query().delete().whereExists(BlogsModel.query().whereRaw('bluser_id',args.user_id,'AND','blog_id',args.blog_id));
+            return BlogsModel.query().delete().where('bluser_id',args.user_id).where('blog_id',args.blog_id);
         },
 
 
