@@ -54,8 +54,8 @@ function App() {
             <Route path = "/search/blogs" element={<> <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col'><Searchposts/></div> </div>  </>}/>
             <Route path = "/explore" element={<> <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col'><Posts /></div> </div>  </>}/>
             <Route path = "/home" element={<> <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col mt-8'><Followingspost/></div> </div>  </>}/>
-            <Route path = "/editprofile" element={<> <div className='grid grid-cols-8 bg-white'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col my-8'><Editprofile/></div> </div>  </>}/>
-            <Route path = "/addblog" element={<> <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col bg-white'><Addblog/></div> </div>  </>}/>
+            <Route path = "/editprofile" element={<> <div className='grid grid-cols-8 '> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col my-8'><Editprofile/></div> </div>  </>}/>
+            <Route path = "/addblog" element={<> <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col py-8 h-full'><Addblog/></div> </div>  </>}/>
             
             {/* <Main/> */}
             </Routes>
