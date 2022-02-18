@@ -1,9 +1,14 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import About from '../About'
 import Posts from '../Posts'
 
 const Userhome: React.FC = () => {
+
+    const profile_id = useParams();
+    console.log(profile_id);
+
   return (
     <div className='col-span-8 grid grid-cols-8 mt-6'>
         <div className='col-start-2 col-span-6 grid grid-cols-5 h-56'>

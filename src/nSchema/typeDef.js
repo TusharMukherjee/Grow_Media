@@ -58,7 +58,7 @@ const typeDefs = gql`
         tb_likes: Int
         tb_comments: Int
         users: [allSearchBlogsUsers]
-        bcomments: [BlogComment] # to be parent
+        bcomments: [subBcomments]
     }
 
     type Blog_ID{
@@ -79,20 +79,28 @@ const typeDefs = gql`
         blcomment: String
     }
 
-    type BlogComment{
+    type BlogComments{
+        bcomments: [subBcomments]
+    }
+
+    type subBcomments{
         bcomment_id: ID
-        bluser_id: ID
-        blblog_id: ID
         blcomment: String
         totalBlogComments: Int
-        replyComments: [ReplyComm] # to be parent
+        replyComments: [ReplyComm]
+        blogsComUsers: [ReplyUsers]
     }
 
     type ReplyComm{
         rcomment_id: ID
-        replyUser_id: ID
-        parentComment_id: ID
         replied_comment: String
+        replyUsers:[ReplyUsers]
+    }
+
+    type ReplyUsers{
+        user_id: ID!
+        profile_img: String
+        username: String!
     }
 
     type friends{
@@ -149,6 +157,7 @@ const typeDefs = gql`
         blog(id: Int!): [SingleBlog]
         blogs: [Blogs!]!
         searchBlog(searchkeyword: String): [Blogs]
+        onlycomments(id: Int!): [BlogComments]
 
         checksomeone_followers(user_id: Int!): [checksomeone_followers]
         checksomeone_following(user_id: Int!): [checksomeone_following]

@@ -24,6 +24,49 @@ export const SINGLE_BLOG = gql`
                 username
                 bio
             }
+            bcomments {
+                bcomment_id
+                blcomment
+                replyComments {
+                    rcomment_id
+                    replied_comment
+                    replyUsers {
+                    user_id
+                    profile_img
+                    username
+                    }
+                }
+                blogsComUsers {
+                    user_id
+                    profile_img
+                    username
+                }
+            }
         }
     }
 `
+
+// export const ONLY_COMMENTS = gql`
+//     query Query($onlycommentsId: Int!) {
+//         onlycomments(id: $onlycommentsId) {
+//             bcomments {
+//             bcomment_id
+//             blcomment
+//             replyComments {
+//                 rcomment_id
+//                 replied_comment
+//                 replyUsers {
+//                 user_id
+//                 profile_img
+//                 username
+//                 }
+//             }
+//             blogsComUsers {
+//                 user_id
+//                 profile_img
+//                 username
+//             }
+//             }
+//         }
+//     }
+// `

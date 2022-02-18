@@ -14,11 +14,11 @@ exports.up = async (knex) => {
   await knex.schema
         .createTable('users', (table) => {
           table.increments('user_id').unsigned().unique().primary();
-          table.string('profile_img',20);
-          table.string('username',255).notNullable().unique();
-          table.string('email',255).notNullable().unique();
+          table.string('profile_img',30);
+          table.string('username',30).notNullable().unique();
+          table.string('email',50).notNullable().unique();
           table.string('password',255).notNullable();
-          table.string('bio',255);
+          table.string('bio', 150);
           table.string('link',255);
           table.timestamp('created_at').defaultTo(knex.fn.now());
           table.timestamp('updated_at').defaultTo(knex.fn.now());
@@ -30,8 +30,8 @@ exports.up = async (knex) => {
           table.integer('bluser_id').unsigned();
           table.foreign('bluser_id').references('user_id').inTable('users').onDelete('CASCADE').onUpdate('CASCADE');
           table.string('b_image',30);
-          table.string('heading',10).notNullable();
-          table.string('content',600); //.notNullable();
+          table.string('heading',75).notNullable();
+          table.string('content',1000); //.notNullable();
           table.string('tb_likes',5);
           table.string('tb_comments',5);
           table.timestamp('created_at').defaultTo(knex.fn.now());
@@ -67,7 +67,7 @@ exports.up = async (knex) => {
           table.integer('replyUser_id').unsigned();
           table.foreign('replyUser_id').references('user_id').inTable('users').onDelete('CASCADE').onUpdate('CASCADE');
           table.integer('parentComment_id').unsigned();
-          table.foreign('parentComment_id').references('blog_id').inTable('blogs').onDelete('CASCADE').onUpdate('CASCADE');
+          table.foreign('parentComment_id').references('bcomment_id').inTable('bcomments').onDelete('CASCADE').onUpdate('CASCADE');
           table.string('replied_comment',200); // add blog_id column
           table.timestamp('created_at').defaultTo(knex.fn.now());
           table.timestamp('updated_at').defaultTo(knex.fn.now());
@@ -91,9 +91,9 @@ exports.up = async (knex) => {
           table.increments('extraInfo_id').unsigned().unique().primary();
           table.integer('bluser_id').unsigned();
           table.foreign('bluser_id').references('user_id').inTable('users').onDelete('CASCADE').onUpdate('CASCADE');
-          table.string('Graduation', 8);
+          table.string('Graduation', 10);
           table.string('finalYear', 4);
-          table.string('skills');
+          table.string('skills', 15);
           table.timestamp('created_at').defaultTo(knex.fn.now());
           table.timestamp('updated_at').defaultTo(knex.fn.now());
         })

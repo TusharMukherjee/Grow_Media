@@ -17,8 +17,11 @@ const resolvers = {
             return UsersModel.query().where('username', 'LIKE', `%${args.searchkeyword}%`);
         }, /* search user with keyword "normal sql like function used" */
         blog(parent, args){
-            return BlogsModel.query().where('blog_id','=',args.id).withGraphFetched('[users,bcomments.[replyComments]]');
+            return BlogsModel.query().where('blog_id','=',args.id).withGraphFetched('[users,bcomments.[blogsComUsers,replyComments.[replyUsers]]]');
         }, /* Resolve A blog fully with comments and replied comments */
+        onlycomments(parent, args){
+            return BlogsModel.query().where('blog_id','=',args.id).withGraphFetched('[bcomments.[blogsComUsers,replyComments.[replyUsers]]]');
+        },
         blogs(){
             return BlogsModel.query().withGraphFetched('users').modifyGraph('users', whereUser => { whereUser.select('user_id', 'profile_img', 'username') });
         }, /* Resolves all blogs of a particular user "HOMEPAGE OF A USER" */

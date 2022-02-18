@@ -17,7 +17,7 @@ const Addblog:React.FC = () => {
     function checkHeadingCount(e: React.ChangeEvent<HTMLTextAreaElement>){
 
         setHeadingCount(75 - e?.target.value.length);
-        if(((75 - e?.target.value.length ) < 0) || ((75 - e?.target.value.length) == 75 || null) || (headingCount) == null){
+        if(((75 - e?.target.value.length ) < 0) || ((75 - e?.target.value.length) === 75 || null) || (headingCount) === null){
             (document.getElementById('createButton') as HTMLInputElement ).disabled = true;
             (document.getElementById('colorClass') as HTMLInputElement ).classList.remove('text-teal-500');
             (document.getElementById('colorClass') as HTMLInputElement ).classList.add('text-red-500');
@@ -28,8 +28,8 @@ const Addblog:React.FC = () => {
             (document.getElementById('colorClass') as HTMLInputElement ).classList.add('text-teal-500');
         }
 
-        if(((headingCount) == null || '') &&
-        ((bodyCount) == null || '')
+        if(((headingCount) === null || '') &&
+        ((bodyCount) === null || '')
         ){
             (document.getElementById('createButton') as HTMLInputElement ).disabled = true;
         }
@@ -40,7 +40,7 @@ const Addblog:React.FC = () => {
         console.log(bodyCount);
         console.log(e.target.value);
         setBodyCount(1000 - e?.target.value.length);
-        if(((1000 - e?.target.value.length ) < 0) || ((1000 - e?.target.value.length) == 1000 || null) || (bodyCount) == null){
+        if(((1000 - e?.target.value.length ) < 0) || ((1000 - e?.target.value.length) === 1000 || null) || (bodyCount) === null){
             (document.getElementById('createButton') as HTMLInputElement ).disabled = true;
             (document.getElementById('colorbClass') as HTMLInputElement ).classList.remove('text-teal-500');
             (document.getElementById('colorbClass') as HTMLInputElement ).classList.add('text-red-500');
@@ -49,6 +49,13 @@ const Addblog:React.FC = () => {
             (document.getElementById('createButton') as HTMLInputElement ).disabled = false;
             (document.getElementById('colorbClass') as HTMLInputElement ).classList.remove('text-red-500');
             (document.getElementById('colorbClass') as HTMLInputElement ).classList.add('text-teal-500');
+        }
+
+
+        if(((headingCount) === null || '') &&
+        ((bodyCount) === null || '')
+        ){
+            (document.getElementById('createButton') as HTMLInputElement ).disabled = true;
         }
 
     }
