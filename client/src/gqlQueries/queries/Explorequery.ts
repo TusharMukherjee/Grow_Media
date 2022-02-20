@@ -46,6 +46,25 @@ export const SINGLE_BLOG = gql`
     }
 `
 
+export const PROFILE = gql`
+    query Query($userId: Int!) {
+        user(id: $userId) {
+            profileImg
+            username
+            email
+            bio
+            link
+            blogs {
+                blog_id
+                heading
+                content
+                b_image
+                tb_likes
+            }
+        }
+    }
+`
+
 // export const ONLY_COMMENTS = gql`
 //     query Query($onlycommentsId: Int!) {
 //         onlycomments(id: $onlycommentsId) {

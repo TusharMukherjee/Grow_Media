@@ -49,7 +49,7 @@ function App() {
             <Routes>
             <Route path = "/read/:blog_id" element={<Readblog/>}/>
             <Route path = "/profile/:profile_id" element={<> <Userhome/> <div className='col-start-2 col-span-6 grid grid-cols-8'> <div className='col-start-2 col-span-6 flex flex-col justify-center items-center'> <Posts/> </div> </div> </>}/>
-            <Route path = "/profile/about" element={<> <Userhome/> <div className='col-start-2 col-span-6 grid grid-cols-8'> <About/> </div> </>}/>
+            <Route path = "/profile/about/:profile_id" element={<> <Userhome/> <div className='col-start-2 col-span-6 grid grid-cols-8'> <About/> </div> </>}/>
             <Route path = "/search/people" element={<> <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col'><People/></div> </div>  </>}/>
             <Route path = "/search/blogs" element={<> <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col'><Searchposts/></div> </div>  </>}/>
             <Route path = "/explore" element={<> <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col'><Posts /></div> </div>  </>}/>
