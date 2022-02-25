@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+// import { getComm } from ''
+import { useSelector } from 'react-redux';
+import { getComm, getOwnerInfo, postOwnerInfo } from "../features/PostSlice";
+
 
 
 type bcomments = {
@@ -28,27 +32,28 @@ type users = {
 }
 
 type b_comments = {
-        bcomments: bcomments[]
         users:users[]
 }
 
 
 
-const Readwithcomment = (props: b_comments) => {
+const Readwithcomment = () => {
+    // const Readwithcomment = (props: b_comments)
+    const commSelector:bcomments[] = useSelector(getComm);
+    const ownerInfoSelector: b_comments = useSelector(getOwnerInfo);
+    console.log(ownerInfoSelector.users[0].user_id);
 
-    const [commInfo, setcommInfo] = useState<bcomments[] | undefined>();
-    const [ownerInfo, setownerInfo] = useState<users[]>();
+    // const [commInfo, setcommInfo] = useState<bcomments[] | undefined>();
+    // const [ownerInfo, setownerInfo] = useState<users[]>();
     const [toggleReply, setToggleReply] = useState<any>(null);
     
 
-    useEffect(()=>{
-
-        if(props.bcomments != undefined){
-            setcommInfo(props.bcomments);
-            setownerInfo(props.users);
-        }   
-        
-    },[props]);
+    // useEffect(()=>{
+    //     if(props.bcomments != undefined){
+    //         setcommInfo(props.bcomments);
+    //         setownerInfo(props.users);            
+    //     }        
+    // },[props]);
 
 
     function toggleRepButton (index:number){
@@ -66,11 +71,11 @@ const Readwithcomment = (props: b_comments) => {
                 <div className='flex flex-row items-center p-4'>
                     <div className='bg-teal-900 h-20 w-20 rounded-md'></div>
                     <div className='flex flex-col'>
-                    <h1 className='pl-4'><Link to= {`/profile/${ownerInfo?.[0].user_id}`}>{ownerInfo?.[0].username}</Link></h1>
+                    <h1 className='pl-4'><Link to= {`/profile/${ownerInfoSelector.users[0].user_id}`}>{ownerInfoSelector.users[0].username}</Link></h1>
                     <p className='pl-4'>10K Followers</p> 
                     </div>
                 </div>
-                <p className='px-4 pb-4'>{ownerInfo?.[0].bio == null? '' : ownerInfo?.[0].bio}</p>
+                <p className='px-4 pb-4'>{ownerInfoSelector.users[0].bio == null? '' : ownerInfoSelector.users[0].bio}</p>
                 <div className='pl-4 pb-4'>
                 <button className=' bg-teal-500 text-white px-2 py-1 rounded-md'>Follow</button> 
                 </div>
@@ -82,7 +87,7 @@ const Readwithcomment = (props: b_comments) => {
                         80 Likes
                     </button>
                     <button className=' rounded-md py-1 px-2 col-span-1 bg-white'>
-                        {commInfo?.length} Comm.
+                        {commSelector.length} Comm.
                     </button>
                 </div>
             </div>
@@ -96,7 +101,7 @@ const Readwithcomment = (props: b_comments) => {
                 </div>
 
                 {
-                    commInfo?.map((el,index) => {
+                    commSelector.map((el,index) => {
                         return(
                         
                             <div className='w-80 my-2 rounded-md bg-white flex flex-col justify-center' key={el.bcomment_id}>

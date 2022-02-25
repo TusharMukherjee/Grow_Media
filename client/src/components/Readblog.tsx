@@ -1,10 +1,11 @@
-import { match } from 'assert'
-import React from 'react'
 import Readwithcomment from './Readwithcomment'
 import {useParams} from 'react-router-dom'
 import { useQuery } from '@apollo/client'
 
 import {SINGLE_BLOG} from '../gqlQueries/queries/Explorequery';
+import { useSelector, useDispatch } from 'react-redux';
+import { getComm, postComm, postOwnerInfo } from '../features/PostSlice'
+// import { allPosts, getAllMovies } from '../features/PostSlice'
 
 
 type SingleBlogOutput = {
@@ -16,12 +17,6 @@ type SingleBlogOutput = {
       bcomments: bcomments[]
         }];
 }
-
-// type info = {
-//     user_id: string;
-//     username: string;
-//     bio: string | null;
-// }
 
 type users = {
         user_id: string;
@@ -54,12 +49,21 @@ type bcomments = {
 
 const Readblog = () => {
 
+    const dispatch = useDispatch();
+    // const selector = useSelector(getComm);
+
     const {blog_id} = useParams<string>();
     
     const { loading, data } = useQuery<SingleBlogOutput, SingleBlogVar>(SINGLE_BLOG,{variables: {blogId: Number(blog_id)}});
     
     const allcommData  = data?.blog[0].bcomments!;
+    dispatch(postComm(allcommData));
     const ownerInfo = data?.blog[0].users!;
+    console.log(ownerInfo);
+    dispatch(postOwnerInfo(ownerInfo));
+    // console.log(allcommData);
+    // console.log(selector);
+    
   
     return (
             <div>
@@ -78,7 +82,8 @@ const Readblog = () => {
                           </div>
                       </div>
                       <div className='col-span-3 bg-teal-400 grid justify-center py-14 z-10 h-screen sticky top-12 right-0 overflow-y-scroll'>
-                          <Readwithcomment bcomments = {allcommData} users = {ownerInfo} />
+                          {/* <Readwithcomment bcomments = {selector} users = {ownerInfo} /> */}
+                          <Readwithcomment />
                       </div> 
                     </>)
                   }
