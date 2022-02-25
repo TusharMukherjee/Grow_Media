@@ -51,7 +51,7 @@ class UsersModel extends Model {
         modelClass: path.join(__dirname, './friends'),
         join: {
           from: 'users.user_id',
-          to: 'friends.following_id'
+          to: 'friends.uUser_id'
         }
       },
 

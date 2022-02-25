@@ -34,6 +34,15 @@ class FriendsModel extends Model {
           }
         },
 
+        friendsFollowing: {
+          relation: Model.HasManyRelation,
+          modelClass: path.join(__dirname, './users'),
+          join: {
+            from: 'friends.uUser_id',
+            to: 'users.user_id'
+          }
+        },
+
       }
     }
   
