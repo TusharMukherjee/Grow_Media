@@ -16,7 +16,12 @@ const Sidebar: React.FC = () => {
               
               <Link to="/editprofile" className='z-10 hover:drop-shadow font-medium bg-white hover:border-teal-600 border text-teal-500 mb-3 h-12 w-48 pl-3 rounded-lg flex items-center'>
                   <div>Edit Profile</div>
-              </Link>                
+              </Link>
+
+              <button className='z-10 hover:drop-shadow font-medium bg-white hover:border-teal-600 border text-teal-500 mb-3 h-12 w-48 pl-3 rounded-lg flex items-center'>
+                Log Out
+              </button>
+
             </div>
         </div>
   );
