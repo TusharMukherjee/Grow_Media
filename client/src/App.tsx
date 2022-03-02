@@ -15,15 +15,18 @@ import Searchposts from './components/Searchposts';
 import Followingspost from './components/Followingspost';
 import Editprofile from './components/Editprofile';
 import About from './components/About';
-import Readblog from './components/Readblog';
+// import Readblog from './components/Readblog';
 import Addblog from './components/Addblog';
 
-import {GET_ALL_BLOGS} from './gqlQueries/queries/Explorequery'
-import { useQuery } from '@apollo/client';
-import Signup from './components/Signup';
-import Rootpage from './components/Rootpage';
-import Login from './components/Login';
+import Auth from './components/Auth'
 
+// import {GET_ALL_BLOGS} from './gqlQueries/queries/Explorequery'
+// import { useQuery } from '@apollo/client';
+import Signup from './components/Signup';
+// import Rootpage from './components/Rootpage';
+import Login from './components/Login';
+import RequireAuth from './components/RequireAuth';
+const Readblog = React.lazy(() => import('./components/Readblog'));
 
 
 
@@ -44,32 +47,35 @@ function App() {
 
   return (
     <ApolloProvider client={client}>
-        <Router>
-        <div>
-        <div>
-            {/* <Userhome/> */}
-            <Routes>
-            {/* <Route path='/' element={<Signup/>}/>
-            <Route path='/login' element={<Login/>}/> */}
-            
-            <Route path = '/' element={<Navbar/>}>
-              <Route path = "profile" element={<Userhome/>}>
-                <Route path = ":profile_id" element={<> <div className='col-start-2 col-span-6 grid grid-cols-8'> <div className='col-start-2 col-span-6 flex flex-col justify-center items-center'> <Posts/> </div> </div> </>}/>
-                <Route path = "about/:profile_id" element={<> <div className='col-start-2 col-span-6 grid grid-cols-8'> <About/> </div> </>}/>
+      <Auth>
+          <Router>
+          <div>
+          <div>
+              {/* <Userhome/> */}
+              <Routes>
+              <Route path='/' element={<Signup/>}/>
+              <Route path='/login' element={<Login/>}/>
+              
+              <Route path = '/' element={<Navbar/>}>
+                <Route path = "profile" element={<RequireAuth> <Userhome/> </RequireAuth>}>
+                  <Route path = ":profile_id" element={<RequireAuth> <> <div className='col-start-2 col-span-6 grid grid-cols-8'> <div className='col-start-2 col-span-6 flex flex-col justify-center items-center'> <Posts/> </div> </div> </> </RequireAuth>}/>
+                  <Route path = "about/:profile_id" element={<RequireAuth> <> <div className='col-start-2 col-span-6 grid grid-cols-8'> <About/> </div> </> </RequireAuth>}/>
+                </Route>
+                <Route path = "/read/:blog_id" element={<RequireAuth> <React.Suspense fallback=''> <Readblog/> </React.Suspense> </RequireAuth>}/>
+                <Route path = "/search/people" element={<RequireAuth> <> <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col'><People/></div> </div>  </> </RequireAuth>}/>
+                <Route path = "/search/blogs" element={<RequireAuth> <> <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col'><Searchposts/></div> </div>  </> </RequireAuth>}/>
+                <Route path = "/explore" element={<RequireAuth> <> <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col'><Posts /></div> </div>  </> </RequireAuth>}/>
+                <Route path = "/home" element={<RequireAuth> <> <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col mt-8'><Followingspost/></div> </div>  </> </RequireAuth>}/>
+                <Route path = "/editprofile" element={<RequireAuth> <> <div className='grid grid-cols-8 '> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col my-8'><Editprofile/></div> </div>  </> </RequireAuth>}/>
+                <Route path = "/addblog" element={<RequireAuth> <> <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col py-8 h-full'><Addblog/></div> </div>  </> </RequireAuth>}/>
               </Route>
-              <Route path = "/read/:blog_id" element={<><Readblog/></>}/>
-              <Route path = "/search/people" element={<> <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col'><People/></div> </div>  </>}/>
-              <Route path = "/search/blogs" element={<> <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col'><Searchposts/></div> </div>  </>}/>
-              <Route path = "/explore" element={<> <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col'><Posts /></div> </div>  </>}/>
-              <Route path = "/home" element={<> <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col mt-8'><Followingspost/></div> </div>  </>}/>
-              <Route path = "/editprofile" element={<> <div className='grid grid-cols-8 '> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col my-8'><Editprofile/></div> </div>  </>}/>
-              <Route path = "/addblog" element={<> <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col py-8 h-full'><Addblog/></div> </div>  </>}/>
-            </Route>
-            {/* <Main/> */}
-            </Routes>
-        </div>
-        </div>
-      </Router>
+              {/* <Main/> */}
+              </Routes>
+          </div>
+          </div>
+        </Router>
+      </Auth>
+        
     </ApolloProvider>
     
     

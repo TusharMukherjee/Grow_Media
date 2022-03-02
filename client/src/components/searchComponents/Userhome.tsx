@@ -1,12 +1,8 @@
 import { useQuery } from '@apollo/client'
 import React, { useEffect, useState } from 'react'
-import { Link, Outlet } from 'react-router-dom'
+import { Link, Outlet, useNavigate } from 'react-router-dom'
 import { useParams } from 'react-router-dom'
 import { PROFILE } from '../../gqlQueries/queries/Explorequery'
-
-// type BasicUserInfo = {
-        
-// }
 
 type UsersBlog = {
         blog_id: string;
@@ -34,6 +30,8 @@ type UserId = {
 
 
 const Userhome: React.FC = () => {
+
+    const navigate = useNavigate();
 
     const [profileID, setProfileID] = useState<string | undefined>('');
 
@@ -70,12 +68,8 @@ const Userhome: React.FC = () => {
             </div>
             <hr className='col-start-2 col-span-6'/>
             <div className='col-start-2 col-span-6 grid grid-cols-2 my-5 place-items-center'>
-                <Link to={`/profile/${profileID}`} className='col-span-1 flex justify-center bg-purple-500 w-20 py-0.5 rounded-md'>
-                    <div className='text-white'>Blogs</div>
-                </Link>
-                <Link to={`/profile/about/${profileID}`} className='col-span-1 flex justify-center bg-purple-500 w-20 py-0.5 rounded-md'>
-                    <div className='text-white'>About</div>
-                </Link>
+                <button onClick={() => navigate(`/profile/${profileID}`)} className='text-white col-span-1 flex justify-center bg-purple-500 w-20 py-0.5 rounded-md'>Blogs</button>
+                <button onClick={() => navigate(`/profile/about/${profileID}`)} className='text-white col-span-1 flex justify-center bg-purple-500 w-20 py-0.5 rounded-md'>About</button>
             </div>
         </div>
         <Outlet/>
