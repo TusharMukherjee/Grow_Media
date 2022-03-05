@@ -4,9 +4,16 @@ const {BlogCommentsModel} = require('../../sqlDB/models/blogsComments');
 const {replyCommentModel} = require('../../sqlDB/models/replyComments');
 const {BlogLikesModel} = require('../../sqlDB/models/blogsLikes');
 const {FriendsModel} = require('../../sqlDB/models/friends');
+const { raw } = require('objection');
 
 const resolvers = {
     Query: {
+
+        userAuthenticationCheck(parent, args){
+            // const {username, password} = args
+            return UsersModel.query().where('username', args.username).whereRaw(`BINARY 'password' = '${args.password}'`);
+        },
+        // give array info to check auth
         users(){
             return UsersModel.query(); /* Resolve all users  */
         },
@@ -50,7 +57,7 @@ const resolvers = {
         },
         updateUser: async (parent, args) => {
             const updUser = args.input;
-            await UsersModel.query().patch({"username": updUser.username}).where('user_id', args.input.user_id);
+            await UsersModel.query().patch({"username": updUser.username, "bio": updUser.bio, "link": updUser.link}).where('user_id', args.input.user_id);
             console.log(updUser);
             return updUser;
         },

@@ -138,7 +138,7 @@ const typeDefs = gql`
         username: String
     }
 
-
+    
     type checksomeone_followers{
         uUser_id: ID
         friendsUsers: [friendsUsers]
@@ -150,7 +150,21 @@ const typeDefs = gql`
         
     }
 
+
+    type userProfile{
+        user_id: ID
+        username: String
+        password: String
+    }
+    
+    type returnBoolean{
+        isTrue: Boolean!
+    }
+
     type Query{
+
+        userAuthenticationCheck(username:String!, password:String!): [userProfile]
+
         users: [Users!]!
         user(id: Int!): [User]
         searchUser(searchkeyword: String): [User]

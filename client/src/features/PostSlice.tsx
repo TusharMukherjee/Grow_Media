@@ -41,16 +41,6 @@ type blogsData = {
     }[];
   }
 
-  type SingleBlogOutput = {
-    blog:[{
-      blog_id: string;
-      heading: string;
-      content: string;
-      users: users[];
-      bcomments: bcomments[]
-    }];
-  }
-
 
 
 const initialState:any = {

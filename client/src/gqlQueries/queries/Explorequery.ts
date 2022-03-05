@@ -65,6 +65,16 @@ export const PROFILE = gql`
     }
 `
 
+export const USER_LOGIN_INFO = gql`
+    query Query($username: String!, $password: String!) {
+        userAuthenticationCheck(username: $username, password: $password) {
+            user_id
+            username
+            password
+        }
+    }
+`
+
 // export const ONLY_COMMENTS = gql`
 //     query Query($onlycommentsId: Int!) {
 //         onlycomments(id: $onlycommentsId) {

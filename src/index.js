@@ -41,18 +41,21 @@ const main = async () => {
         res.json(ideas);
     });
 
-    app.get('/user/:id', async (req, res) => {
-        const {id} = req.params;
+    app.get('/user/:id/:password', async (req, res) => {
+        const {id, password} = req.params;
         // const usersblog = await Blogs.query().withGraphFetched('users').where('buser_id','=',id);
         // const usersblog = await Users.query().withGraphFetched('blogs').where('user_id','=',id);
         // const usersblog = await Users.relatedQuery('blogs').findById(id);
         // const usersblog = await FriendsModel.query().select('uUser_id').where('followers_id',id).withGraphFetched('friendsUsers');
         // const usersblog = await FriendsModel.query().select('followers_id').where('uUser_id',id).withGraphFetched('friendsFollowers');
         // const usersblog = await Users.query().findById(id);
-        const usersblog = await BlogsModel.query().where('blog_id','=',id).withGraphFetched('[bcomments.[blogsComUsers,replyComments.[replyUsers]]]');
+        // const usersblog = await BlogsModel.query().where('blog_id','=',id).withGraphFetched('[bcomments.[blogsComUsers,replyComments.[replyUsers]]]');
+        const usersblog = await UsersModel.query().where('username',id).andWhere('password',password);
         // const usersblog = await FriendsModel.query().select('followers_id').where('uUser_id',id).withGraphFetched('friendsFollowers').withGraphFetched('blogs');
         // const tiko = await usersblog.$relatedQuery(blogs);
         // await usersblog.$relatedQuery('blogs');
+        console.log(usersblog.length === 0);
+        console.log(usersblog);
         res.json(usersblog);
     });
 

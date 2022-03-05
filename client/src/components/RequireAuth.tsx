@@ -6,7 +6,7 @@ const RequireAuth = ({children}:any) => {
 
     const auth = useAuth();
 
-    if(!auth?.user){
+    if(auth?.booleanLog === false){
         return <Navigate to ='/login'/>
     }
     return children;
