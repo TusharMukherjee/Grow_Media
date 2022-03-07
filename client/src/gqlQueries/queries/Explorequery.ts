@@ -66,8 +66,8 @@ export const PROFILE = gql`
 `
 
 export const USER_LOGIN_INFO = gql`
-    query Query($username: String!, $password: String!) {
-        userAuthenticationCheck(username: $username, password: $password) {
+    query Query($username: String!) {
+        userAuthenticationCheck(username: $username) {
             user_id
             username
             password

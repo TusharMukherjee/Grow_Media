@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Rootpage from './Rootpage'
 import {useAuth} from './Auth'
@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux'
 import { logIn } from '../features/UserSlice';
 import { USER_LOGIN_INFO } from '../gqlQueries/queries/Explorequery'
 import { useLazyQuery } from '@apollo/client'
-import { type } from 'os'
+const bcrypt = require('bcryptjs');
 
 type dataInfo= {
     userAuthenticationCheck : [userAuthenticationCheck]
@@ -20,7 +20,6 @@ type userAuthenticationCheck = {
 
 type AuthVar = {
     username:string;
-    password: string;
 }
 
 const Login = () => {
@@ -30,53 +29,52 @@ const Login = () => {
   
     const auth = useAuth();
     const [user, setUser] = useState<string>('');
-    const [password, setPassword] = useState<string>('');
+    const [loginPassword, setLoginPassword] = useState<string>('');
+    const [emptyField,setEmptyField] = useState<boolean>(false);
+    const [errorPass,setErrorPass] = useState<boolean>(false);
+    const [errorUser,setErrorUser] = useState<boolean>(false);
+
     const navigate = useNavigate();
 
-    const [checkLogLazyQuery,{loading,data}] = useLazyQuery<dataInfo, AuthVar>(USER_LOGIN_INFO,{onCompleted:(data) => {
+    const [checkLogLazyQuery,{loading,data}] = useLazyQuery<dataInfo, AuthVar>(USER_LOGIN_INFO,{variables: {username:user}});
 
-        (data.userAuthenticationCheck.length) ? (auth?.login(true)) : (console.log('not found'))
-        
-        navigate('/home', {replace: true});
+    function loginHandler(){
+        if(loginPassword.length > 0) {
+            checkLogLazyQuery();
+            if(data?.userAuthenticationCheck.length){
+                
+                bcrypt.compare(loginPassword,data.userAuthenticationCheck[0].password,function(err:any,res:any){
+                    if(res){
 
-            dispatch(logIn(
-            {
-                username:user?.trim(),
-                password: password?.trim()
+                        auth?.login(true);
+                        navigate('/home', {replace: true});
+
+                        dispatch(logIn(
+                            {
+                                username:user?.trim(),
+                                password: loginPassword
+                            }
+                        ));
+
+                    }
+                    else{
+                        (!errorUser)?setErrorUser(false):
+                        setErrorPass(true);
+                    }
+                })
             }
-        ));
-
-
-    },variables: {username:user, password}});
-    // const handleLogin = () => {
-
-    //     dispatch(logIn(
-    //         {
-    //             username:user?.trim(),
-    //             password: password?.trim()
-    //         }
-    //     ));
-    //     // console.log(loginSelector);
-    //     console.log({
-    //         user, password
-    //     });
-
-    //     checkLogLazyQuery();
-    //     // check();
-    //     console.log(data?.userAuthenticationCheck[0].username);
-
-    //     // auth?.login(user);
-    //     // navigate('/home', {replace: true});
-    // }
-
-    
-
-    // function check(){
-    //     if(data?.[0]){
-    //         auth?.login(user);
-    //         navigate('/home', {replace: true});
-    //     }
-    // }
+            else{
+                console.log(data);
+                (!errorPass)?setErrorUser(true):
+                setErrorPass(false);
+            }
+        }
+        else{
+           setEmptyField(true);
+        }
+        
+        
+    }
 
     return (
 
@@ -89,10 +87,10 @@ const Login = () => {
                 <div className=' grid place-content-center py-5'>
                     <h1 className=' font-light text-teal-500 text-2xl text-center mb-8 '>Log In</h1>
                     <div className=" my-5">
-                        <input type="text" onChange={(e) => setUser((e.target.value).trim())} placeholder='Name' className=' bg-gray-200 text-gray-900 h-9 rounded-md outline-0 p-2' />
+                        <input type="text" onChange={(e) => setUser((e.target.value).trim())} placeholder='Name' className=' bg-gray-200 text-gray-900 h-9 rounded-md outline-0 p-2' required/>
                     </div>
                     <div className=" my-5">
-                        <input type="password" onChange={(e) => setPassword((e.target.value).trim())} placeholder='Password' className=' bg-gray-200 text-gray-900 h-9 rounded-md outline-0 p-2' />
+                        <input type="password" onChange={(e) => setLoginPassword(e.target.value)} placeholder='Password' className=' bg-gray-200 text-gray-900 h-9 rounded-md outline-0 p-2' required/>
                     </div>
                     <div className=" mt-5 flex justify-around">
                         <Link to="/" className=' text-blue-700'>
@@ -100,10 +98,13 @@ const Login = () => {
                                 Sign Up?
                             </button>
                         </Link>
-                        <button onClick={() => checkLogLazyQuery()} className=' bg-teal-500 rounded-md outline-0 hover:bg-teal-700 text-white py-1 px-2 '>
+                        <button onClick={loginHandler} className=' bg-teal-500 rounded-md outline-0 hover:bg-teal-700 text-white py-1 px-2 '>
                             Log in
                         </button>
                     </div>
+                    {(errorPass)?<><p className=' text-red-600 mt-5 w-48 text-center text-sm'>Password is incorrect</p></>:(<></>)}
+                    {(errorUser)?<><p className=' text-red-600 mt-5 w-48 text-center text-sm'>User is incorrect</p></>:(<></>)}
+                    {(emptyField)?<><p className=' text-red-600 mt-5 w-48 text-center text-sm'>Field can't be empty</p></>:(<></>)}
                 </div>
             </div>
         </section>

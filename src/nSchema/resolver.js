@@ -11,7 +11,7 @@ const resolvers = {
 
         userAuthenticationCheck(parent, args){
             // const {username, password} = args
-            return UsersModel.query().where('username', args.username).whereRaw(`BINARY password = '${args.password}'`);
+            return UsersModel.query().where('username', args.username);
         },
         // give array info to check auth
         users(){

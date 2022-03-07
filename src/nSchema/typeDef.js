@@ -163,7 +163,7 @@ const typeDefs = gql`
 
     type Query{
 
-        userAuthenticationCheck(username:String!, password:String!): [userProfile]
+        userAuthenticationCheck(username:String!): [userProfile]
 
         users: [Users!]!
         user(id: Int!): [User]
