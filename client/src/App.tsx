@@ -26,6 +26,7 @@ import Signup from './components/Signup';
 // import Rootpage from './components/Rootpage';
 import Login from './components/Login';
 import RequireAuth from './components/RequireAuth';
+import HomePosts from './components/HomePosts';
 const Readblog = React.lazy(() => import('./components/Readblog'));
 
 
@@ -58,7 +59,7 @@ function App() {
               
               <Route path = '/' element={<Navbar/>}>
                 <Route path = "profile" element={<RequireAuth> <Userhome/> </RequireAuth>}>
-                  <Route path = ":profile_id" element={<RequireAuth> <> <div className='col-start-2 col-span-6 grid grid-cols-8'> <div className='col-start-2 col-span-6 flex flex-col justify-center items-center'> <Posts/> </div> </div> </> </RequireAuth>}/>
+                  <Route path = ":profile_id" element={<RequireAuth> <> <div className='col-start-2 col-span-6 grid grid-cols-8'> <div className='col-start-2 col-span-6 flex flex-col justify-center items-center'> <HomePosts/> </div> </div> </> </RequireAuth>}/>
                   <Route path = "about/:profile_id" element={<RequireAuth> <> <div className='col-start-2 col-span-6 grid grid-cols-8'> <About/> </div> </> </RequireAuth>}/>
                 </Route>
                 <Route path = "/read/:blog_id" element={<RequireAuth> <React.Suspense fallback=''> <Readblog/> </React.Suspense> </RequireAuth>}/>

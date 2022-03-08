@@ -1,17 +1,15 @@
 import { useQuery } from '@apollo/client'
 import React, { useEffect, useState } from 'react'
-import { Link, Outlet, useNavigate } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 import { useParams } from 'react-router-dom'
 import { PROFILE } from '../../gqlQueries/queries/Explorequery'
-import { useSelector } from 'react-redux'
-import { userLoginInfo } from '../../features/UserSlice';
+import { useDispatch } from 'react-redux'
+import { homeBlogsStore } from '../../features/PostSlice'
 
 type UsersBlog = {
         blog_id: string;
         heading: string;
         content: string;
-        b_image: string;
-        tb_likes: number;
 }
 
 
@@ -33,8 +31,7 @@ type UserId = {
 
 const Userhome: React.FC = () => {
 
-    const selectorLoginId = useSelector(userLoginInfo);
-    console.log(selectorLoginId.users.id);
+    const dispatch = useDispatch();
 
     const navigate = useNavigate();
 
@@ -42,17 +39,21 @@ const Userhome: React.FC = () => {
 
     const {profile_id} = useParams();
     console.log(profile_id);
-
+    const {loading, data} = useQuery<UserInfoType, UserId>(PROFILE,{variables: {userId:Number(profile_id)}});
+    
     useEffect(() => {
 
         setProfileID(profile_id);
+        dispatch(homeBlogsStore(data));
 
-    },[]);
+    },[data]);
 
     
 
-    const {loading, data} = useQuery<UserInfoType, UserId>(PROFILE,{variables: {userId:Number(profile_id)}});
+    
     console.log(data);
+
+    // dispatch(postOwnerInfo(data?.user[0]))
   return (
       <>
         <div className='col-span-8 grid grid-cols-8 mt-6'>

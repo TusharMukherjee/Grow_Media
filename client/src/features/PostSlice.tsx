@@ -14,6 +14,38 @@ type blogsData = {
       blogs: blogsData[]
   }
 
+  // type homeBlogsData = {
+  //   blog_id: String,
+  //   heading: String,
+  //   content: String,
+  // }
+
+  // type homeblogss = {
+  //   profileImg: String | null,
+  //   username: String,
+  //   email: String,
+  //   bio: String | null,
+  //   link: String | null,
+  //   blogs: [homeBlogsData]
+  // }
+
+  type UsersBlog = {
+    blog_id: string;
+    heading: string;
+    content: string;
+}
+
+
+type UserInfoType = {
+    user: [{
+        profileImg: string;
+        username: string;
+        email: string;
+        bio: string;
+        link: string;
+        blogs: UsersBlog[] | undefined;
+    }]
+}
   
 
   type users = {
@@ -61,13 +93,17 @@ export const postSlice = createSlice({
         },
         postOwnerInfo: (state, actions: PayloadAction<users[]>) => {
           state.users = actions.payload;
+        },
+        homeBlogsStore: (state, actions: PayloadAction<UserInfoType | undefined>) =>{
+          state.user = actions.payload;
         }
     }
 });
 
 
-export const { allPosts, postComm, postOwnerInfo } = postSlice.actions;
+export const { allPosts, postComm, postOwnerInfo, homeBlogsStore } = postSlice.actions;
 export const getAllMovies = (state:any) => state.postSlice;
 export const getComm = (state:any) => state.postSlice.bcomments;
 export const getOwnerInfo = (state:any) => state.postSlice; 
+export const homeBlogsDataStore = (state: any) => state.postSlice.user;
 export default postSlice.reducer;

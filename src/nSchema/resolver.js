@@ -23,6 +23,9 @@ const resolvers = {
         searchUser(parent, args){
             return UsersModel.query().where('username', 'LIKE', `%${args.searchkeyword}%`);
         }, /* search user with keyword "normal sql like function used" */
+        // homeUser(parent,args){
+        //     return UsersModel.query().where('user_id',args.id);
+        // },
         blog(parent, args){
             return BlogsModel.query().where('blog_id','=',args.id).withGraphFetched('[users,bcomments.[blogsComUsers,replyComments.[replyUsers]]]');
         }, /* Resolve A blog fully with comments and replied comments */
@@ -32,6 +35,9 @@ const resolvers = {
         blogs(){
             return BlogsModel.query().withGraphFetched('users').modifyGraph('users', whereUser => { whereUser.select('user_id', 'profile_img', 'username') });
         }, /* Resolves all blogs of a particular user "HOMEPAGE OF A USER" */
+        homeBlogs(parent,args){
+            return BlogsModel.query().where('bluser_id',args.id);
+        },
         searchBlog(parent, args){
             return BlogsModel.query().where('heading', 'LIKE', `%${args.searchkeyword}%`).orWhere('content', 'LIKE', `%${args.searchkeyword}%`);
         },/* Search a blog with keyword matching word in blog heading or content */

@@ -160,6 +160,11 @@ const typeDefs = gql`
     type returnBoolean{
         isTrue: Boolean!
     }
+                         
+    # type homeUserInfo{
+    #     username: String
+    #     profile_img: String
+    # }
 
     type Query{
 
@@ -167,9 +172,11 @@ const typeDefs = gql`
 
         users: [Users!]!
         user(id: Int!): [User]
+        # homeUser(id: Int!): [homeUserInfo]
         searchUser(searchkeyword: String): [User]
         blog(id: Int!): [SingleBlog]
         blogs: [Blogs!]!
+        homeBlogs(id:Int!): [Blogs!]!
         searchBlog(searchkeyword: String): [Blogs]
         onlycomments(id: Int!): [BlogComments]
 

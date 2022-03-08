@@ -58,8 +58,6 @@ export const PROFILE = gql`
                 blog_id
                 heading
                 content
-                b_image
-                tb_likes
             }
         }
     }
@@ -84,6 +82,26 @@ export const USER_HOME_POSTS = gql`
             blog_id
             heading
             content
+        }
+    }
+`
+
+export const USER_HOME_INFO = gql`
+    query Query($userId: Int!) {
+        user(id: $userId) {
+            username
+            profileImg
+        }
+    }
+`
+
+export const HOME_POSTS = gql`
+    query Query($homeBlogsId: Int!) {
+        homeBlogs(id: $homeBlogsId) {
+            blog_id
+            heading
+            content
+            b_image
         }
     }
 `
