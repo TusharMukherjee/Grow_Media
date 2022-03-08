@@ -64,8 +64,8 @@ function App() {
                 <Route path = "/read/:blog_id" element={<RequireAuth> <React.Suspense fallback=''> <Readblog/> </React.Suspense> </RequireAuth>}/>
                 <Route path = "/search/people" element={<RequireAuth> <> <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col'><People/></div> </div>  </> </RequireAuth>}/>
                 <Route path = "/search/blogs" element={<RequireAuth> <> <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col'><Searchposts/></div> </div>  </> </RequireAuth>}/>
-                <Route path = "/explore" element={<RequireAuth> <> <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col'><Posts /></div> </div>  </> </RequireAuth>}/>
-                <Route path = "/home" element={<RequireAuth> <> <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col mt-8'><Followingspost/></div> </div>  </> </RequireAuth>}/>
+                <Route path = "/explore" element={<RequireAuth> <> <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col mt-6'><Posts /></div> </div>  </> </RequireAuth>}/>
+                <Route path = "/home" element={<RequireAuth> <> <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col mt-6'><Followingspost/></div> </div>  </> </RequireAuth>}/>
                 <Route path = "/editprofile" element={<RequireAuth> <> <div className='grid grid-cols-8 '> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col my-8'><Editprofile/></div> </div>  </> </RequireAuth>}/>
                 <Route path = "/addblog" element={<RequireAuth> <> <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col py-8 h-full'><Addblog/></div> </div>  </> </RequireAuth>}/>
               </Route>

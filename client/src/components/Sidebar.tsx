@@ -7,7 +7,9 @@ const Sidebar: React.FC = () => {
             <div className='flex flex-col justify-center items-center w-60 mt-8 pt-1.5 h-1/2 fixed top-12'>
 
               <Link to="/home" className='z-10 hover:drop-shadow font-medium bg-white hover:border-teal-600 border text-teal-500 mb-3 h-12 w-48 pl-3 rounded-lg flex items-center'>
-                  <div>Home</div>
+                  <h1>
+                    Home
+                  </h1>
               </Link>
 
               <Link to="/explore" className='z-10 hover:drop-shadow font-medium bg-white hover:border-teal-600 border text-teal-500 mb-3 h-12 w-48 pl-3 rounded-lg flex items-center'>

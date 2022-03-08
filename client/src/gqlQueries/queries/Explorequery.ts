@@ -75,6 +75,19 @@ export const USER_LOGIN_INFO = gql`
     }
 `
 
+export const USER_HOME_POSTS = gql`
+    query Blogs {
+        blogs {
+            users {
+            username
+            }
+            blog_id
+            heading
+            content
+        }
+    }
+`
+
 // export const ONLY_COMMENTS = gql`
 //     query Query($onlycommentsId: Int!) {
 //         onlycomments(id: $onlycommentsId) {

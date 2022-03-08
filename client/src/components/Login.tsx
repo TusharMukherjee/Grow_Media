@@ -5,7 +5,7 @@ import {useAuth} from './Auth'
 import { useDispatch } from 'react-redux'
 import { logIn } from '../features/UserSlice';
 import { USER_LOGIN_INFO } from '../gqlQueries/queries/Explorequery'
-import { useLazyQuery } from '@apollo/client'
+import { useLazyQuery, useQuery } from '@apollo/client'
 const bcrypt = require('bcryptjs');
 
 type dataInfo= {
@@ -36,38 +36,48 @@ const Login = () => {
 
     const navigate = useNavigate();
 
-    const [checkLogLazyQuery,{loading,data}] = useLazyQuery<dataInfo, AuthVar>(USER_LOGIN_INFO,{variables: {username:user}});
+    const {loading,data,refetch} = useQuery<dataInfo, AuthVar>(USER_LOGIN_INFO,{variables:{username:user}});
 
-    function loginHandler(){
+    const loginHandler = async() => {
+        await refetch({username:user});
+        console.log(data);
+
+        
+        
         if(loginPassword.length > 0) {
-            checkLogLazyQuery();
-            if(data?.userAuthenticationCheck.length){
-                
-                bcrypt.compare(loginPassword,data.userAuthenticationCheck[0].password,function(err:any,res:any){
-                    if(res){
+            console.log("has password")
+            setEmptyField(false);
 
-                        auth?.login(true);
-                        navigate('/home', {replace: true});
+                if(data?.userAuthenticationCheck.length){
+                    
+                    bcrypt.compare(loginPassword,data.userAuthenticationCheck[0].password,function(err:any,res:any){
+                        if(res){
 
-                        dispatch(logIn(
-                            {
-                                username:user?.trim(),
-                                password: loginPassword
-                            }
-                        ));
+                            auth?.login(true);
+                            navigate('/home', {replace: true});
 
-                    }
-                    else{
-                        (!errorUser)?setErrorUser(false):
-                        setErrorPass(true);
-                    }
-                })
-            }
-            else{
-                console.log(data);
-                (!errorPass)?setErrorUser(true):
-                setErrorPass(false);
-            }
+                            dispatch(logIn(
+                                {
+                                    id: data.userAuthenticationCheck[0].user_id,
+                                    username:user?.trim()
+                                }
+                            ));
+
+                        }
+                        else{
+                            if(errorUser)setErrorUser(false);
+                            setErrorPass(true);
+                        }
+                    })
+                }
+                else{
+                    console.log(data);
+                    (!errorPass)?setErrorUser(true):
+                    setErrorPass(false);
+                }
+
+            // checkLogLazyQuery({variables: {username:user}});
+            
         }
         else{
            setEmptyField(true);

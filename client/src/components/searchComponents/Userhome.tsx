@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react'
 import { Link, Outlet, useNavigate } from 'react-router-dom'
 import { useParams } from 'react-router-dom'
 import { PROFILE } from '../../gqlQueries/queries/Explorequery'
+import { useSelector } from 'react-redux'
+import { userLoginInfo } from '../../features/UserSlice';
 
 type UsersBlog = {
         blog_id: string;
@@ -30,6 +32,9 @@ type UserId = {
 
 
 const Userhome: React.FC = () => {
+
+    const selectorLoginId = useSelector(userLoginInfo);
+    console.log(selectorLoginId.users.id);
 
     const navigate = useNavigate();
 
