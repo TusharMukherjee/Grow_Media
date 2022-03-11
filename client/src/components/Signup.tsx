@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom'
 import Rootpage from './Rootpage'
 import { SIGN_UP_MUTATION } from '../gqlQueries/mutations/Allmutation'
 import { useMutation } from '@apollo/client';
-const bcrypt = require('bcryptjs');
 
 type mutationType = {
     user_id: Number
@@ -25,12 +24,12 @@ const Signup = () => {
     const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [email, setEmail] = useState<string>('');
+    const [emailError, setEmailError] = useState<boolean>(false);
 
     const emailRegex = RegExp(
         /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
       );
     
-    const salt = bcrypt.genSaltSync(10);
     const navigate = useNavigate();
 
     const [addSignUpInfo,{loading}] = useMutation<{
@@ -46,9 +45,9 @@ const Signup = () => {
             },
             variables:{
                 input:{
-                    username:username,
-                    email: email,
-                    password: password
+                    username,
+                    email,
+                    password
                 }
             }
         }
@@ -57,14 +56,12 @@ const Signup = () => {
     if (loading) console.log("loading");
 
     const Sign_up_the_user = async() =>{
-
-        const hashPass:string = await bcrypt.hash(password,salt)
-        setPassword(hashPass);
-
         if(email.trim().replace(/\s/g, '').match(emailRegex)){
+            setEmailError(false);
             addSignUpInfo();
         }
         else{
+            setEmailError(true);
             console.log("email not authorized")
         }
     }
@@ -98,6 +95,7 @@ const Signup = () => {
                             Sign Up
                         </button>
                     </div>
+                    {(emailError)?(<><p className=' text-red-600 mt-5 w-48 text-center text-sm' >Email not recognized</p></>):(<></>)}
                 </div>
             </div>
         </section>

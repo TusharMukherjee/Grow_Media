@@ -63,15 +63,15 @@ export const PROFILE = gql`
     }
 `
 
-export const USER_LOGIN_INFO = gql`
-    query Query($username: String!) {
-        userAuthenticationCheck(username: $username) {
-            user_id
-            username
-            password
-        }
-    }
-`
+// export const USER_LOGIN_INFO = gql`
+//     query UserAuthenticationCheck($username: String!, $password: String!) {
+//         userAuthenticationCheck(username: $username, password: $password) {
+//             user_id
+//             username
+//             authorized
+//         }
+//     }
+// `
 
 export const USER_HOME_POSTS = gql`
     query Blogs {

@@ -12,3 +12,13 @@ export const SIGN_UP_MUTATION = gql`
     }
 
 `
+
+export const USER_LOGIN_INFO = gql`
+    mutation Mutation($username: String!, $password: String!) {
+        userAuthenticationCheck(username: $username, password: $password) {
+            user_id
+            username
+            authorized
+        }
+    }
+`

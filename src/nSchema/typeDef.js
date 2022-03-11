@@ -152,9 +152,9 @@ const typeDefs = gql`
 
 
     type userProfile{
-        user_id: ID
-        username: String
-        password: String
+        user_id: ID!
+        username: String!
+        authorized: Boolean!
     }
     
     type returnBoolean{
@@ -167,9 +167,6 @@ const typeDefs = gql`
     # }
 
     type Query{
-
-        userAuthenticationCheck(username:String!): [userProfile]
-
         users: [Users!]!
         user(id: Int!): [User]
         # homeUser(id: Int!): [homeUserInfo]
@@ -187,6 +184,7 @@ const typeDefs = gql`
     }
 
     type Mutation{
+        userAuthenticationCheck(username:String!,password:String!): userProfile
         createUser(input: cuserInfo!): Users
         updateUser(input: upuserInfo!): Users
         deleteUser(input: upuserInfo!): User

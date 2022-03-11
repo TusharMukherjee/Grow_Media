@@ -4,87 +4,71 @@ import Rootpage from './Rootpage'
 import {useAuth} from './Auth'
 import { useDispatch } from 'react-redux'
 import { logIn } from '../features/UserSlice';
-import { USER_LOGIN_INFO } from '../gqlQueries/queries/Explorequery'
-import { useLazyQuery, useQuery } from '@apollo/client'
-const bcrypt = require('bcryptjs');
+import { USER_LOGIN_INFO } from '../gqlQueries/mutations/Allmutation'
+import { useMutation } from '@apollo/client'
 
 type dataInfo= {
-    userAuthenticationCheck : [userAuthenticationCheck]
+    userAuthenticationCheck : userAuthenticationCheck
 }
 
 type userAuthenticationCheck = {
     user_id: string;
     username: string;
-    password: string;
+    authorized: Boolean;
 }
 
 type AuthVar = {
     username:string;
+    password: string;
 }
 
 const Login = () => {
 
     const dispatch = useDispatch();
-    // const loginSelector = useSelector(userLoginInfo);
-  
+
     const auth = useAuth();
     const [user, setUser] = useState<string>('');
     const [loginPassword, setLoginPassword] = useState<string>('');
-    const [emptyField,setEmptyField] = useState<boolean>(false);
     const [errorPass,setErrorPass] = useState<boolean>(false);
     const [errorUser,setErrorUser] = useState<boolean>(false);
+    const [emptyField,setEmptyField] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const navigate = useNavigate();
 
-    const {loading,data,refetch} = useQuery<dataInfo, AuthVar>(USER_LOGIN_INFO,{variables:{username:user}});
-
-    const loginHandler = async() => {
-        await refetch({username:user});
-        console.log(data);
-
+    const [callLogin,{loading}] = useMutation<dataInfo, AuthVar>(USER_LOGIN_INFO,{onCompleted(data){
+        console.log("completed")
+            if(data?.userAuthenticationCheck.authorized === true){
+                setIsLoading(loading);
+                setErrorPass(false);
+                setErrorUser(false);
+                console.log("if");
+                console.log(data);
+                auth?.login(true);
+                navigate('/home', {replace: true});
+                dispatch(logIn(
+                    {
+                        id: data.userAuthenticationCheck.user_id,
+                        username:user?.trim()
+                    }
+                ));
+            }
+            if(data?.userAuthenticationCheck.authorized === false){
+                setErrorPass(true);
+                setErrorUser(false);
+                setEmptyField(false);
+            }        
         
-        
-        if(loginPassword.length > 0) {
-            console.log("has password")
-            setEmptyField(false);
-
-                if(data?.userAuthenticationCheck.length){
-                    
-                    bcrypt.compare(loginPassword,data.userAuthenticationCheck[0].password,function(err:any,res:any){
-                        if(res){
-
-                            auth?.login(true);
-                            navigate('/home', {replace: true});
-
-                            dispatch(logIn(
-                                {
-                                    id: data.userAuthenticationCheck[0].user_id,
-                                    username:user?.trim()
-                                }
-                            ));
-
-                        }
-                        else{
-                            if(errorUser)setErrorUser(false);
-                            setErrorPass(true);
-                        }
-                    })
-                }
-                else{
-                    console.log(data);
-                    (!errorPass)?setErrorUser(true):
-                    setErrorPass(false);
-                }
-
-            // checkLogLazyQuery({variables: {username:user}});
-            
+    },onError(){
+        if(!user || !loginPassword){
+            setEmptyField(true);
         }
         else{
-           setEmptyField(true);
+          setErrorUser(true);  
+          setEmptyField(false);
+          setErrorPass(false);
         }
-        
-        
-    }
+    }});
 
     return (
 
@@ -100,7 +84,7 @@ const Login = () => {
                         <input type="text" onChange={(e) => setUser((e.target.value).trim())} placeholder='Name' className=' bg-gray-200 text-gray-900 h-9 rounded-md outline-0 p-2' required/>
                     </div>
                     <div className=" my-5">
-                        <input type="password" onChange={(e) => setLoginPassword(e.target.value)} placeholder='Password' className=' bg-gray-200 text-gray-900 h-9 rounded-md outline-0 p-2' required/>
+                        <input type="password" onChange={(e)=>setLoginPassword((e.target.value))} placeholder='Password' className=' bg-gray-200 text-gray-900 h-9 rounded-md outline-0 p-2' required/>
                     </div>
                     <div className=" mt-5 flex justify-around">
                         <Link to="/" className=' text-blue-700'>
@@ -108,10 +92,11 @@ const Login = () => {
                                 Sign Up?
                             </button>
                         </Link>
-                        <button onClick={loginHandler} className=' bg-teal-500 rounded-md outline-0 hover:bg-teal-700 text-white py-1 px-2 '>
+                        <button onClick={()=>callLogin({variables:{username:user, password: loginPassword}})} className=' bg-teal-500 rounded-md outline-0 hover:bg-teal-700 text-white py-1 px-2 '>
                             Log in
                         </button>
                     </div>
+                    {(isLoading)?(<><p className=' text-teal-600 mt-5 w-48 text-center text-sm' >Logging In...</p></>):(<></>)}
                     {(errorPass)?<><p className=' text-red-600 mt-5 w-48 text-center text-sm'>Password is incorrect</p></>:(<></>)}
                     {(errorUser)?<><p className=' text-red-600 mt-5 w-48 text-center text-sm'>User is incorrect</p></>:(<></>)}
                     {(emptyField)?<><p className=' text-red-600 mt-5 w-48 text-center text-sm'>Field can't be empty</p></>:(<></>)}

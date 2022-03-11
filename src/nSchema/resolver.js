@@ -4,16 +4,12 @@ const {BlogCommentsModel} = require('../../sqlDB/models/blogsComments');
 const {replyCommentModel} = require('../../sqlDB/models/replyComments');
 const {BlogLikesModel} = require('../../sqlDB/models/blogsLikes');
 const {FriendsModel} = require('../../sqlDB/models/friends');
-const { raw } = require('objection');
+const bcrypt = require('bcryptjs');
+
+const salt = bcrypt.genSaltSync(10);
 
 const resolvers = {
     Query: {
-
-        userAuthenticationCheck(parent, args){
-            // const {username, password} = args
-            return UsersModel.query().where('username', args.username);
-        },
-        // give array info to check auth
         users(){
             return UsersModel.query(); /* Resolve all users  */
         },
@@ -55,10 +51,44 @@ const resolvers = {
 // UsersModel.query().select('followers_id').where('uUser_id',args.user_id).withGraphFetched('blogs');
 
     Mutation: {
+        async userAuthenticationCheck(parent, args){
+
+            const usersblog = await UsersModel.query().where('username', args.username);
+            const userAuthPass = usersblog[0].password;
+            console.log("called");
+
+            let resultBcrypt = await bcrypt.compare(args.password, userAuthPass);
+            console.log(resultBcrypt);
+
+            if(resultBcrypt){
+                return (
+                    {
+                        "user_id": usersblog[0].user_id,
+                        "username": usersblog[0].username,
+                        "authorized": true,
+                    }
+                )
+            }else{
+                return({
+                    "user_id": usersblog[0].user_id,
+                    "username": usersblog[0].username,
+                    "authorized": false,
+                })
+            }
+        },
+        // give array info to check auth 
         createUser: async (parent, args) => {
             const newUser = args.input;
-            await UsersModel.query().insert(newUser);
+            const {username, email, password} = newUser;
+            const hashPass = await bcrypt.hash(password,salt);
+            const newUserHash = {
+                username,
+                email,
+                password:hashPass
+            }
+            await UsersModel.query().insert(newUserHash);
             console.log(newUser);
+            console.log(newUserHash);
             return newUser;
         },
         updateUser: async (parent, args) => {

@@ -7,8 +7,8 @@ const {BlogsModel} = require('../sqlDB/models/blogsModel')
 const {typeDefs} = require('./nSchema/typeDef');
 const {resolvers} = require('./nSchema/resolver');
 const { UsersModel } = require('../sqlDB/models/users');
-const { FriendsModel } = require('../sqlDB/models/friends');
-const { BlogCommentsModel } = require('../sqlDB/models/blogsComments');
+// const { FriendsModel } = require('../sqlDB/models/friends');
+// const { BlogCommentsModel } = require('../sqlDB/models/blogsComments');
 // const { default: knex } = require('knex');
 // const cors = require('cors');
 
@@ -52,12 +52,13 @@ const main = async () => {
         // const usersblog = await BlogsModel.query().where('blog_id','=',id).withGraphFetched('[bcomments.[blogsComUsers,replyComments.[replyUsers]]]');
         // const usersblog = await UsersModel.query().where('username',id).andWhere('password',password);
         // const usersblog = await BlogsModel.query().where('bluser_id',id);
-        const usersblog = await UsersModel.query().withGraphFetched('blogs').where('user_id','=',id);
+        // const usersblog = await UsersModel.query().withGraphFetched('blogs').where('user_id','=',id);
+        const usersblog = await UsersModel.query().where('username', id);
         // const usersblog = await FriendsModel.query().select('followers_id').where('uUser_id',id).withGraphFetched('friendsFollowers').withGraphFetched('blogs');
         // const tiko = await usersblog.$relatedQuery(blogs);
         // await usersblog.$relatedQuery('blogs');
         console.log(usersblog.length === 0);
-        console.log(usersblog);
+        // console.log(usersblog[0].password);
         res.json(usersblog);
     });
 
