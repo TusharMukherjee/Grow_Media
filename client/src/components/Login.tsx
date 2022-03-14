@@ -1,11 +1,14 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Link, useNavigate, useLocation, useParams } from 'react-router-dom'
 import Rootpage from './Rootpage'
-import {useAuth} from './Auth'
+// import {useAuth} from './Auth'
 import { useDispatch } from 'react-redux'
 import { logIn } from '../features/UserSlice';
+import { jwtAfterLogin } from '../features/UserSlice';
 import { USER_LOGIN_INFO } from '../gqlQueries/mutations/Allmutation'
+import { FROM_COOKIE } from '../gqlQueries/mutations/Allmutation'
 import { useMutation } from '@apollo/client'
+// import { useHistory } from 'react-router-dom'
 
 type dataInfo= {
     userAuthenticationCheck : userAuthenticationCheck
@@ -22,11 +25,17 @@ type AuthVar = {
     password: string;
 }
 
+type verifyjwtFunc = {
+    verifyjwtFunc:{
+        userId: Number
+    }
+}
+
 const Login = () => {
 
     const dispatch = useDispatch();
 
-    const auth = useAuth();
+    // const auth = useAuth();
     const [user, setUser] = useState<string>('');
     const [loginPassword, setLoginPassword] = useState<string>('');
     const [errorPass,setErrorPass] = useState<boolean>(false);
@@ -35,29 +44,12 @@ const Login = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const navigate = useNavigate();
-
-    const [callLogin,{loading}] = useMutation<dataInfo, AuthVar>(USER_LOGIN_INFO,{onCompleted(data){
-        console.log("completed")
-            if(data?.userAuthenticationCheck.authorized === true){
-                setIsLoading(loading);
-                setErrorPass(false);
-                setErrorUser(false);
-                console.log("if");
-                console.log(data);
-                auth?.login(true);
-                navigate('/home', {replace: true});
-                dispatch(logIn(
-                    {
-                        id: data.userAuthenticationCheck.user_id,
-                        username:user?.trim()
-                    }
-                ));
-            }
-            if(data?.userAuthenticationCheck.authorized === false){
-                setErrorPass(true);
-                setErrorUser(false);
-                setEmptyField(false);
-            }        
+    const location = useLocation();
+    // const {data} = useQuery(FROM_COOKIE);
+    // console.log(data);
+    
+    const [callLogin,{loading,data}] = useMutation<dataInfo, AuthVar>(USER_LOGIN_INFO,{onCompleted(data){
+         console.log("1");
         
     },onError(){
         if(!user || !loginPassword){
@@ -69,6 +61,49 @@ const Login = () => {
           setErrorPass(false);
         }
     }});
+
+    useEffect(()=>{
+        console.log("completed")
+        checkMutation();
+            if(data?.userAuthenticationCheck.authorized === true){
+                setIsLoading(loading);
+                setErrorPass(false);
+                setErrorUser(false);
+                console.log("if");
+                console.log(data);
+                // auth?.login(true);
+                dispatch(logIn(
+                    {
+                        id: data.userAuthenticationCheck.user_id,
+                        username:user?.trim()
+                    }
+                ));
+                
+                navigate('/home', {replace: true});
+                
+                
+            }
+            if(data?.userAuthenticationCheck.authorized === false){
+                console.log("if 2")
+                setErrorPass(true);
+                setErrorUser(false);
+                setEmptyField(false);
+            }       
+    },[]);
+
+    const [checkMutation] = useMutation<verifyjwtFunc>(FROM_COOKIE,{onCompleted(data){
+        console.log(data);
+        dispatch(jwtAfterLogin(data));
+        console.log(location)
+        // auth?.login(true);
+        // if(location.pathname === `/login` || location.pathname === `/`){
+         navigate(-1);
+        // }
+    }})
+
+    // useEffect(() =>{
+        
+    // },[]);
 
     return (
 

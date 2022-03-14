@@ -1,8 +1,8 @@
 import { useQuery } from '@apollo/client'
-import e from 'express'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { USER_HOME_POSTS } from '../gqlQueries/queries/Explorequery'
+import Sidebar from './Sidebar'
 
 type allSearchBlogsUsers = {
     user_id: String
@@ -29,10 +29,12 @@ const Followingspost:React.FC = () => {
 
   return (
 <>
+    <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col mt-6'>
             {
                 (loading)?(<p>Loading...</p>):
                 data?.blogs.map((el) => {
                     return (
+                        
                         <div className='bg-white grid grid-cols-8 items-center pt-8' key={Number(el.blog_id)}>
                             <Link to={`/read/${el.blog_id}`} className='bg-white col-start-2 col-span-6 grid grid-cols-5 grid-rows-6 h-52 mb-8 border rounded-md hover:drop-shadow' >
                                     <div className='col-span-3 row-span-1 flex flex-row  items-center border-b-[0.5px]'>
@@ -56,10 +58,12 @@ const Followingspost:React.FC = () => {
                                     </div> 
                             </Link>      
                         </div>
-                            
+                        
                     )
                 })
             }
+            </div>
+            </div>
       </>
 )
 }

@@ -1,10 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Sidebar from '../Sidebar';
 import Tabs from './Tabs';
 
 const People:React.FC = () => {
   return (
       <>
+      <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col'>
       <Tabs/>
 
       <Link to="/profile">
@@ -21,6 +23,8 @@ const People:React.FC = () => {
           </div>
       </div>
       </Link>
+      </div>
+      </div>
 
       
       </>

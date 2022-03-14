@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import {GET_ALL_BLOGS} from '../gqlQueries/queries/Explorequery'
 import { useSelector, useDispatch } from 'react-redux';
 import { allPosts, getAllMovies } from '../features/PostSlice'
+import Sidebar from './Sidebar'
 
 // type PostType = {
 //     posts: {}
@@ -42,9 +43,11 @@ const Posts = () => {
 
   return (
       <>
+      <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col mt-6'>
       { loading ? (<p>Loading...</p>):(
             allblogs.blogs.map((allblogsEle:any) => {
               return (
+                
                     <div className='bg-white grid grid-cols-8 items-center pt-8' key={allblogsEle.blog_id}>
                         <Link to={`/read/${allblogsEle.blog_id}`} className='bg-white col-start-2 col-span-6 grid grid-cols-5 grid-rows-6 h-52 mb-8 border rounded-md hover:drop-shadow' >
                                 <div className='col-span-3 row-span-1 flex flex-row  items-center border-b-[0.5px]'>
@@ -68,9 +71,12 @@ const Posts = () => {
                                 </div> 
                         </Link>      
                     </div>
+                    
               )
           }))
       }
+                    </div>
+                    </div>
       </>
 
   );

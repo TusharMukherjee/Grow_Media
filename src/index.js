@@ -10,16 +10,53 @@ const { UsersModel } = require('../sqlDB/models/users');
 // const { FriendsModel } = require('../sqlDB/models/friends');
 // const { BlogCommentsModel } = require('../sqlDB/models/blogsComments');
 // const { default: knex } = require('knex');
-// const cors = require('cors');
+const cors = require('cors');
+// const jwt = require('jsonwebtoken');
+// const { response } = require('express');
+
+const app = express();
+app.use(express.json());
 
 const main = async () => {
 
-    const server = new ApolloServer({typeDefs, resolvers});
+    const corsOptions = {
+        origin: ['http://localhost:3000', 'https://studio.apollographql.com'],
+        // origin: 'https://studio.apollographql.com',
+        credentials: true
+    }
 
-    const app = express();
-    app.use(express.json());
+    app.use(cors(corsOptions));
+
+    const server = new ApolloServer({
+        typeDefs,
+        resolvers,
+        context: ({req, res}) => ({req,res})
+    });
+
+    
 
     const dir = path.join(__dirname,'../photos');
+
+    
+    // app.use('/',(req,res,next) => {
+
+    //     const jwtToken = jwt.sign({
+    //         "user_id": 51
+    //     },"secret123", { expiresIn: '1d' });
+
+    //     res.cookie("access-token",jwtToken, {maxAge: 1000 * 60 * 60 * 24, httpOnly:true});
+    //     next();
+    // })
+    // response.cookie("access-token",jwtToken, {maxAge: 1000 * 60 * 60 * 24, httpOnly:true});
+
+    // app.use((req, next) => {
+    //     const accessToken = req.cookies["access-token"];
+    //     try {
+    //       const data = verify(accessToken, `y9-xs"=!<"R&mCT4F.,T`);
+    //       (req).userId = data.user_id;
+    //     } catch {}
+    //     next();
+    // });
 
     app.use('/uploads', express.static(dir));
     
@@ -77,7 +114,7 @@ const main = async () => {
     //     graphiql: true
     // }));
     await server.start();
-    server.applyMiddleware({app})
+    server.applyMiddleware({app, path: "/graphql", cors: false })
 
     app.listen(3001, () => {
         console.log("SERVER RUNNING ON PORT 3001");

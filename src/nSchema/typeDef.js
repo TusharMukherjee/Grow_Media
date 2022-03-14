@@ -155,18 +155,19 @@ const typeDefs = gql`
         user_id: ID!
         username: String!
         authorized: Boolean!
+        token: String
     }
     
     type returnBoolean{
         isTrue: Boolean!
     }
                          
-    # type homeUserInfo{
-    #     username: String
-    #     profile_img: String
-    # }
+    type jwtInfo{
+        user_id: Int,
+    }
 
     type Query{
+        
         users: [Users!]!
         user(id: Int!): [User]
         # homeUser(id: Int!): [homeUserInfo]
@@ -184,6 +185,7 @@ const typeDefs = gql`
     }
 
     type Mutation{
+        verifyjwtFunc: jwtInfo
         userAuthenticationCheck(username:String!,password:String!): userProfile
         createUser(input: cuserInfo!): Users
         updateUser(input: upuserInfo!): Users

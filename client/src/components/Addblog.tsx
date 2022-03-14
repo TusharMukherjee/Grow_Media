@@ -1,5 +1,6 @@
 import React, { TextareaHTMLAttributes } from 'react'
 import { useState,useEffect } from 'react';
+import Sidebar from './Sidebar';
 
 const Addblog:React.FC = () => {
 
@@ -83,6 +84,7 @@ const Addblog:React.FC = () => {
     }
 
   return (
+    <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col py-8 h-full'>
     <div className='grid grid-cols-8'>
         <div className=' col-start-2 col-span-6 grid gap-4 rounded-md shadow-md shadow-teal-300'>
                 <textarea name="" id="headingTextArea" maxLength={75} onInput={checkHeadingCount} className=' resize-none outline-0 w-full p-4 text-3xl font-bold'  placeholder='Your Heading'></textarea>
@@ -122,6 +124,8 @@ const Addblog:React.FC = () => {
                     <button className='bg-teal-500 text-white px-2 py-1 rounded-md'  id='createButton'>Create</button>
                 </div>
         </div>
+    </div>
+    </div>
     </div>
   )
 }

@@ -2,6 +2,7 @@ import React from 'react'
 
 const About:React.FC = () => {
   return (
+    <div className='col-start-2 col-span-6 grid grid-cols-8'> 
     <div className='bg-red-400  col-start-2 col-span-6 grid gap-1 pt-5'>
         <div className='p-2'>
             <h1 className='text-2xl mb-5'>Hometown</h1>
@@ -27,6 +28,7 @@ const About:React.FC = () => {
             <h1 className='text-2xl mb-5'>Hobbies / Intrests</h1>
             <span className='bg-yellow-400 rounded-md py-1 px-2 text-sm'>Football</span> <span className='bg-yellow-400 rounded-md py-1 px-2 text-sm'>Adventure</span>
         </div>
+    </div>
     </div>
   )
 }

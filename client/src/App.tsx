@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
 
-import {ApolloClient, InMemoryCache, ApolloProvider} from '@apollo/client'
+import {ApolloClient, InMemoryCache, ApolloProvider, createHttpLink} from '@apollo/client'
 
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
@@ -18,37 +18,57 @@ import About from './components/About';
 // import Readblog from './components/Readblog';
 import Addblog from './components/Addblog';
 
-import Auth from './components/Auth'
+// import Auth from './components/Auth'
 
 // import {GET_ALL_BLOGS} from './gqlQueries/queries/Explorequery'
 // import { useQuery } from '@apollo/client';
 import Signup from './components/Signup';
 // import Rootpage from './components/Rootpage';
 import Login from './components/Login';
-import RequireAuth from './components/RequireAuth';
+// import RequireAuth from './components/RequireAuth';
 import HomePosts from './components/HomePosts';
-const Readblog = React.lazy(() => import('./components/Readblog'));
+import Readblog from './components/Readblog';
+import {ProtectiveRoute} from './ProtectiveRoute'
+// import { FROM_COOKIE } from '../gqlQueries/mutations/Allmutation'
+import { useMutation } from '@apollo/client'
+// const Readblog = React.lazy(() => import('./components/Readblog'));
 
-
-
+type verifyjwtFunc = {
+  verifyjwtFunc:{
+      userId: Number
+  }
+}
 
 
 function App() {
 
+  const link = createHttpLink({
+    uri: 'http://localhost:3001/graphql',
+    credentials: 'include'
+  })
+
+  // #Apollographql authentication
 
 
   const client = new ApolloClient({
     cache: new InMemoryCache(),
-    uri: "http://localhost:3001/graphql",
+    link
   });
 
+  // const [checkMutation] = useMutation<verifyjwtFunc>(FROM_COOKIE,{onCompleted(data){
+  //     console.log(data);
+  //     // console.log(location);
+  //     // if(location.pathname === `/login` || location.pathname === `/`){
+  //     //  navigate(`/home`);
+  //     // }
+  // }})
 
-
-
+  // useEffect(() =>{
+  //     checkMutation();
+  // },[]);   
 
   return (
     <ApolloProvider client={client}>
-      <Auth>
           <Router>
           <div>
           <div>
@@ -58,24 +78,25 @@ function App() {
               <Route path='/login' element={<Login/>}/>
               
               <Route path = '/' element={<Navbar/>}>
-                <Route path = "profile" element={<RequireAuth> <Userhome/> </RequireAuth>}>
-                  <Route path = ":profile_id" element={<RequireAuth> <> <div className='col-start-2 col-span-6 grid grid-cols-8'> <div className='col-start-2 col-span-6 flex flex-col justify-center items-center'> <HomePosts/> </div> </div> </> </RequireAuth>}/>
-                  <Route path = "about/:profile_id" element={<RequireAuth> <> <div className='col-start-2 col-span-6 grid grid-cols-8'> <About/> </div> </> </RequireAuth>}/>
+                <Route path = "profile" element={ <Userhome/>}>
+                  <Route path = ":profile_id" element={<> <ProtectiveRoute path='/profile/:profile_id'><HomePosts/></ProtectiveRoute> </>}/>
+                  <Route path = "about/:profile_id" element={<> <ProtectiveRoute path='/about/:profile_id'><About/></ProtectiveRoute></>}/>
                 </Route>
-                <Route path = "/read/:blog_id" element={<RequireAuth> <React.Suspense fallback=''> <Readblog/> </React.Suspense> </RequireAuth>}/>
-                <Route path = "/search/people" element={<RequireAuth> <> <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col'><People/></div> </div>  </> </RequireAuth>}/>
-                <Route path = "/search/blogs" element={<RequireAuth> <> <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col'><Searchposts/></div> </div>  </> </RequireAuth>}/>
-                <Route path = "/explore" element={<RequireAuth> <> <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col mt-6'><Posts /></div> </div>  </> </RequireAuth>}/>
-                <Route path = "/home" element={<RequireAuth> <> <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col mt-6'><Followingspost/></div> </div>  </> </RequireAuth>}/>
-                <Route path = "/editprofile" element={<RequireAuth> <> <div className='grid grid-cols-8 '> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col my-8'><Editprofile/></div> </div>  </> </RequireAuth>}/>
-                <Route path = "/addblog" element={<RequireAuth> <> <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col py-8 h-full'><Addblog/></div> </div>  </> </RequireAuth>}/>
+                </Route>
+                <Route path = '/' element={<Navbar/>}>
+                <Route path = "/read/:blog_id" element={<ProtectiveRoute path='/read/:blog_id'><Readblog/></ProtectiveRoute>}/>
+                <Route path = "/search/people" element={<><ProtectiveRoute path="/search/people"><People/></ProtectiveRoute></>}/>
+                <Route path = "/search/blogs" element={<><ProtectiveRoute path="/search/blogs"><Searchposts/></ProtectiveRoute></>}/>
+                <Route path = "/explore" element={<><ProtectiveRoute path="/explore"><Posts /></ProtectiveRoute></>}/>
+                <Route path = "/home" element={<><ProtectiveRoute path="/home"><Followingspost/></ProtectiveRoute></>}/>
+                <Route path = "/editprofile" element={<><ProtectiveRoute path="/editprofile"><Editprofile/></ProtectiveRoute></>}/>
+                <Route path = "/addblog" element={<><ProtectiveRoute path="/addblog"><Addblog/></ProtectiveRoute></>}/>
               </Route>
               {/* <Main/> */}
               </Routes>
           </div>
           </div>
         </Router>
-      </Auth>
         
     </ApolloProvider>
     

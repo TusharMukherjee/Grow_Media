@@ -5,11 +5,37 @@ const {replyCommentModel} = require('../../sqlDB/models/replyComments');
 const {BlogLikesModel} = require('../../sqlDB/models/blogsLikes');
 const {FriendsModel} = require('../../sqlDB/models/friends');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const isAuth = require('../isAuth');
 
 const salt = bcrypt.genSaltSync(10);
 
+const jwtToken = (value) =>  {
+    const giveToken = jwt.sign({"user_id": value},
+                        `tKBw+m]$#VC"&P3_Lq:u`, { expiresIn: '1d' })
+    return giveToken;
+    
+}
+
+
+const verifyjwtFunc = (jwtAToken) => {
+    jwt.verify(jwtAToken, `tKBw+m]$#VC"&P3_Lq:u`, function(err, decode){
+        if(decode){
+            return decode;
+        }
+        else{
+            return err;
+        }
+    });
+}
+
 const resolvers = {
     Query: {
+        // verifyjwtIfExist(parent,args, {req}){
+            
+        //     // const verifyjwt = verifyjwtFunc(token);
+        //     // return {"user_id":verifyjwt.user_id};
+        // },
         users(){
             return UsersModel.query(); /* Resolve all users  */
         },
@@ -51,7 +77,20 @@ const resolvers = {
 // UsersModel.query().select('followers_id').where('uUser_id',args.user_id).withGraphFetched('blogs');
 
     Mutation: {
-        async userAuthenticationCheck(parent, args){
+        async verifyjwtFunc(_,args,{req}){
+
+            const token = req.headers.cookie.replace(/aces_token=/g,'');
+            console.log(token);
+            try {
+                const result_id = jwt.verify(token, `tKBw+m]$#VC"&P3_Lq:u`);
+                return {"user_id": result_id.user_id};
+            }
+            catch(err){
+                console.log(err);
+            }
+
+        },
+        async userAuthenticationCheck(parent, args,{ res }){
 
             const usersblog = await UsersModel.query().where('username', args.username);
             const userAuthPass = usersblog[0].password;
@@ -60,7 +99,16 @@ const resolvers = {
             let resultBcrypt = await bcrypt.compare(args.password, userAuthPass);
             console.log(resultBcrypt);
 
+            const jwtAccessToken = jwtToken(usersblog[0].user_id);
+            // console.log(jwtToken(usersblog[0].user_id))
+            // const token = req.cookie.jwtAccessToken;
+            // console.log(token);
+            // const verifyjwt = verifyjwtFunc(token);
+
             if(resultBcrypt){
+                res.cookie("aces_token",jwtAccessToken, {maxAge: 1000 * 60 * 60 * 24, httpOnly:true});
+                // res.cookie("access-token",jwtToken, {maxAge: 1000 * 60 * 60 * 24, httpOnly:true});
+                // response.cookie("access-token",jwtToken, {maxAge: 1000 * 60 * 60 * 24, httpOnly:true});
                 return (
                     {
                         "user_id": usersblog[0].user_id,
@@ -73,6 +121,7 @@ const resolvers = {
                     "user_id": usersblog[0].user_id,
                     "username": usersblog[0].username,
                     "authorized": false,
+                    "token": null
                 })
             }
         },

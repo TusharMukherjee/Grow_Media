@@ -19,6 +19,17 @@ export const USER_LOGIN_INFO = gql`
             user_id
             username
             authorized
+            token
         }
     }
+`
+
+export const FROM_COOKIE = gql`
+
+    mutation Mutation {
+        verifyjwtFunc {
+            user_id
+        }
+    }
+
 `

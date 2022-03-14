@@ -1,9 +1,12 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import Tabs from './searchComponents/Tabs'
+import Sidebar from './Sidebar'
 
 const Searchposts:React.FC = () => {
   return (
+      <>
+    <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col'>
     <div>
         <Tabs/>
         <div className='bg-white grid grid-cols-8 items-center pt-8'>
@@ -34,6 +37,9 @@ const Searchposts:React.FC = () => {
       </div>
         
     </div>
+    </div>
+    </div>
+    </>
   )
 }
 

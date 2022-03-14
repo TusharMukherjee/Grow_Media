@@ -27,6 +27,7 @@ const HomePosts = () => {
 
   return (
       <>
+       <div className='col-start-2 col-span-6 grid grid-cols-8'> <div className='col-start-2 col-span-6 flex flex-col justify-center items-center'>
         {
             homeBlogsDataSelector?.user[0]?.blogs?.map((el:any) => {
                 return (
@@ -53,9 +54,12 @@ const HomePosts = () => {
                                 </div> 
                         </Link>      
                     </div>
+                    
                 )
                 }
   )}
+                </div>
+                </div>
     </>
 )
 }

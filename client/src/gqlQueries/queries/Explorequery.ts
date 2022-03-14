@@ -73,6 +73,16 @@ export const PROFILE = gql`
 //     }
 // `
 
+// export const FROM_COOKIE = gql`
+
+//     query VerifyjwtIfExist {
+//         verifyjwtIfExist {
+//             user_id
+//         }
+//     }
+
+// `
+
 export const USER_HOME_POSTS = gql`
     query Blogs {
         blogs {

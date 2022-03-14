@@ -7,8 +7,15 @@ type usersslogin = {
 }
 
 const initialState:any = {
-    users: {}
+    users: {},
+    userjwtinfo:{}
 }
+
+type verifyjwtFunc = {
+    verifyjwtFunc:{
+       userId: Number 
+    }
+  }
 
 
 export const userSlice = createSlice({
@@ -17,10 +24,14 @@ export const userSlice = createSlice({
     reducers: {
         logIn:(state, actions: PayloadAction<usersslogin>) => {
             state.users = actions.payload;
+        },
+        jwtAfterLogin:(state, actions: PayloadAction<verifyjwtFunc>) =>{
+            state.userjwtinfo = actions.payload;
         }
     }
 });
 
-export const { logIn } = userSlice.actions;
+export const { logIn,jwtAfterLogin } = userSlice.actions;
 export const userLoginInfo = (state:any) => state.userSlice;
+export const jwtLogin = (state:any) => state.userSlice.userjwtinfo;
 export default userSlice.reducer;

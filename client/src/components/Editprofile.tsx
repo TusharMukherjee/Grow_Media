@@ -1,7 +1,9 @@
 import React from 'react'
+import Sidebar from './Sidebar'
 
 const Editprofile:React.FC = () => {
   return (
+    <div className='grid grid-cols-8 '> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col my-8'>
     <div className='grid grid-cols-7'>
         <div className='col-start-2 col-span-5 border-teal-500 border-[0.5px] grid grid-cols-10 gap-5 shadow-lg'>
             <div className=' col-start-2 col-span-8 my-8'>
@@ -46,6 +48,8 @@ const Editprofile:React.FC = () => {
             </div>
         </div>
         
+    </div>
+    </div>
     </div>
   )
 }
