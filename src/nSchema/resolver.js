@@ -31,11 +31,12 @@ const verifyjwtFunc = (jwtAToken) => {
 
 const resolvers = {
     Query: {
-        // verifyjwtIfExist(parent,args, {req}){
-            
-        //     // const verifyjwt = verifyjwtFunc(token);
-        //     // return {"user_id":verifyjwt.user_id};
-        // },
+        verifyjwtFunc(parent,args, {req,checkContext}){
+            return ({"user_id":checkContext(req)})
+
+            // const verifyjwt = verifyjwtFunc(token);
+            // return {"user_id":verifyjwt.user_id};
+        },
         users(){
             return UsersModel.query(); /* Resolve all users  */
         },
@@ -77,19 +78,20 @@ const resolvers = {
 // UsersModel.query().select('followers_id').where('uUser_id',args.user_id).withGraphFetched('blogs');
 
     Mutation: {
-        async verifyjwtFunc(_,args,{req}){
+        // async verifyjwtFunc(_,args,{req}){
 
-            const token = req.headers.cookie.replace(/aces_token=/g,'');
-            console.log(token);
-            try {
-                const result_id = jwt.verify(token, `tKBw+m]$#VC"&P3_Lq:u`);
-                return {"user_id": result_id.user_id};
-            }
-            catch(err){
-                console.log(err);
-            }
+        //     const token = req.headers.cookie.replace(/aces_token=/g,'');
+        //     console.log(token);
+        //     try {
+        //         const result_id = jwt.verify(token, `tKBw+m]$#VC"&P3_Lq:u`);
+        //         return {"user_id": result_id.user_id};
+                
+        //     }
+        //     catch(err){
+        //         console.log(err);
+        //     }
 
-        },
+        // },
         async userAuthenticationCheck(parent, args,{ res }){
 
             const usersblog = await UsersModel.query().where('username', args.username);
@@ -114,6 +116,7 @@ const resolvers = {
                         "user_id": usersblog[0].user_id,
                         "username": usersblog[0].username,
                         "authorized": true,
+                        "token": jwtAccessToken
                     }
                 )
             }else{

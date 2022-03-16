@@ -47,10 +47,6 @@ const Userhome: React.FC = () => {
         dispatch(homeBlogsStore(data));
 
     },[data]);
-
-    
-
-    
     console.log(data);
 
     // dispatch(postOwnerInfo(data?.user[0]))

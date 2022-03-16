@@ -24,7 +24,7 @@ export const USER_LOGIN_INFO = gql`
     }
 `
 
-export const FROM_COOKIE = gql`
+export const FROM_COOKIE_Mutation = gql`
 
     mutation Mutation {
         verifyjwtFunc {

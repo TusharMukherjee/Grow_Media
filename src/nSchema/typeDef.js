@@ -167,7 +167,7 @@ const typeDefs = gql`
     }
 
     type Query{
-        
+        verifyjwtFunc: jwtInfo
         users: [Users!]!
         user(id: Int!): [User]
         # homeUser(id: Int!): [homeUserInfo]
@@ -185,7 +185,7 @@ const typeDefs = gql`
     }
 
     type Mutation{
-        verifyjwtFunc: jwtInfo
+        # verifyjwtFunc: jwtInfo
         userAuthenticationCheck(username:String!,password:String!): userProfile
         createUser(input: cuserInfo!): Users
         updateUser(input: upuserInfo!): Users

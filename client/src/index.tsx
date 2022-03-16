@@ -5,11 +5,27 @@ import App from './App';
 
 import { Provider } from 'react-redux';
 import {store} from './astore/store'
+import {ApolloClient, InMemoryCache, ApolloProvider, createHttpLink} from '@apollo/client'
+
+const link = createHttpLink({
+  uri: 'http://localhost:3001/graphql',
+  credentials: 'include'
+})
+
+// #Apollographql authentication
+
+
+const client = new ApolloClient({
+  cache: new InMemoryCache(),
+  link
+});
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App/>
+      <ApolloProvider client={client}>
+        <App/>
+      </ApolloProvider>
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')

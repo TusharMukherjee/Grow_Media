@@ -1,14 +1,11 @@
 import { useEffect, useState } from 'react'
-import { Link, useNavigate, useLocation, useParams } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Rootpage from './Rootpage'
-// import {useAuth} from './Auth'
 import { useDispatch } from 'react-redux'
 import { logIn } from '../features/UserSlice';
-import { jwtAfterLogin } from '../features/UserSlice';
 import { USER_LOGIN_INFO } from '../gqlQueries/mutations/Allmutation'
-import { FROM_COOKIE } from '../gqlQueries/mutations/Allmutation'
-import { useMutation } from '@apollo/client'
-// import { useHistory } from 'react-router-dom'
+import { FROM_COOKIE } from '../gqlQueries/queries/Explorequery'
+import { useLazyQuery, useMutation } from '@apollo/client'
 
 type dataInfo= {
     userAuthenticationCheck : userAuthenticationCheck
@@ -27,15 +24,13 @@ type AuthVar = {
 
 type verifyjwtFunc = {
     verifyjwtFunc:{
-        userId: Number
+        user_id: Number
     }
 }
 
 const Login = () => {
-
     const dispatch = useDispatch();
 
-    // const auth = useAuth();
     const [user, setUser] = useState<string>('');
     const [loginPassword, setLoginPassword] = useState<string>('');
     const [errorPass,setErrorPass] = useState<boolean>(false);
@@ -44,12 +39,30 @@ const Login = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const navigate = useNavigate();
-    const location = useLocation();
-    // const {data} = useQuery(FROM_COOKIE);
-    // console.log(data);
     
-    const [callLogin,{loading,data}] = useMutation<dataInfo, AuthVar>(USER_LOGIN_INFO,{onCompleted(data){
-         console.log("1");
+    const [callLogin,{loading}] = useMutation<dataInfo, AuthVar>(USER_LOGIN_INFO,{onCompleted(data){
+         console.log("1one");
+
+         if(data?.userAuthenticationCheck.authorized === true){
+            checkCookie();
+            setIsLoading(loading);
+            setErrorPass(false);
+            setErrorUser(false);
+            dispatch(logIn(
+                {
+                    user_id: Number(data.userAuthenticationCheck.user_id)
+                }
+            ));
+            
+            navigate('/home');
+            
+        }
+        if(data?.userAuthenticationCheck.authorized === false){
+            console.log("if 2")
+            setErrorPass(true);
+            setErrorUser(false);
+            setEmptyField(false);
+        }
         
     },onError(){
         if(!user || !loginPassword){
@@ -60,50 +73,40 @@ const Login = () => {
           setEmptyField(false);
           setErrorPass(false);
         }
-    }});
+    },variables:{username:user, password: loginPassword}});
 
-    useEffect(()=>{
-        console.log("completed")
-        checkMutation();
-            if(data?.userAuthenticationCheck.authorized === true){
-                setIsLoading(loading);
-                setErrorPass(false);
-                setErrorUser(false);
-                console.log("if");
-                console.log(data);
-                // auth?.login(true);
-                dispatch(logIn(
-                    {
-                        id: data.userAuthenticationCheck.user_id,
-                        username:user?.trim()
-                    }
-                ));
-                
-                navigate('/home', {replace: true});
-                
-                
-            }
-            if(data?.userAuthenticationCheck.authorized === false){
-                console.log("if 2")
-                setErrorPass(true);
-                setErrorUser(false);
-                setEmptyField(false);
-            }       
+    const [userwithcookie,setUserwithcookie] = useState<verifyjwtFunc>();
+
+    const[checkCookie] = useLazyQuery<verifyjwtFunc>(FROM_COOKIE,{onCompleted(data){
+        setUserwithcookie(data);
+        if(data.verifyjwtFunc){
+           dispatch(logIn(
+                {
+                    user_id: data?.verifyjwtFunc.user_id,
+                }
+           )); 
+        }
+        
+    }});
+    
+    console.log(userwithcookie);
+
+    
+
+    useEffect(()=>{  
+        checkCookie();
+        if(userwithcookie?.verifyjwtFunc != null){
+            navigate('/home');
+        }
     },[]);
 
-    const [checkMutation] = useMutation<verifyjwtFunc>(FROM_COOKIE,{onCompleted(data){
-        console.log(data);
-        dispatch(jwtAfterLogin(data));
-        console.log(location)
-        // auth?.login(true);
-        // if(location.pathname === `/login` || location.pathname === `/`){
-         navigate(-1);
-        // }
-    }})
+    function setUserValue(userValue:string):void{
+        setUser(userValue);
+    }
 
-    // useEffect(() =>{
-        
-    // },[]);
+    function setLoginPasswordValue(passwordValue:string):void{
+        setLoginPassword(passwordValue);
+    }
 
     return (
 
@@ -116,10 +119,10 @@ const Login = () => {
                 <div className=' grid place-content-center py-5'>
                     <h1 className=' font-light text-teal-500 text-2xl text-center mb-8 '>Log In</h1>
                     <div className=" my-5">
-                        <input type="text" onChange={(e) => setUser((e.target.value).trim())} placeholder='Name' className=' bg-gray-200 text-gray-900 h-9 rounded-md outline-0 p-2' required/>
+                        <input type="text" onChange={(e) => setUserValue((e.target.value).trim())} placeholder='Name' className=' bg-gray-200 text-gray-900 h-9 rounded-md outline-0 p-2' required/>
                     </div>
                     <div className=" my-5">
-                        <input type="password" onChange={(e)=>setLoginPassword((e.target.value))} placeholder='Password' className=' bg-gray-200 text-gray-900 h-9 rounded-md outline-0 p-2' required/>
+                        <input type="password" onChange={(e)=> setLoginPasswordValue((e.target.value))} placeholder='Password' className=' bg-gray-200 text-gray-900 h-9 rounded-md outline-0 p-2' required/>
                     </div>
                     <div className=" mt-5 flex justify-around">
                         <Link to="/" className=' text-blue-700'>
@@ -127,7 +130,7 @@ const Login = () => {
                                 Sign Up?
                             </button>
                         </Link>
-                        <button onClick={()=>callLogin({variables:{username:user, password: loginPassword}})} className=' bg-teal-500 rounded-md outline-0 hover:bg-teal-700 text-white py-1 px-2 '>
+                        <button onClick={()=>callLogin()} className=' bg-teal-500 rounded-md outline-0 hover:bg-teal-700 text-white py-1 px-2 '>
                             Log in
                         </button>
                     </div>

@@ -11,7 +11,7 @@ const { UsersModel } = require('../sqlDB/models/users');
 // const { BlogCommentsModel } = require('../sqlDB/models/blogsComments');
 // const { default: knex } = require('knex');
 const cors = require('cors');
-// const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 // const { response } = require('express');
 
 const app = express();
@@ -30,9 +30,35 @@ const main = async () => {
     const server = new ApolloServer({
         typeDefs,
         resolvers,
-        context: ({req, res}) => ({req,res})
+        context: ({req, res}) => ({req,res,checkContext})
+        // context : ({ req }) => {
+        //     const token = req.headers.authorization || ''
+        //   try {
+        //   return { id, email } = jwt.verify(token.split(' ')[1], `tKBw+m]$#VC"&P3_Lq:u`)
+        //   } catch (e) {
+        //     throw new AuthenticationError(
+        //     'Authentication token is invalid, please log in',)
+        //   }
+        // }
     });
 
+    const checkContext = ( req ) => {
+        // const token = req.headers.authorization;
+        const token = req.headers.cookie.replace(/aces_token=/g,'');
+        console.log(token);
+        // const pureToken = token.split(" ")[1];
+        console.log("first");
+        // console.log(pureToken);
+        try {
+            const { user_id } = jwt.verify(token, `tKBw+m]$#VC"&P3_Lq:u`)
+            console.log(user_id);
+          return user_id;   
+        } catch (e) {
+          throw new AuthenticationError(
+            'Authentication token is invalid, please log in',
+          )
+        }
+      }
     
 
     const dir = path.join(__dirname,'../photos');
