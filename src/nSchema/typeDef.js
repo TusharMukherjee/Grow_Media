@@ -185,7 +185,7 @@ const typeDefs = gql`
     }
 
     type Mutation{
-        # verifyjwtFunc: jwtInfo
+        logout: Boolean
         userAuthenticationCheck(username:String!,password:String!): userProfile
         createUser(input: cuserInfo!): Users
         updateUser(input: upuserInfo!): Users

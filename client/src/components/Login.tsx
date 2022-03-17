@@ -4,8 +4,9 @@ import Rootpage from './Rootpage'
 import { useDispatch } from 'react-redux'
 import { logIn } from '../features/UserSlice';
 import { USER_LOGIN_INFO } from '../gqlQueries/mutations/Allmutation'
-import { FROM_COOKIE } from '../gqlQueries/queries/Explorequery'
-import { useLazyQuery, useMutation } from '@apollo/client'
+import { useSelector } from 'react-redux';
+import { userLoginInfo } from '../features/UserSlice';
+import { useMutation } from '@apollo/client'
 
 type dataInfo= {
     userAuthenticationCheck : userAuthenticationCheck
@@ -22,14 +23,9 @@ type AuthVar = {
     password: string;
 }
 
-type verifyjwtFunc = {
-    verifyjwtFunc:{
-        user_id: Number
-    }
-}
-
 const Login = () => {
     const dispatch = useDispatch();
+    const selector = useSelector(userLoginInfo);
 
     const [user, setUser] = useState<string>('');
     const [loginPassword, setLoginPassword] = useState<string>('');
@@ -41,10 +37,8 @@ const Login = () => {
     const navigate = useNavigate();
     
     const [callLogin,{loading}] = useMutation<dataInfo, AuthVar>(USER_LOGIN_INFO,{onCompleted(data){
-         console.log("1one");
 
          if(data?.userAuthenticationCheck.authorized === true){
-            checkCookie();
             setIsLoading(loading);
             setErrorPass(false);
             setErrorUser(false);
@@ -58,7 +52,6 @@ const Login = () => {
             
         }
         if(data?.userAuthenticationCheck.authorized === false){
-            console.log("if 2")
             setErrorPass(true);
             setErrorUser(false);
             setEmptyField(false);
@@ -75,38 +68,12 @@ const Login = () => {
         }
     },variables:{username:user, password: loginPassword}});
 
-    const [userwithcookie,setUserwithcookie] = useState<verifyjwtFunc>();
-
-    const[checkCookie] = useLazyQuery<verifyjwtFunc>(FROM_COOKIE,{onCompleted(data){
-        setUserwithcookie(data);
-        if(data.verifyjwtFunc){
-           dispatch(logIn(
-                {
-                    user_id: data?.verifyjwtFunc.user_id,
-                }
-           )); 
-        }
-        
-    }});
-    
-    console.log(userwithcookie);
-
-    
-
-    useEffect(()=>{  
-        checkCookie();
-        if(userwithcookie?.verifyjwtFunc != null){
-            navigate('/home');
+    useEffect(()=>{
+        if(selector){
+            navigate('/home', {replace: true});
         }
     },[]);
 
-    function setUserValue(userValue:string):void{
-        setUser(userValue);
-    }
-
-    function setLoginPasswordValue(passwordValue:string):void{
-        setLoginPassword(passwordValue);
-    }
 
     return (
 
@@ -119,10 +86,10 @@ const Login = () => {
                 <div className=' grid place-content-center py-5'>
                     <h1 className=' font-light text-teal-500 text-2xl text-center mb-8 '>Log In</h1>
                     <div className=" my-5">
-                        <input type="text" onChange={(e) => setUserValue((e.target.value).trim())} placeholder='Name' className=' bg-gray-200 text-gray-900 h-9 rounded-md outline-0 p-2' required/>
+                        <input type="text" onChange={(e) => setUser((e.target.value).trim())} placeholder='Name' className=' bg-gray-200 text-gray-900 h-9 rounded-md outline-0 p-2' required/>
                     </div>
                     <div className=" my-5">
-                        <input type="password" onChange={(e)=> setLoginPasswordValue((e.target.value))} placeholder='Password' className=' bg-gray-200 text-gray-900 h-9 rounded-md outline-0 p-2' required/>
+                        <input type="password" onChange={(e)=> setLoginPassword((e.target.value))} placeholder='Password' className=' bg-gray-200 text-gray-900 h-9 rounded-md outline-0 p-2' required/>
                     </div>
                     <div className=" mt-5 flex justify-around">
                         <Link to="/" className=' text-blue-700'>

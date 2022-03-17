@@ -33,3 +33,11 @@ export const FROM_COOKIE_Mutation = gql`
     }
 
 `
+
+export const LOG_OUT = gql`
+
+    mutation Mutation {
+        logout
+    }
+
+`

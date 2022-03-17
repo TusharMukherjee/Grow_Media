@@ -1,18 +1,29 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import { useMutation } from '@apollo/client';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { userLoginInfo } from '../features/UserSlice';
+import { logIn, userLoginInfo } from '../features/UserSlice';
+import { LOG_OUT } from '../gqlQueries/mutations/Allmutation';
 
 const Navbar: React.FC = () => {
 
   const selector = useSelector(userLoginInfo);
-  console.log(selector);
+  const dispatchJwt = useDispatch();
 
   const navigate = useNavigate();
 
+  const [calllogout,{data}] = useMutation(LOG_OUT);
+
   const handleLogout = () => {
-    navigate('/login');
+    calllogout();
   }
+
+  useEffect(()=>{
+    if(data){
+      navigate('/login');
+      dispatchJwt(logIn(undefined));
+    }
+  },[data]);
 
   const navLinkStyle = ({isActive}:any) =>{
     return{
@@ -41,12 +52,12 @@ const Navbar: React.FC = () => {
                   <NavLink to="/addblog" style={navLinkStyle} className=' font-semibold text-white '>
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 6C12.5523 6 13 6.44772 13 7V11H17C17.5523 11 18 11.4477 18 12C18 12.5523 17.5523 13 17 13H13V17C13 17.5523 12.5523 18 12 18C11.4477 18 11 17.5523 11 17V13H7C6.44772 13 6 12.5523 6 12C6 11.4477 6.44772 11 7 11H11V7C11 6.44772 11.4477 6 12 6Z" fill="currentColor" /><path fillRule="evenodd" clipRule="evenodd" d="M5 22C3.34315 22 2 20.6569 2 19V5C2 3.34315 3.34315 2 5 2H19C20.6569 2 22 3.34315 22 5V19C22 20.6569 20.6569 22 19 22H5ZM4 19C4 19.5523 4.44772 20 5 20H19C19.5523 20 20 19.5523 20 19V5C20 4.44772 19.5523 4 19 4H5C4.44772 4 4 4.44772 4 5V19Z" fill="currentColor" /></svg>
                   </NavLink>
-
-                  <NavLink to={`/profile/${selector.users.user_id}`} style={navLinkStyle} className=' font-semibold text-white '>
+                  { (selector && 
+                  <NavLink to={`/profile/${selector.user_id}`} style={navLinkStyle} className=' font-semibold text-white '>
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" clipRule="evenodd" d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7ZM14 7C14 8.10457 13.1046 9 12 9C10.8954 9 10 8.10457 10 7C10 5.89543 10.8954 5 12 5C13.1046 5 14 5.89543 14 7Z" fill="currentColor" /><path d="M16 15C16 14.4477 15.5523 14 15 14H9C8.44772 14 8 14.4477 8 15V21H6V15C6 13.3431 7.34315 12 9 12H15C16.6569 12 18 13.3431 18 15V21H16V15Z" fill="currentColor" /></svg>
-                  </NavLink>
+                  </NavLink>)}
 
-                  <div onClick={handleLogout} className=' cursor-pointer font-semibold text-white '>
+                  <div onClick={() => handleLogout()} className=' cursor-pointer font-semibold text-white '>
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.51428 20H4.51428C3.40971 20 2.51428 19.1046 2.51428 18V6C2.51428 4.89543 3.40971 4 4.51428 4H8.51428V6H4.51428V18H8.51428V20Z" fill="currentColor" /><path d="M13.8418 17.385L15.262 15.9768L11.3428 12.0242L20.4857 12.0242C21.038 12.0242 21.4857 11.5765 21.4857 11.0242C21.4857 10.4719 21.038 10.0242 20.4857 10.0242L11.3236 10.0242L15.304 6.0774L13.8958 4.6572L7.5049 10.9941L13.8418 17.385Z" fill="currentColor" /></svg>
                   </div>
                 </div>

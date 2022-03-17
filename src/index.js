@@ -45,13 +45,13 @@ const main = async () => {
     const checkContext = ( req ) => {
         // const token = req.headers.authorization;
         const token = req.headers.cookie.replace(/aces_token=/g,'');
-        console.log(token);
+        // console.log(token);
         // const pureToken = token.split(" ")[1];
-        console.log("first");
+        // console.log("first");
         // console.log(pureToken);
         try {
             const { user_id } = jwt.verify(token, `tKBw+m]$#VC"&P3_Lq:u`)
-            console.log(user_id);
+            // console.log(user_id);
           return user_id;   
         } catch (e) {
           throw new AuthenticationError(
@@ -63,6 +63,11 @@ const main = async () => {
 
     const dir = path.join(__dirname,'../photos');
 
+    // app.use((req,_, next) => {
+    //   // const aces_token = req
+    //   console.log(req);
+    //   next();
+    // });
     
     // app.use('/',(req,res,next) => {
 

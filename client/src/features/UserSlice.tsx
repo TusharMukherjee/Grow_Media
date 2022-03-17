@@ -6,7 +6,6 @@ type usersslogin = {
 
 const initialState:any = {
     users: {},
-    userjwtinfo:{}
 }
 
 export const userSlice = createSlice({
@@ -20,5 +19,5 @@ export const userSlice = createSlice({
 });
 
 export const { logIn } = userSlice.actions;
-export const userLoginInfo = (state:any) => state.userSlice;
+export const userLoginInfo = (state:any) => state.userSlice.users;
 export default userSlice.reducer;

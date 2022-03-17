@@ -78,20 +78,12 @@ const resolvers = {
 // UsersModel.query().select('followers_id').where('uUser_id',args.user_id).withGraphFetched('blogs');
 
     Mutation: {
-        // async verifyjwtFunc(_,args,{req}){
+        
+        async logout(_,__,{res}){
+            res.cookie("aces_token",'', {maxAge: 1, httpOnly:true});
+            return true;
+        },
 
-        //     const token = req.headers.cookie.replace(/aces_token=/g,'');
-        //     console.log(token);
-        //     try {
-        //         const result_id = jwt.verify(token, `tKBw+m]$#VC"&P3_Lq:u`);
-        //         return {"user_id": result_id.user_id};
-                
-        //     }
-        //     catch(err){
-        //         console.log(err);
-        //     }
-
-        // },
         async userAuthenticationCheck(parent, args,{ res }){
 
             const usersblog = await UsersModel.query().where('username', args.username);
@@ -155,7 +147,6 @@ const resolvers = {
             console.log(updUser);
             return updUser;
         },
-
 
         createBlog: async (parent, args) => {
             return BlogsModel.query().insert({"bluser_id": args.user_id, "b_immage": args.b_immage,"heading": args.heading, "content": args.content});
