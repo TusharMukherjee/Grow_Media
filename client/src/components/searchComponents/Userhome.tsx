@@ -49,7 +49,6 @@ const Userhome: React.FC = () => {
     },[data]);
     console.log(data);
 
-    // dispatch(postOwnerInfo(data?.user[0]))
   return (
       <>
         <div className='col-span-8 grid grid-cols-8 mt-6'>
@@ -58,14 +57,14 @@ const Userhome: React.FC = () => {
                     <div className='bg-purple-500 rounded-lg w-32 h-32'></div>
                 </div>
                 <div className='col-span-3 flex flex-col justify-center '>
-                    <h1 className=' w-4/6 flex items-center font-semibold my-2'>{data?.user[0].username}</h1>
+                    <div className=' w-4/6 flex items-center font-semibold my-2 justify-between' ><h1>{data?.user[0].username}</h1><button className=' bg-teal-500 text-white px-2 py-1 rounded-md'>Follow</button></div>
                     <div className=' w-4/6 my-2 flex justify-between'>
                         <div className=""> {data?.user[0].blogs.length} Blogs</div>
                         <div className=""> 114 Followers </div>
                         <div className=""> 316 Following </div>
                     </div>
                     <p className=' w-4/6 flex items-center '>{data?.user[0].bio == null ? '' : data?.user[0].bio}</p>
-                    <p className=' w-4/6 my-1 flex items-center'>{data?.user[0].link}</p>
+                    <a href={data?.user[0].link} className=' w-4/6 my-1 flex items-center' >{data?.user[0].link}</a>
                 </div>
             </div>
             <hr className='col-start-2 col-span-6'/>

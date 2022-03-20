@@ -166,6 +166,20 @@ const typeDefs = gql`
         user_id: Int,
     }
 
+    type allInfo{
+        user_id: Int
+        username: String,
+        bio: String,
+        link: String,
+        usersExtraInfo: [usersExtraInfo]
+    }
+    type usersExtraInfo{
+        qualification: String,
+        hometown: String,
+        work: String,
+        college: String
+    }
+
     type Query{
         verifyjwtFunc: jwtInfo
         users: [Users!]!
@@ -182,14 +196,25 @@ const typeDefs = gql`
         checksomeone_following(user_id: Int!): [checksomeone_following]
 
         imgname: imgname!
+
+        infoquery(id: Int): [allInfo]
     }
 
     type Mutation{
         logout: Boolean
         userAuthenticationCheck(username:String!,password:String!): userProfile
         createUser(input: cuserInfo!): Users
-        updateUser(input: upuserInfo!): Users
-        deleteUser(input: upuserInfo!): User
+
+        updateUser(
+            user_id: Int!
+            bio: String,
+            link: String,
+            qualification: String,
+            hometown: String,
+            work: String,
+            college: String): Boolean
+
+        deleteUser(user_id: Int): User
 
 
         createBlog(user_id: ID!, b_image: String, heading: String!, content:String!): Blogs
@@ -214,11 +239,12 @@ const typeDefs = gql`
 
     input upuserInfo{
         user_id: Int!
-        username: String
-        email: String
-        password: String
-        bio: String
-        link: String
+        bio: String,
+        link: String,
+        qualification: String,
+        hometown: String,
+        work: String,
+        college: String
     }
 `;
 

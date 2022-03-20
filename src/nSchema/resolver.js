@@ -7,6 +7,7 @@ const {FriendsModel} = require('../../sqlDB/models/friends');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const isAuth = require('../isAuth');
+const { ExtraInfoModel } = require('../../sqlDB/models/extraInfo');
 
 const salt = bcrypt.genSaltSync(10);
 
@@ -73,7 +74,14 @@ const resolvers = {
         imgname(){
             const imgLink = "http://localhost:3001/uploads/269150.jpg";
             return {"img":imgLink};
+        },
+
+        async infoquery(_,args){
+            const allInfo = await UsersModel.query().where('user_id',args.id).withGraphFetched('usersExtraInfo');
+            console.log(allInfo);
+            return allInfo;
         }
+
     },
 // UsersModel.query().select('followers_id').where('uUser_id',args.user_id).withGraphFetched('blogs');
 
@@ -82,7 +90,7 @@ const resolvers = {
         async logout(_,__,{res}){
             res.cookie("aces_token",'', {maxAge: 1, httpOnly:true});
             return true;
-        },
+        }, //DONE
 
         async userAuthenticationCheck(parent, args,{ res }){
 
@@ -119,7 +127,7 @@ const resolvers = {
                     "token": null
                 })
             }
-        },
+        }, // DONE
         // give array info to check auth 
         createUser: async (parent, args) => {
             const newUser = args.input;
@@ -131,14 +139,61 @@ const resolvers = {
                 password:hashPass
             }
             await UsersModel.query().insert(newUserHash);
+            // await ExtraInfoModel.query().insert([
+            //     {
+            //         bluser_id: await UsersModel.query().select(user_id).where('username',newUser.username),
+            //         qualification: null,
+            //         hometown:null,
+            //         work:null,
+            //         college:null
+            //     }
+            // ]);
+            // await UsersModel.query().insertGraph({
+            //  username,
+            //  email,
+            //  password:hashPass,
+
+            //  usersExtraInfo:[
+            //     {
+            //         bluser_id: ,
+            //         qualification:null,
+            //         hometown:null,
+            //         work:null,
+            //         college:null
+            //     }
+            //  ]
+
+            // })
             console.log(newUser);
             console.log(newUserHash);
             return newUser;
-        },
+        }, // DONE
+
         updateUser: async (parent, args) => {
-            const updUser = args.input;
-            await UsersModel.query().patch({"username": updUser.username, "bio": updUser.bio, "link": updUser.link}).where('user_id', args.input.user_id);
+            const updUser = args;
+            await UsersModel.query().patch({"bio": updUser.bio, "link": updUser.link}).where('user_id', args.user_id);
+            const check_ei = await ExtraInfoModel.query().where('bluser_id',args.user_id);
             console.log(updUser);
+            console.log(check_ei.length === 0);
+            if(check_ei.length === 0){
+                await ExtraInfoModel.query().insert({
+                    bluser_id: args.user_id,
+                    qualification: args.qualification,
+                    hometown:args.hometown,
+                    work:args.work,
+                    college:args.college
+                })
+                console.log("first")
+            }
+            else{
+                await ExtraInfoModel.query().patch({
+                    'qualification': args.qualification,
+                    'hometown':args.hometown,
+                    'work':args.work,
+                    'college':args.college
+                }).where('bluser_id',args.user_id);
+                console.log("second");
+            }
             return updUser;
         },
         deleteUser: async (parent, args) => {

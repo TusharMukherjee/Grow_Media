@@ -91,9 +91,10 @@ exports.up = async (knex) => {
           table.increments('extraInfo_id').unsigned().unique().primary();
           table.integer('bluser_id').unsigned();
           table.foreign('bluser_id').references('user_id').inTable('users').onDelete('CASCADE').onUpdate('CASCADE');
-          table.string('Graduation', 10);
-          table.string('finalYear', 4);
-          table.string('skills', 15);
+          table.string('qualification', 10);
+          table.string('hometown', 15);
+          table.string('work', 15);
+          table.string('college',15);
           table.timestamp('created_at').defaultTo(knex.fn.now());
           table.timestamp('updated_at').defaultTo(knex.fn.now());
         })

@@ -8,7 +8,7 @@ const PrivateRoute = ({children, path }: {children: any, path: string}) => {
     return selector ? (
         children
     ):(
-        <Navigate replace to={'/login'} state={{ path: `${path}` }}/>
+        <Navigate replace to={'/login'} state={{ path: 5 }}/>
     )
 }
 

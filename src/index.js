@@ -12,6 +12,7 @@ const { UsersModel } = require('../sqlDB/models/users');
 // const { default: knex } = require('knex');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
+const { ExtraInfoModel } = require('../sqlDB/models/extraInfo');
 // const { response } = require('express');
 
 const app = express();
@@ -121,14 +122,20 @@ const main = async () => {
         // const usersblog = await UsersModel.query().where('username',id).andWhere('password',password);
         // const usersblog = await BlogsModel.query().where('bluser_id',id);
         // const usersblog = await UsersModel.query().withGraphFetched('blogs').where('user_id','=',id);
-        const usersblog = await UsersModel.query().where('username', id);
+        // const usersblog = await UsersModel.query().where('username', id);
         // const usersblog = await FriendsModel.query().select('followers_id').where('uUser_id',id).withGraphFetched('friendsFollowers').withGraphFetched('blogs');
         // const tiko = await usersblog.$relatedQuery(blogs);
+        const usersblog = await UsersModel.query().select('bio','link').where('user_id', id);
+        // const usersblogei = await ExtraInfoModel.query().where('bluser_id', id);
+        const usersblogei = await UsersModel.query().where('user_id', id).withGraphFetched('usersExtraInfo');
         // await usersblog.$relatedQuery('blogs');
         console.log(usersblog.length === 0);
+        const addblog = [...usersblog, ...usersblogei];
         // console.log(usersblog[0].password);
-        res.json(usersblog);
+        res.json(usersblogei);
     });
+
+    // BlogsModel.query().where('blog_id','=',args.id).withGraphFetched('[users,bcomments.[blogsComUsers,replyComments.[replyUsers]]]');
 
     // app.post('/post', async (req, res) => {
     //     // creates a new idea from the request body

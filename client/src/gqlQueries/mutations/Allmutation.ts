@@ -41,3 +41,11 @@ export const LOG_OUT = gql`
     }
 
 `
+
+export const EDITPROFILE_MUTATION = gql`
+
+    mutation UpdateUser($userId: Int!, $bio: String, $link: String, $qualification: String, $hometown: String, $work: String, $college: String) {
+        updateUser(user_id: $userId, bio: $bio, link: $link, qualification: $qualification, hometown: $hometown, work: $work, college: $college)
+    }
+
+`

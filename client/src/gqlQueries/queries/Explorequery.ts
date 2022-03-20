@@ -116,6 +116,23 @@ export const HOME_POSTS = gql`
     }
 `
 
+export const EDIT_QUERY = gql`
+    query Query($infoqueryId: Int) {
+        infoquery(id: $infoqueryId) {
+            user_id
+            bio
+            username
+            link
+            usersExtraInfo {
+            qualification
+            hometown
+            work
+            college
+            }
+        }
+    }
+` 
+
 // export const ONLY_COMMENTS = gql`
 //     query Query($onlycommentsId: Int!) {
 //         onlycomments(id: $onlycommentsId) {

@@ -41,12 +41,10 @@ const Posts = () => {
     }
     console.log(allblogs);
 
-  return (
-      <>
+  return ( loading ? <div className='bg-teal-500 w-screen h-screen grid place-items-center'><div className=' h-32 w-32 border-white rounded-full border-t-[1rem] border-[1rem] border-t-teal-900 animate-spin ' ></div></div>:
+      
       <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col mt-6'>
-      { loading ? (<p>Loading...</p>):(
-            allblogs.blogs.map((allblogsEle:any) => {
-              return (
+            {allblogs.blogs.map((allblogsEle:any) => {
                 
                     <div className='bg-white grid grid-cols-8 items-center pt-8' key={allblogsEle.blog_id}>
                         <Link to={`/read/${allblogsEle.blog_id}`} className='bg-white col-start-2 col-span-6 grid grid-cols-5 grid-rows-6 h-52 mb-8 border rounded-md hover:drop-shadow' >
@@ -71,13 +69,9 @@ const Posts = () => {
                                 </div> 
                         </Link>      
                     </div>
-                    
-              )
-          }))
-      }
+          })}
                     </div>
                     </div>
-      </>
 
   );
 };

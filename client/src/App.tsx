@@ -32,7 +32,7 @@ function App() {
 
   const dispatchJwt = useDispatch();
 
-  const [callLazy,{data}]=useLazyQuery<verifyjwtFunc>(FROM_COOKIE);
+  const [callLazy,{data, loading}]=useLazyQuery<verifyjwtFunc>(FROM_COOKIE);
 
   useEffect(()=>{
     callLazy();
@@ -42,7 +42,7 @@ function App() {
     }
   },[data])
 
-  return (
+  return ( loading ? <div className='bg-teal-500 w-screen h-screen grid place-items-center'><div className=' h-32 w-32 border-white rounded-full border-t-[1rem] border-[1rem] border-t-teal-900 animate-spin ' ></div></div>:
           <Router>
           <div>
           <div>
@@ -55,9 +55,9 @@ function App() {
                   <Route path = ":profile_id" element={<> <PrivateRoute path='/profile/:profile_id'><HomePosts/></PrivateRoute> </>}/>
                   <Route path = "about/:profile_id" element={<> <PrivateRoute path='/about/:profile_id'><About/></PrivateRoute></>}/>
                 </Route>
+                <Route path = "/read/:blog_id" element={<PrivateRoute path='/read/:blog_id'><Readblog/></PrivateRoute>}/>
                 </Route>
                 <Route path = '/' element={<Navbar/>}>
-                <Route path = "/read/:blog_id" element={<PrivateRoute path='/read/:blog_id'><Readblog/></PrivateRoute>}/>
                 <Route path = "/search/people" element={<><PrivateRoute path="/search/people"><People/></PrivateRoute></>}/>
                 <Route path = "/search/blogs" element={<><PrivateRoute path="/search/blogs"><Searchposts/></PrivateRoute></>}/>
                 <Route path = "/explore" element={<><PrivateRoute path="/explore"><Posts /></PrivateRoute></>}/>
