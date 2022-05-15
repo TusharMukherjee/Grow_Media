@@ -1,14 +1,14 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit'
 
 type blogsData = {
-    blog_id:string,
-    heading:string,
-    content:string
-    users:{
-      user_id: string,
-      username: string
-    }[]
-  }
+  blog_id:string,
+  heading:string,
+  content:string
+  users:{
+    user_id: string,
+    username: string
+  }[]
+}
 
   type blogss = {
       blogs: blogsData[]
@@ -29,11 +29,12 @@ type blogsData = {
   //   blogs: [homeBlogsData]
   // }
 
-  type UsersBlog = {
+  type blogs = {
     blog_id: string;
     heading: string;
     content: string;
-}
+    b_image: string;
+  }
 
 
 type UserInfoType = {
@@ -43,7 +44,7 @@ type UserInfoType = {
         email: string;
         bio: string;
         link: string;
-        blogs: UsersBlog[] | undefined;
+        blogs: blogs[];
     }]
 }
   

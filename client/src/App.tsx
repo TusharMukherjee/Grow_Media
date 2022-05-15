@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import {BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 
 import Navbar from './components/Navbar';
-import Userhome from './components/searchComponents/Userhome';
+import Userhome from './components/Userhome';
 import People from './components/searchComponents/People';
 import Posts from './components/Posts';
 import Searchposts from './components/Searchposts';
@@ -44,8 +44,6 @@ function App() {
 
   return ( loading ? <div className='bg-teal-500 w-screen h-screen grid place-items-center'><div className=' h-32 w-32 border-white rounded-full border-t-[1rem] border-[1rem] border-t-teal-900 animate-spin ' ></div></div>:
           <Router>
-          <div>
-          <div>
               <Routes>
               {console.log("in cp")}
               <Route path='/' element={ <Signup/> }/>
@@ -66,9 +64,6 @@ function App() {
                 <Route path = "/addblog" element={<><PrivateRoute path="/addblog"><Addblog/></PrivateRoute></>}/>
               </Route>
               </Routes>
-              
-          </div>
-          </div>
         </Router>
         
         

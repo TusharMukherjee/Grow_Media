@@ -10,6 +10,7 @@ export const GET_ALL_BLOGS = gql`
         blog_id
         heading
         content
+        b_image
     }
 }
 `
@@ -19,6 +20,7 @@ export const SINGLE_BLOG = gql`
             blog_id
             heading
             content
+            b_image
             users {
                 user_id
                 username
@@ -46,6 +48,24 @@ export const SINGLE_BLOG = gql`
     }
 `
 
+// export const PROFILE = gql`
+//     query Query($userId: Int!) {
+//         user(id: $userId) {
+//             profileImg
+//             username
+//             email
+//             bio
+//             link
+//             blogs {
+//                 blog_id
+//                 heading
+//                 content
+//                 b_image
+//             }
+//         }
+//     }
+// `
+
 export const PROFILE = gql`
     query Query($userId: Int!) {
         user(id: $userId) {
@@ -58,10 +78,26 @@ export const PROFILE = gql`
                 blog_id
                 heading
                 content
+                b_image
             }
         }
     }
 `
+
+export const PROFILE_INFO = gql`
+
+    query Query($userId: Int!) {
+        user(id: $userId) {
+            user_id
+            profileImg
+            username
+            bio
+            link
+        }
+    }
+
+`
+
 
 // export const USER_LOGIN_INFO = gql`
 //     query UserAuthenticationCheck($username: String!, $password: String!) {
@@ -92,6 +128,7 @@ export const USER_HOME_POSTS = gql`
             blog_id
             heading
             content
+            b_image
         }
     }
 `

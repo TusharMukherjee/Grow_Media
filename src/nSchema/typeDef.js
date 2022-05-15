@@ -28,6 +28,10 @@ const typeDefs = gql`
         skills: [extraInfo] # to be parent
     }
 
+    type numberOfBlogs{
+        numberOfBlogs: Int
+    }
+
     type toFollow{
         user_id: ID!
         followers_id: ID!
@@ -200,7 +204,14 @@ const typeDefs = gql`
         infoquery(id: Int): [allInfo]
     }
 
+    type blogData{
+        isUploaded: Boolean
+    }
+
     type Mutation{
+
+        blogData(user_id: ID!, blog_heading: String!, blog_content: String!, blog_image: String!): blogData 
+
         logout: Boolean
         userAuthenticationCheck(username:String!,password:String!): userProfile
         createUser(input: cuserInfo!): Users
@@ -214,7 +225,7 @@ const typeDefs = gql`
             work: String,
             college: String): Boolean
 
-        deleteUser(user_id: Int): User
+        deleteUser(user_id: Int): Boolean
 
 
         createBlog(user_id: ID!, b_image: String, heading: String!, content:String!): Blogs

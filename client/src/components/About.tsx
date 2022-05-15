@@ -1,6 +1,7 @@
 import { useQuery } from '@apollo/client'
 import React from 'react'
 import { useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
 import { userLoginInfo } from '../features/UserSlice'
 import { EDIT_QUERY } from '../gqlQueries/queries/Explorequery'
 
@@ -27,10 +28,12 @@ type usersExtraInfo = {
 }
 
 const About:React.FC = () => {
+    const {profile_id} = useParams();
 
     const selector:selectortype = useSelector(userLoginInfo);
 
-    const {data} = useQuery<infoquery>(EDIT_QUERY,{variables:{infoqueryId: Number(selector.user_id)}});
+    const {data} = useQuery<infoquery>(EDIT_QUERY,{variables:{infoqueryId: Number(profile_id)}});
+    console.log(data);
 
   return (
     <div className='col-start-2 col-span-6 grid grid-cols-8 my-12'> 

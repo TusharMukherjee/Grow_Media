@@ -13,6 +13,7 @@ type SingleBlogOutput = {
       blog_id: string;
       heading: string;
       content: string;
+      b_image: string;
       users: users[];
       bcomments: bcomments[]
         }];
@@ -76,7 +77,8 @@ const Readblog = () => {
                           <div className='col-span-10 grid grid-cols-11 items-center mt-14'>
                               <h1 className='col-start-2 col-span-9 mx-10 text-3xl font-bold'>{data?.blog[0].heading}</h1>
                               <div className='col-start-2 col-span-9 mx-10 grid place-items-center  my-12'>
-                                  <div className='h-60 w-96 bg-teal-700'></div>
+                                  {/* <div className='h-60 w-96 bg-teal-700'></div> */}
+                                  <img className='h-60 w-96 object-cover' src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1652613376/${data?.blog[0].b_image}`} alt="" />
                               </div>
                               <p className='col-start-2 col-span-9 mx-10 text-xl mb-8'>{data?.blog[0].content}</p>
                           </div>

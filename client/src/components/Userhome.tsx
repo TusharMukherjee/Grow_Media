@@ -2,14 +2,19 @@ import { useQuery } from '@apollo/client'
 import React, { useEffect, useState } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { useParams } from 'react-router-dom'
-import { PROFILE } from '../../gqlQueries/queries/Explorequery'
+import { PROFILE, PROFILE_INFO } from '../gqlQueries/queries/Explorequery'
 import { useDispatch } from 'react-redux'
-import { homeBlogsStore } from '../../features/PostSlice'
+import { homeBlogsStore } from '../features/PostSlice'
 
-type UsersBlog = {
+import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
+import { homeBlogsDataStore } from '../features/PostSlice'
+
+type blogs = {
         blog_id: string;
         heading: string;
         content: string;
+        b_image:string;
 }
 
 
@@ -20,7 +25,7 @@ type UserInfoType = {
             email: string;
             bio: string;
             link: string;
-            blogs: UsersBlog[];
+            blogs: blogs[];
         }]
 }
 
@@ -31,22 +36,17 @@ type UserId = {
 
 const Userhome: React.FC = () => {
 
-    const dispatch = useDispatch();
-
     const navigate = useNavigate();
 
-    const [profileID, setProfileID] = useState<string | undefined>('');
-
     const {profile_id} = useParams();
-    console.log(profile_id);
-    const {loading, data} = useQuery<UserInfoType, UserId>(PROFILE,{variables: {userId:Number(profile_id)}});
-    
-    useEffect(() => {
 
-        setProfileID(profile_id);
-        dispatch(homeBlogsStore(data));
+    const homeBlogsDataSelector: UserInfoType = useSelector(homeBlogsDataStore);
+    console.log(homeBlogsDataSelector);
 
-    },[data]);
+    const{data} = useQuery(PROFILE_INFO,{variables:{
+        userId: Number(profile_id)
+    }});
+
     console.log(data);
 
   return (
@@ -59,7 +59,7 @@ const Userhome: React.FC = () => {
                 <div className='col-span-3 flex flex-col justify-center '>
                     <div className=' w-4/6 flex items-center font-semibold my-2 justify-between' ><h1>{data?.user[0].username}</h1><button className=' bg-teal-500 text-white px-2 py-1 rounded-md'>Follow</button></div>
                     <div className=' w-4/6 my-2 flex justify-between'>
-                        <div className=""> {data?.user[0].blogs.length} Blogs</div>
+                        <div className=""> 100 Blogs</div>
                         <div className=""> 114 Followers </div>
                         <div className=""> 316 Following </div>
                     </div>
@@ -69,8 +69,8 @@ const Userhome: React.FC = () => {
             </div>
             <hr className='col-start-2 col-span-6'/>
             <div className='col-start-2 col-span-6 grid grid-cols-2 my-5 place-items-center'>
-                <button onClick={() => navigate(`/profile/${profileID}`)} className='text-white col-span-1 flex justify-center bg-purple-500 w-20 py-0.5 rounded-md'>Blogs</button>
-                <button onClick={() => navigate(`/profile/about/${profileID}`)} className='text-white col-span-1 flex justify-center bg-purple-500 w-20 py-0.5 rounded-md'>About</button>
+                <button onClick={() => navigate(`/profile/${profile_id}`)} className='text-white col-span-1 flex justify-center bg-purple-500 w-20 py-0.5 rounded-md'>Blogs</button>
+                <button onClick={() => navigate(`/profile/about/${profile_id}`)} className='text-white col-span-1 flex justify-center bg-purple-500 w-20 py-0.5 rounded-md'>About</button>
             </div>
         </div>
         <Outlet/>

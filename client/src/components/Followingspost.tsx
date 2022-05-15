@@ -20,6 +20,7 @@ type blogs = {
     blog_id: String
     heading: String
     content: String
+    b_image: String
 }
 
 const Followingspost:React.FC = () => {
@@ -46,7 +47,8 @@ const Followingspost:React.FC = () => {
                                         <p className='text-base row-span-3 pl-3 flex items-center'>{el.content.slice(0,120) + "..."}</p>
                                     </div>
                                     <div className='col-start-4 col-span-2 row-start-1 row-span-6 flex justify-center items-center'>
-                                        <div className=' bg-purple-700 w-[12rem] h-[8rem]'></div>
+                                        {/* <div className=' bg-purple-700 w-[12rem] h-[8rem]'></div> */}
+                                        <img className=' w-[12rem] h-[8rem] object-cover' src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1652613376/${el.b_image}`} alt="" />
                                     </div>
                                     <div className=' row-span-1 grid grid-cols-2 w-56 items-center pl-3'>
                                         <div className='col-span-1 flex justify-center'>

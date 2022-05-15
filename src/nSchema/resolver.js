@@ -8,6 +8,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const isAuth = require('../isAuth');
 const { ExtraInfoModel } = require('../../sqlDB/models/extraInfo');
+const {cloudinary} = require('../cloudinary');
 
 const salt = bcrypt.genSaltSync(10);
 
@@ -83,10 +84,12 @@ const resolvers = {
         }
 
     },
-// UsersModel.query().select('followers_id').where('uUser_id',args.user_id).withGraphFetched('blogs');
+// UsersModel.query().select('followers_id').contextwhere('uUser_id',args.user_id).withGraphFetched('blogs');
 
     Mutation: {
+
         
+
         async logout(_,__,{res}){
             res.cookie("aces_token",'', {maxAge: 1, httpOnly:true});
             return true;
@@ -193,18 +196,24 @@ const resolvers = {
                     'college':args.college
                 }).where('bluser_id',args.user_id);
                 console.log("second");
+                return true;
             }
-            return updUser;
+            // return updUser;
         },
         deleteUser: async (parent, args) => {
-            const updUser = args.input;
-            await UsersModel.query().delete().where('user_id', args.input.user_id);
-            console.log(updUser);
-            return updUser;
+            await UsersModel.query().delete().where('user_id', args.user_id);
+            console.log(true);
+            return true;
         },
 
-        createBlog: async (parent, args) => {
-            return BlogsModel.query().insert({"bluser_id": args.user_id, "b_immage": args.b_immage,"heading": args.heading, "content": args.content});
+        async blogData(parent, args){
+            let {user_id, blog_heading, blog_content, blog_image} = await args;
+            const uploadResponse = await cloudinary.uploader.upload(blog_image, {
+                    upload_preset: "grow_media",
+            });
+            await BlogsModel.query().insert({"bluser_id": user_id, "b_image": uploadResponse.public_id+'.'+uploadResponse.format,"heading": blog_heading, "content": blog_content});
+            // await UsersModel.relatedQuery('blogs').insert({"bluser_id": user_id, "b_image": uploadResponse.public_id+'.'+uploadResponse.format,"heading": blog_heading, "content": blog_content});
+            return {"isUploaded": true};
         },
         deleteBlog: async(parent,args) => {
             return BlogsModel.query().delete().where('bluser_id',args.user_id).where('blog_id',args.blog_id);

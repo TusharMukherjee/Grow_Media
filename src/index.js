@@ -14,9 +14,33 @@ const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const { ExtraInfoModel } = require('../sqlDB/models/extraInfo');
 // const { response } = require('express');
+const { cloudinary } = require('./cloudinary');
 
 const app = express();
-app.use(express.json());
+// app.use(express.json());
+app.use(express.json({
+  limit: '200mb'
+}));
+app.use(express.urlencoded({
+  limit: '200mb',
+  extended: true 
+}));
+
+// app.use(bodyParser.json({
+//   limit: '50mb'
+// }));
+
+// app.use(bodyParser.urlencoded({
+//   limit: '50mb',
+//   parameterLimit: 100000,
+//   extended: true 
+// }));
+
+// const options = {
+//   port: 3001,
+//   bodyParserOptions: { limit: "50mb", type: "application/json" },
+// };
+
 
 const main = async () => {
 
@@ -60,8 +84,23 @@ const main = async () => {
           )
         }
       }
-    
-
+        
+      // const uploaded_name = (args) => app.post('/api/upload', async (req, res) => {
+      //     try{
+      //       const imageData = req.body.data;
+      //         const uploadResponse = await cloudinary.uploader.upload(imageData, {
+      //           upload_preset: "grow_media",
+      //       });
+      //       await UsersModel.relatedQuery('blogs').insert({"bluser_id": args.user_id, "b_image": uploadResponse.public_id+'.'+uploadResponse.format,"heading": args.blog_heading, "content": args.blog_content});
+      //       res.send(uploadResponse);
+      //       return (true);
+      //     }
+      //     catch(error){
+      //       console.log(error);
+      //       return 0;
+      //     }
+      //   });
+        
     const dir = path.join(__dirname,'../photos');
 
     // app.use((req,_, next) => {
@@ -112,6 +151,9 @@ const main = async () => {
 
     app.get('/user/:id', async (req, res) => {
         const {id} = req.params;
+        let userInfo = await UsersModel.query().withGraphFetched('blogs').where('user_id','=',id);
+            let numberOfBlogs = await BlogsModel.query().count('blog_id').where('bluser_id', '=', id);
+            
         // const usersblog = await Blogs.query().withGraphFetched('users').where('buser_id','=',id);
         // const usersblog = await Users.query().withGraphFetched('blogs').where('user_id','=',id);
         // const usersblog = await Users.relatedQuery('blogs').findById(id);
@@ -125,14 +167,15 @@ const main = async () => {
         // const usersblog = await UsersModel.query().where('username', id);
         // const usersblog = await FriendsModel.query().select('followers_id').where('uUser_id',id).withGraphFetched('friendsFollowers').withGraphFetched('blogs');
         // const tiko = await usersblog.$relatedQuery(blogs);
-        const usersblog = await UsersModel.query().select('bio','link').where('user_id', id);
+        // const usersblog = await UsersModel.query().select('bio','link').where('user_id', id);
         // const usersblogei = await ExtraInfoModel.query().where('bluser_id', id);
-        const usersblogei = await UsersModel.query().where('user_id', id).withGraphFetched('usersExtraInfo');
+        // const usersblogei = await UsersModel.query().where('user_id', id).withGraphFetched('usersExtraInfo');
         // await usersblog.$relatedQuery('blogs');
-        console.log(usersblog.length === 0);
-        const addblog = [...usersblog, ...usersblogei];
+        // console.log(usersblog.length === 0);
+        // const addblog = [...usersblog, ...usersblogei];
         // console.log(usersblog[0].password);
-        res.json(usersblogei);
+        userInfo = {...userInfo,...numberOfBlogs};
+        res.json(userInfo);
     });
 
     // BlogsModel.query().where('blog_id','=',args.id).withGraphFetched('[users,bcomments.[blogsComUsers,replyComments.[replyUsers]]]');

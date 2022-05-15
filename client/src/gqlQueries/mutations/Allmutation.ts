@@ -49,3 +49,21 @@ export const EDITPROFILE_MUTATION = gql`
     }
 
 `
+
+export const DELETE_PROFILE = gql`
+
+    mutation Mutation($userId: Int) {
+        deleteUser(user_id: $userId)
+    }
+
+`
+
+export const CREATE_POST = gql`
+
+    mutation Mutation($userId: ID!, $blogHeading: String!, $blogContent: String!, $blogImage: String!) {
+        blogData(user_id: $userId, blog_heading: $blogHeading, blog_content: $blogContent, blog_image: $blogImage) {
+        isUploaded
+        }
+    }
+
+`
