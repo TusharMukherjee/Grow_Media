@@ -149,11 +149,11 @@ const main = async () => {
         res.json(ideas);
     });
 
-    app.get('/user/:id', async (req, res) => {
+    app.get('/read/:id', async (req, res) => {
         const {id} = req.params;
-        let userInfo = await UsersModel.query().withGraphFetched('blogs').where('user_id','=',id);
-            let numberOfBlogs = await BlogsModel.query().count('blog_id').where('bluser_id', '=', id);
-            
+        // let userInfo = await UsersModel.query().withGraphFetched('blogs').where('user_id','=',id);
+        //     let numberOfBlogs = await BlogsModel.query().count('blog_id').where('bluser_id', '=', id);
+            let ok = await BlogsModel.query().where('blog_id','=',id).withGraphFetched('[users,bcomments.[blogsComUsers,replyComments.[replyUsers]]]');
         // const usersblog = await Blogs.query().withGraphFetched('users').where('buser_id','=',id);
         // const usersblog = await Users.query().withGraphFetched('blogs').where('user_id','=',id);
         // const usersblog = await Users.relatedQuery('blogs').findById(id);
@@ -174,8 +174,9 @@ const main = async () => {
         // console.log(usersblog.length === 0);
         // const addblog = [...usersblog, ...usersblogei];
         // console.log(usersblog[0].password);
-        userInfo = {...userInfo,...numberOfBlogs};
-        res.json(userInfo);
+        // userInfo = {...userInfo,...numberOfBlogs};
+        console.log(ok);
+        res.json(ok);
     });
 
     // BlogsModel.query().where('blog_id','=',args.id).withGraphFetched('[users,bcomments.[blogsComUsers,replyComments.[replyUsers]]]');

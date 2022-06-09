@@ -1,14 +1,16 @@
-import { useQuery } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
 import React, { useEffect, useState } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { useParams } from 'react-router-dom'
-import { PROFILE, PROFILE_INFO } from '../gqlQueries/queries/Explorequery'
+import { IS_FOLLOWING, PROFILE, PROFILE_INFO } from '../gqlQueries/queries/Explorequery'
 import { useDispatch } from 'react-redux'
 import { homeBlogsStore } from '../features/PostSlice'
 
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { homeBlogsDataStore } from '../features/PostSlice'
+import { userLoginInfo } from '../features/UserSlice'
+import { FOLLOW, UNFOLLOW } from '../gqlQueries/mutations/Allmutation'
 
 type blogs = {
         blog_id: string;
@@ -33,6 +35,11 @@ type UserId = {
     userId:number;
 }
 
+type isFollow = {
+      isFollowing:{
+          status: boolean
+      }
+}|undefined
 
 const Userhome: React.FC = () => {
 
@@ -47,6 +54,38 @@ const Userhome: React.FC = () => {
         userId: Number(profile_id)
     }});
 
+    const selector = useSelector(userLoginInfo);
+
+    const {data:data_isFollowing,refetch:refetch_isFollowing} = useQuery<isFollow>(IS_FOLLOWING,{
+        variables:{
+            userId:selector.user_id,
+            followersId: Number(profile_id)
+        }
+    });
+    console.log(data_isFollowing?.isFollowing.status);
+
+    const [followFun] = useMutation(FOLLOW,{
+        onCompleted:(data) => {
+            console.log(data);
+            refetch_isFollowing();
+        },
+        variables:{
+            userId:selector.user_id,
+            followersId:Number(profile_id)
+        }
+    });
+
+    const [unfollowFun] = useMutation(UNFOLLOW,{
+        onCompleted:(data) => {
+            console.log(data);
+            refetch_isFollowing();
+        },
+        variables:{
+            userId:selector.user_id,
+            followersId:Number(profile_id)
+        }
+    })
+
     console.log(data);
 
   return (
@@ -57,7 +96,20 @@ const Userhome: React.FC = () => {
                     <div className='bg-purple-500 rounded-lg w-32 h-32'></div>
                 </div>
                 <div className='col-span-3 flex flex-col justify-center '>
-                    <div className=' w-4/6 flex items-center font-semibold my-2 justify-between' ><h1>{data?.user[0].username}</h1><button className=' bg-teal-500 text-white px-2 py-1 rounded-md'>Follow</button></div>
+                    <div className=' w-4/6 flex items-center font-semibold my-2 justify-between' ><h1>{data?.user[0].username}</h1>
+                    {
+                        (Number(selector.user_id) === Number(profile_id))
+                        ?
+                        <></>
+                        :
+                        (data_isFollowing?.isFollowing.status)
+                        ?
+                        <button onClick={()=>unfollowFun()} className=' outline-0 border-2 border-teal-500 bg-white text-teal-500 px-2 py-1 rounded-md'>Unfollow</button>
+                        :
+                        <button onClick={()=>followFun()} className=' outline-0 bg-teal-500 text-white px-2 py-1 rounded-md'>Follow</button>
+
+                    }
+                    </div>
                     <div className=' w-4/6 my-2 flex justify-between'>
                         <div className=""> 100 Blogs</div>
                         <div className=""> 114 Followers </div>

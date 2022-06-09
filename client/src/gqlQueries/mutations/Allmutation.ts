@@ -67,3 +67,51 @@ export const CREATE_POST = gql`
     }
 
 `
+
+export const COMMENT = gql`
+
+    mutation Mutation($userId: ID!, $blogId: ID!, $commentContent: String!) {
+        commentBlog(user_id: $userId, blog_id: $blogId, commentContent: $commentContent) {
+            blcomment
+            bcomment_id
+        }
+    }
+
+`
+export const REPLY_COMMENTS = gql`
+
+    mutation Mutation($userId: ID!, $parentCommentId: ID!, $commentContent: String!) {
+        replyComm(user_id: $userId, parentComment_id: $parentCommentId, commentContent: $commentContent) {
+            rcomment_id
+            replied_comment
+            replyUsers {
+            user_id
+            profile_img
+            username
+            }
+        }
+    }
+
+`
+
+export const FOLLOW = gql`
+
+mutation ToFollow($userId: ID!, $followersId: ID!) {
+  toFollow(user_id: $userId, followers_id: $followersId) {
+    status
+    message
+  }
+}
+
+`
+
+export const UNFOLLOW =gql`
+
+mutation ToUnfollow($userId: ID!, $followersId: ID!) {
+  toUnfollow(user_id: $userId, followers_id: $followersId) {
+    status
+    message
+  }
+}
+
+`

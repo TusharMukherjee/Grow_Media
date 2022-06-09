@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 // import { getComm } from ''
 import { useSelector } from 'react-redux';
 import { getComm, getOwnerInfo, postOwnerInfo } from "../features/PostSlice";
+import { useMutation, useQuery } from "@apollo/client";
+import { COMMENT, FOLLOW, REPLY_COMMENTS, UNFOLLOW } from "../gqlQueries/mutations/Allmutation";
+import { userLoginInfo } from "../features/UserSlice";
+import { IS_FOLLOWING } from "../gqlQueries/queries/Explorequery";
 
 
 
@@ -35,18 +39,88 @@ type b_comments = {
         users:users[]
 }
 
+type refetchMut = {
+    refetch_isFollowing:()=> any,
+    refetchMut: () => any,
+    isFollow: {
+        isFollowing:{
+            status: boolean
+        }
+    }|undefined
+}
+type isFollow = {
+    isFollow: {
+        isFollowing:{
+            status: Boolean
+        }
+    }
+}
 
-
-const Readwithcomment = () => {
+const Readwithcomment = ({refetch_isFollowing,refetchMut, isFollow}:refetchMut) => {
     // const Readwithcomment = (props: b_comments)
+    const param = useParams();
     const commSelector:bcomments[] = useSelector(getComm);
     const ownerInfoSelector: b_comments = useSelector(getOwnerInfo);
-    console.log(ownerInfoSelector.users[0].user_id);
-
+    const selector = useSelector(userLoginInfo);
+    console.log(selector);
+    // console.log(ownerInfoSelector.users[0].user_id);
+    console.log(commSelector);
     // const [commInfo, setcommInfo] = useState<bcomments[] | undefined>();
     // const [ownerInfo, setownerInfo] = useState<users[]>();
     const [toggleReply, setToggleReply] = useState<any>(null);
-    
+    const [createComment, setCreateComment] = useState("");
+    const [replyComment, setReplyComment] = useState("");
+
+    console.log(isFollow?.isFollowing.status);
+
+    // const {data,refetch} = useQuery(IS_FOLLOWING,{
+    //     onCompleted:()=>{
+    //         console.log(data);
+    //     },
+    //     variables:{
+    //         userId:selector.user_id,
+    //         followersId: ownerInfoSelector.users[0].user_id
+    //     }
+    // });
+
+    // useEffect(()=>{
+        
+    // },[isFollow]);
+
+    const [commentFun] = useMutation(COMMENT,{ 
+        onCompleted:() => {
+            refetchMut();
+        },
+        variables:{
+            userId: selector.user_id,
+            blogId: param.blog_id,
+            commentContent: createComment
+        }
+    })
+    const [replyFun] = useMutation(REPLY_COMMENTS,{
+        onCompleted:() => {
+            refetchMut();
+        }
+    });
+
+    const [followFun] = useMutation(FOLLOW,{
+        onCompleted:(data) => {
+            console.log(data);
+            refetch_isFollowing();
+        }
+    });
+
+    const [unfollowFun] = useMutation(UNFOLLOW,{
+        onCompleted:(data) => {
+            console.log(data);
+            refetch_isFollowing();
+        }
+    })
+
+    useEffect(()=>{
+        setCreateComment("");
+        setReplyComment("");
+    },[commSelector])
 
     // useEffect(()=>{
     //     if(props.bcomments != undefined){
@@ -57,7 +131,7 @@ const Readwithcomment = () => {
 
 
     function toggleRepButton (index:number){
-        if(toggleReply == index){
+        if(toggleReply === index){
             return setToggleReply(null);
         }
         setToggleReply(index);
@@ -76,9 +150,21 @@ const Readwithcomment = () => {
                     </div>
                 </div>
                 <p className='px-4 pb-4'>{ownerInfoSelector.users[0].bio == null? '' : ownerInfoSelector.users[0].bio}</p>
-                <div className='pl-4 pb-4'>
-                <button className=' bg-teal-500 text-white px-2 py-1 rounded-md'>Follow</button> 
-                </div>
+                {
+                    (Number(ownerInfoSelector.users[0].user_id) === Number(selector.user_id))
+                    ?
+                    <></>
+                    :
+                    (isFollow?.isFollowing.status)
+                    ?
+                    <div className='pl-4 pb-4'>
+                        <button onClick={() => unfollowFun({variables:{userId:selector.user_id, followersId:ownerInfoSelector.users[0].user_id}})} className=' bg-white border-2 border-teal-500 text-teal-500 px-2 py-1 rounded-md'>Unfollow</button> 
+                    </div>
+                    :
+                    <div className='pl-4 pb-4'>
+                        <button onClick={() => followFun({variables:{userId:selector.user_id, followersId:ownerInfoSelector.users[0].user_id}})} className=' bg-teal-500 text-white px-2 py-1 rounded-md'>Follow</button> 
+                    </div>
+                }
             </div>
 
             <div className=' w-80 my-5 py-1 px-2 rounded-md'>
@@ -94,9 +180,9 @@ const Readwithcomment = () => {
 
             <div className='flex flex-col items-center'>
                 <div className='flex flex-col items-center mb-4'>
-                    <textarea className=' w-80 rounded-t-md resize-none mx-4 mt-4 outline-0 p-4'></textarea>
+                    <textarea placeholder="Comment" value={createComment} onChange={(e) => {setCreateComment(e.target.value)}} className=' w-80 rounded-t-md resize-none mx-4 mt-4 outline-0 p-4'></textarea>
                     <div className='flex flex-row bg-white w-80 justify-end py-2  rounded-b-md'>
-                        <button className='mr-4 px-2 py-1 bg-teal-500 rounded-md text-white'>Reply</button>
+                        <button onClick={()=>commentFun()} className='mr-4 px-2 py-1 bg-teal-500 rounded-md text-white'>Reply</button>
                     </div>
                 </div>
 
@@ -123,12 +209,12 @@ const Readwithcomment = () => {
                                 {/* reply cmnt */}
                                         <>
                                             <div className=' items-center flex-row bg-white rounded-b-md grid grid-cols-8'>
-                                                { toggleReply == index ? (<>
+                                                { toggleReply === index ? (<>
                                                             <div className="flex flex-col col-span-8">
                                                                 <div className='flex flex-col items-center mb-4 bg-white'>
-                                                                    <textarea className=' w-72  border-t-[0.5px] border-x-[0.5px] border-teal-500 rounded-t-md resize-none mx-4 mt-4 outline-0 p-4' rows={1}></textarea>
+                                                                    <textarea value={replyComment} onChange={(e)=>{setReplyComment(e.target.value)}} className=' w-72  border-t-[0.5px] border-x-[0.5px] border-teal-500 rounded-t-md resize-none mx-4 mt-4 outline-0 p-4' rows={1}></textarea>
                                                                     <div className=' w-72 border-b-[0.5px] border-x-[0.5px] border-teal-500 flex flex-row bg-white justify-end py-2  rounded-b-md'>
-                                                                        <button className='mr-4 px-2 py-1 bg-teal-500 rounded-md text-white'>Reply</button>
+                                                                        <button onClick={()=>{replyFun({variables:{userId: selector.user_id,parentCommentId:el.bcomment_id, commentContent:replyComment}})}} className='mr-4 px-2 py-1 bg-teal-500 rounded-md text-white'>Reply</button>
                                                                     </div>
                                                                 </div>
                                                             </div>

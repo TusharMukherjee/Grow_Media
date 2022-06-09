@@ -45,13 +45,12 @@ const {data} = useQuery<UserInfoType,UserId>(PROFILE,{
     }
 });
 
-
 useEffect(() => {
 
     dispatch(homeBlogsStore(data));
     console.log("first");
 
-},[data,profile_id]);
+},[data,profile_id,dispatch]);
 
   return (
        <div className='col-start-2 col-span-6 grid grid-cols-8'> <div className='col-start-2 col-span-6 flex flex-col justify-center items-center'>

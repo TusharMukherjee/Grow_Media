@@ -170,27 +170,37 @@ export const EDIT_QUERY = gql`
     }
 ` 
 
-// export const ONLY_COMMENTS = gql`
-//     query Query($onlycommentsId: Int!) {
-//         onlycomments(id: $onlycommentsId) {
-//             bcomments {
-//             bcomment_id
-//             blcomment
-//             replyComments {
-//                 rcomment_id
-//                 replied_comment
-//                 replyUsers {
-//                 user_id
-//                 profile_img
-//                 username
-//                 }
-//             }
-//             blogsComUsers {
-//                 user_id
-//                 profile_img
-//                 username
-//             }
-//             }
-//         }
-//     }
-// `
+export const ONLY_COMMENTS = gql`
+    query Query($onlycommentsId: Int!) {
+        onlycomments(id: $onlycommentsId) {
+            bcomments {
+            bcomment_id
+            blcomment
+            replyComments {
+                rcomment_id
+                replied_comment
+                replyUsers {
+                user_id
+                profile_img
+                username
+                }
+            }
+            blogsComUsers {
+                user_id
+                profile_img
+                username
+            }
+            }
+        }
+    }
+`
+export const IS_FOLLOWING = gql`
+
+query Query($userId: ID, $followersId: ID) {
+  isFollowing(user_id: $userId, followers_id: $followersId) {
+    status
+    message
+  }
+}
+
+`

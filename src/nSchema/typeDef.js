@@ -202,10 +202,16 @@ const typeDefs = gql`
         imgname: imgname!
 
         infoquery(id: Int): [allInfo]
+        isFollowing(user_id: ID, followers_id: ID):follow
     }
 
     type blogData{
         isUploaded: Boolean
+    }
+
+    type follow{
+        status: Boolean,
+        message: String
     }
 
     type Mutation{
@@ -238,8 +244,8 @@ const typeDefs = gql`
         deleteComment(rcomment_id: ID!, user_id: ID!, bcomment_id: ID!): Comment
         deleteReplyComment(user_id: ID!, blog_id: ID!, parentComment_id: ID!): ReplyComm
 
-        toFollow(user_id: ID!, followers_id: ID!): friends
-        toUnfollow(user_id: ID!, followers_id: ID!): friends
+        toFollow(user_id: ID!, followers_id: ID!): follow
+        toUnfollow(user_id: ID!, followers_id: ID!): follow
     }
 
     input cuserInfo{

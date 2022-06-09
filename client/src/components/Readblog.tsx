@@ -2,9 +2,11 @@ import Readwithcomment from './Readwithcomment'
 import {useParams} from 'react-router-dom'
 import { useQuery } from '@apollo/client'
 
-import {SINGLE_BLOG} from '../gqlQueries/queries/Explorequery';
+import {IS_FOLLOWING, SINGLE_BLOG} from '../gqlQueries/queries/Explorequery';
 import { useSelector, useDispatch } from 'react-redux';
 import { getComm, postComm, postOwnerInfo } from '../features/PostSlice'
+import { useEffect, useState } from 'react';
+import { userLoginInfo } from '../features/UserSlice';
 // import { allPosts, getAllMovies } from '../features/PostSlice'
 
 
@@ -48,20 +50,47 @@ type bcomments = {
     }[];
 }
 
+type isFollow = {
+      isFollowing:{
+          status: boolean
+      }
+}|undefined
+
+
 const Readblog = () => {
 
     const dispatch = useDispatch();
     // const selector = useSelector(getComm);
 
     const {blog_id} = useParams<string>();
+    const selector = useSelector(userLoginInfo);
+    const [isFollow,setIsFollow] = useState<isFollow>();
+    console.log(isFollow?.isFollowing.status)
     
-    const { loading, data } = useQuery<SingleBlogOutput, SingleBlogVar>(SINGLE_BLOG,{variables: {blogId: Number(blog_id)}});
+    const { loading, data, refetch: refetch1 } = useQuery<SingleBlogOutput, SingleBlogVar>(SINGLE_BLOG,{
+      onCompleted:(data)=> {
+        const allcommData  = data?.blog[0].bcomments!;
+        dispatch(postComm(allcommData));
+      },
+      variables: {blogId: Number(blog_id)}});
+
+        const ownerInfo = data?.blog[0].users!;
+        console.log(ownerInfo);
+        dispatch(postOwnerInfo(ownerInfo));
+        const allcommData  = data?.blog[0].bcomments!;
+        dispatch(postComm(allcommData));
     
-    const allcommData  = data?.blog[0].bcomments!;
-    dispatch(postComm(allcommData));
-    const ownerInfo = data?.blog[0].users!;
-    console.log(ownerInfo);
-    dispatch(postOwnerInfo(ownerInfo));
+        const {refetch:refetch_isFollowing} = useQuery(IS_FOLLOWING,{
+          onCompleted:(data)=>{
+              console.log(data);
+              setIsFollow(data);
+          },
+          variables:{
+              userId:selector.user_id,
+              followersId: data?.blog[0].users[0].user_id
+          }
+      });
+    
     // console.log(allcommData);
     // console.log(selector);
     
@@ -85,7 +114,7 @@ const Readblog = () => {
                       </div>
                       <div className='col-span-3 bg-teal-400 grid justify-center py-14 z-10 h-screen sticky top-12 right-0 overflow-y-scroll'>
                           {/* <Readwithcomment bcomments = {selector} users = {ownerInfo} /> */}
-                          <Readwithcomment />
+                          <Readwithcomment refetch_isFollowing={refetch_isFollowing} refetchMut={refetch1} isFollow = {isFollow}/>
                       </div> 
                     </>)
                   }

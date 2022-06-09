@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { USER_HOME_POSTS } from '../gqlQueries/queries/Explorequery'
 import Sidebar from './Sidebar'
@@ -25,8 +25,12 @@ type blogs = {
 
 const Followingspost:React.FC = () => {
 
-    const {data,loading} = useQuery<Blogs>(USER_HOME_POSTS);
+    const {data,loading,refetch} = useQuery<Blogs>(USER_HOME_POSTS);
     console.log(data?.blogs);
+
+    useEffect(()=>{
+        refetch();
+    },[refetch]);
 
   return (
 <>

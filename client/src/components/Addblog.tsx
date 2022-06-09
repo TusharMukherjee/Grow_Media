@@ -115,6 +115,12 @@ const Addblog:React.FC = () => {
     }
 
   return (
+           (loading)
+            ?
+                <div className=' z-30 h-screen w-full bg-white grid place-items-center fixed'>
+                    <h1 className=' z-40 text-xl'>Uploading...</h1>
+                </div>
+            :     
     <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col py-8 h-full'>
     <div className='grid grid-cols-8'>
         <div className=' col-start-2 col-span-6 grid gap-4 rounded-md shadow-md shadow-teal-300'>

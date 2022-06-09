@@ -76,6 +76,10 @@ const resolvers = {
             const imgLink = "http://localhost:3001/uploads/269150.jpg";
             return {"img":imgLink};
         },
+        async isFollowing(parents,args){
+            const isFollow = await FriendsModel.query().where('uUser_id',args.user_id).where('followers_id',args.followers_id);
+            return {"status":Boolean(isFollow.length),"message":"isFollowing_Request"};
+        },
 
         async infoquery(_,args){
             const allInfo = await UsersModel.query().where('user_id',args.id).withGraphFetched('usersExtraInfo');
@@ -261,15 +265,18 @@ const resolvers = {
 
 
         toFollow: async (parent, args) => {
-            const isExist = FriendsModel.query().whereExists(FriendsModel.query().whereRaw('uUser',args.user_id, 'AND', 'followers_id', args.followers_id));
-            if(!(await isExist.length)){
+            // const isExist = await FriendsModel.query().whereExists(function(){FriendsModel.query().whereRaw(`uUser_id = ${args.user_id} AND followers_id = ${args.followers_id}`)});
+            const isExist = await FriendsModel.query().where('uUser_id',args.user_id).where('followers_id',args.followers_id);
+            if(!(isExist.length)){
                 await FriendsModel.query().insert({"uUser_id": args.user_id, "followers_id": args.followers_id});
             }
-            return FriendsModel.query();
+            console.log(!(isExist.length));
+            return {"status": !(isExist.length), "message":"Followed!"};
         },
         toUnfollow: async (parent, args) => {
-                await FriendsModel.query().delete().where('uUser_id',[args.user_id]).where('followers_id', [args.followers_id]);
-            return FriendsModel.query();
+            const unfollowed = await FriendsModel.query().delete().where('uUser_id',[args.user_id]).where('followers_id', [args.followers_id]);
+            console.log(Boolean(unfollowed));
+            return {"status":Boolean(unfollowed), "message":"unfollowed!"};
         }
     }
 }
