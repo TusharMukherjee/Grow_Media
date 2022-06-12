@@ -58,6 +58,7 @@ type UserInfoType = {
   type bcomments = {
     bcomment_id: string;
     blcomment:string;
+    totalBlogComments:number
     replyComments:{
       rcomment_id:string;
       replied_comment:string;

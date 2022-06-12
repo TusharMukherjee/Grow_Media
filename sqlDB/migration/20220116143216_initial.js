@@ -61,6 +61,15 @@ exports.up = async (knex) => {
           table.timestamp('updated_at').defaultTo(knex.fn.now());
         })
 
+        .createTable('bcommentLikes', (table) => {
+          table.increments('bcommentLike_id').unsigned().unique().primary();
+          table.integer('bluser_id').unsigned();
+          table.foreign('bluser_id').references('user_id').inTable('users').onDelete('CASCADE').onUpdate('CASCADE');
+          table.integer('bcomment_idLike').unsigned();
+          table.foreign('bcomment_idLike').references('bcomment_id').inTable('bcomments').onDelete('CASCADE').onUpdate('CASCADE');
+          
+        })
+
 
         .createTable('rcomments', (table) => {
           table.increments('rcomment_id').unsigned().unique().primary();
@@ -72,7 +81,6 @@ exports.up = async (knex) => {
           table.timestamp('created_at').defaultTo(knex.fn.now());
           table.timestamp('updated_at').defaultTo(knex.fn.now());
         })
-
 
         .createTable('friends', (table) => {
           table.increments('friend_id').unsigned().unique().primary();
@@ -107,6 +115,14 @@ exports.up = async (knex) => {
 exports.down = async (knex) => {
   // await knex.schema.dropTable('users');
   return knex.schema
+      .dropTable("rcommentLikes", function(table) {
+        table.dropForeign('rcommentLikes_bluser_id_foreign');
+        table.dropForeign('rcommentLikes_rcomment_id_foreign');
+      })
+      .dropTable("bcommentLikes", function(table) {
+        table.dropForeign('bcommentLikes_bluser_id_foreign');
+        table.dropForeign('bcommentLikes_bcomment_id_foreign');
+      })
       .dropTable("rcomments", function(table) {
         table.dropForeign('rcomments_replyUser_id_foreign');
         table.dropForeign('rcomments_parentComment_id_foreign');

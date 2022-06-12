@@ -184,6 +184,11 @@ const typeDefs = gql`
         college: String
     }
 
+    type likecommentreturn{
+        count: Int,
+        success: Boolean,
+    }
+
     type Query{
         verifyjwtFunc: jwtInfo
         users: [Users!]!
@@ -201,6 +206,8 @@ const typeDefs = gql`
 
         imgname: imgname!
 
+        likecomment(bcomment_id:ID): likecommentreturn
+
         infoquery(id: Int): [allInfo]
         isFollowing(user_id: ID, followers_id: ID):follow
     }
@@ -210,6 +217,11 @@ const typeDefs = gql`
     }
 
     type follow{
+        status: Boolean,
+        message: String
+    }
+
+    type likeMutation{
         status: Boolean,
         message: String
     }
@@ -240,6 +252,8 @@ const typeDefs = gql`
         likeBlog(user_id: Int, blog_id: Int): [BlogLikes]
         unlikeBlog(user_id: Int, blog_id: Int): BlogLikes
         commentBlog(user_id: ID!, blog_id: ID!, commentContent: String!): Comment
+        likecommentMutation(user_id:ID, bcomment_idLike:ID): likeMutation
+        unlikecommentMutation(user_id:ID,bcomment_id:ID):likeMutation
         replyComm(user_id: ID!, parentComment_id: ID!, commentContent: String!): ReplyComm
         deleteComment(rcomment_id: ID!, user_id: ID!, bcomment_id: ID!): Comment
         deleteReplyComment(user_id: ID!, blog_id: ID!, parentComment_id: ID!): ReplyComm

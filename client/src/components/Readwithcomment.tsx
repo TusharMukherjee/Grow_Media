@@ -13,6 +13,7 @@ import { IS_FOLLOWING } from "../gqlQueries/queries/Explorequery";
 type bcomments = {
         bcomment_id: string;
         blcomment:string;
+        totalBlogComments: number
         replyComments:{
           rcomment_id:string;
           replied_comment:string;
@@ -201,7 +202,7 @@ const Readwithcomment = ({refetch_isFollowing,refetchMut, isFollow}:refetchMut) 
                                     <p className='w-72'>{el.blcomment}</p>
                                 </div>
                                 <div className='px-4 pb-4'>
-                                    <button className='px-2 py-1 rounded-md bg-teal-500 text-white'>12 Like</button>
+                                    <button className='px-2 py-1 rounded-md bg-teal-500 text-white'>{el.totalBlogComments} Likes</button>
                                     <button className='px-2 py-1 ml-3 rounded-md bg-teal-500 text-white' onClick={() => toggleRepButton(index)} >{el.replyComments.length} Reply</button>
                                 </div>
 

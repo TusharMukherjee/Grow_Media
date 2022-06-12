@@ -2,7 +2,7 @@ import Readwithcomment from './Readwithcomment'
 import {useParams} from 'react-router-dom'
 import { useQuery } from '@apollo/client'
 
-import {IS_FOLLOWING, SINGLE_BLOG} from '../gqlQueries/queries/Explorequery';
+import {COUNT_CMNT_LIKE, IS_FOLLOWING, SINGLE_BLOG} from '../gqlQueries/queries/Explorequery';
 import { useSelector, useDispatch } from 'react-redux';
 import { getComm, postComm, postOwnerInfo } from '../features/PostSlice'
 import { useEffect, useState } from 'react';
@@ -34,6 +34,7 @@ type SingleBlogVar = {
 type bcomments = {
     bcomment_id: string;
     blcomment:string;
+    totalBlogComments:number
     replyComments:{
       rcomment_id:string;
       replied_comment:string;
@@ -73,6 +74,12 @@ const Readblog = () => {
         dispatch(postComm(allcommData));
       },
       variables: {blogId: Number(blog_id)}});
+
+      // const {} = useQuery(COUNT_CMNT_LIKE, {
+      //   variables:{
+      //     bcommentId
+      //   }
+      // })
 
         const ownerInfo = data?.blog[0].users!;
         console.log(ownerInfo);

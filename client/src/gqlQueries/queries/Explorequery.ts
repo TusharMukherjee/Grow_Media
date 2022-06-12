@@ -29,6 +29,7 @@ export const SINGLE_BLOG = gql`
             bcomments {
                 bcomment_id
                 blcomment
+                totalBlogComments
                 replyComments {
                     rcomment_id
                     replied_comment
@@ -200,6 +201,17 @@ query Query($userId: ID, $followersId: ID) {
   isFollowing(user_id: $userId, followers_id: $followersId) {
     status
     message
+  }
+}
+
+`
+
+export const COUNT_CMNT_LIKE = gql`
+
+query Query($bcommentId: ID) {
+  likecomment(bcomment_id: $bcommentId) {
+    count
+    success
   }
 }
 

@@ -9,6 +9,7 @@ const jwt = require('jsonwebtoken');
 const isAuth = require('../isAuth');
 const { ExtraInfoModel } = require('../../sqlDB/models/extraInfo');
 const {cloudinary} = require('../cloudinary');
+const { bCommentLikesModel } = require('../../sqlDB/models/bcommentLikes');
 
 const salt = bcrypt.genSaltSync(10);
 
@@ -51,15 +52,27 @@ const resolvers = {
         // homeUser(parent,args){
         //     return UsersModel.query().where('user_id',args.id);
         // },
-        blog(parent, args){
-            return BlogsModel.query().where('blog_id','=',args.id).withGraphFetched('[users,bcomments.[blogsComUsers,replyComments.[replyUsers]]]');
-        }, /* Resolve A blog fully with comments and replied comments */
+        // blog(parent, args){
+        //     return BlogsModel.query().where('blog_id','=',args.id).withGraphFetched('[users,bcomments.[blogsComUsers,replyComments.[replyUsers]]]');
+        // }, /* Resolve A blog fully with comments and replied comments */
+        
+        async blog(parent, args){
+            return await BlogsModel.query().where('blog_id','=',args.id).withGraphFetched('[users,bcomments.[blogsComUsers,bcommentLikesb,replyComments.[replyUsers]]]').modifyGraph('bcomments',builder => {
+                builder.select('bcomment_id','blcomment',BlogCommentsModel.relatedQuery('bcommentLikesb').count().as('totalBlogComments'));
+              });
+        },
+
         onlycomments(parent, args){
             return BlogsModel.query().where('blog_id','=',args.id).withGraphFetched('[bcomments.[blogsComUsers,replyComments.[replyUsers]]]');
         },
         blogs(){
             return BlogsModel.query().withGraphFetched('users').modifyGraph('users', whereUser => { whereUser.select('user_id', 'profile_img', 'username') });
         }, /* Resolves all blogs of a particular user "HOMEPAGE OF A USER" */
+        likecomment: async (_,args) => {
+            const ok = await bCommentLikesModel.query().count('bluser_id as a').where('bcomment_id', args.bcomment_id);
+            console.log(ok);
+            return {"count": ok[0].a, "success": true}
+        },
         homeBlogs(parent,args){
             return BlogsModel.query().where('bluser_id',args.id);
         },
@@ -210,7 +223,7 @@ const resolvers = {
             return true;
         },
 
-        async blogData(parent, args){
+        blogData: async (parent, args) => {
             let {user_id, blog_heading, blog_content, blog_image} = await args;
             const uploadResponse = await cloudinary.uploader.upload(blog_image, {
                     upload_preset: "grow_media",
@@ -253,6 +266,30 @@ const resolvers = {
         commentBlog: async (parent,args) => {
             return BlogCommentsModel.query().insert({"bluser_id": args.user_id, "blblog_id":args.blog_id, "blcomment":args.commentContent});
         },
+
+        likecommentMutation: async(_,args) => {
+            const isExist = await bCommentLikesModel.query().where('bluser_id',args.user_id).where('bcomment_idLike',args.bcomment_idLike);
+            console.log(!Boolean(isExist.length));
+            if(!Boolean(isExist.length)){
+                await bCommentLikesModel.query().insert({"bluser_id": args.user_id, "bcomment_idLike": args.bcomment_idLike});
+                return {"status":true, "message": "liked!"}
+            }
+            else{
+                return {"status":false, "message": "liked!"}
+            }
+        },
+
+        unlikecommentMutation: async (_,args) => {
+            const isExist = BlogLikesModel.query().where('bluser_id',args.user_id).where('bcomment_idLike',args.bcomment_idLike);
+            if(!Boolean(isExist.length)){
+                await bCommentLikesModel.query().delete().where('bluser_id',args.user_id).where('bcomment_idLike',args.bcomment_idLike);
+                return {"status":true, "message": "unliked!"}
+            }
+            else{
+                return {"status":false, "message": "unliked!"}
+            }
+        },
+        
         deleteComment: async (parents,args) => {
             return BlogCommentsModel.query().delete().where('bluser_id',args.user_id).where('blblog_id',args.blog_id).where('bcomment_id',args.bcomment_id);
         },

@@ -15,6 +15,9 @@ const jwt = require('jsonwebtoken');
 const { ExtraInfoModel } = require('../sqlDB/models/extraInfo');
 // const { response } = require('express');
 const { cloudinary } = require('./cloudinary');
+const { bCommentLikesModel } = require('../sqlDB/models/bcommentLikes');
+const { BlogCommentsModel } = require('../sqlDB/models/blogsComments');
+const { buildResolveInfo } = require('graphql/execution/execute');
 
 const app = express();
 // app.use(express.json());
@@ -153,7 +156,17 @@ const main = async () => {
         const {id} = req.params;
         // let userInfo = await UsersModel.query().withGraphFetched('blogs').where('user_id','=',id);
         //     let numberOfBlogs = await BlogsModel.query().count('blog_id').where('bluser_id', '=', id);
-            let ok = await BlogsModel.query().where('blog_id','=',id).withGraphFetched('[users,bcomments.[blogsComUsers,replyComments.[replyUsers]]]');
+            // let ok = await BlogsModel.query().where('blog_id','=',id).withGraphFetched('[users,bcomments.[blogsComUsers,replyComments.[replyUsers]]]');
+            // const ok = await bCommentLikesModel.query().count('bluser_id as a').where('bcomment_id', id);
+            const ok = await BlogsModel.query().where('blog_id','=',id).withGraphFetched('[users,bcomments.[blogsComUsers,bcommentLikesb,replyComments.[replyUsers]]]').modifyGraph('bcomments',builder => {
+              builder.select('bcomment_id','blcomment',BlogCommentsModel.relatedQuery('bcommentLikesb').count().as('totallikes'));
+            });
+            // const ok = await BlogsModel.query().where('blog_id','=',id).withGraphFetched('[bcomments.[blogsComUsers,bcommentLikesb,replyComments.[replyUsers]]]').modifyGraph('bcommentLikesb',builder => {
+            //   builder.select(bCommentLikesModel.relatedQuery('bcommentLikesb').count().as('totallikes'));
+            // });
+            // const ok = await BlogCommentsModel.query().where('bcomment_id','=',id).withGraphFetched('[blogsComUsers, blogsCom, replyComments, bcommentLikesb]').modifyGraph('bcommentLikesb',builder => {
+            //   builder.select(bCommentLikesModel.relatedQuery('bcommentLikesb').count().as('totalLikes'));
+            // });
         // const usersblog = await Blogs.query().withGraphFetched('users').where('buser_id','=',id);
         // const usersblog = await Users.query().withGraphFetched('blogs').where('user_id','=',id);
         // const usersblog = await Users.relatedQuery('blogs').findById(id);

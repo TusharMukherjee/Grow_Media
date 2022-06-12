@@ -42,7 +42,16 @@ class BlogCommentsModel extends Model {
             from: 'bcomments.bcomment_id',
             to: 'rcomments.parentComment_id'
           }
-        }
+        },
+
+        bcommentLikesb:{
+          relation: Model.HasManyRelation,
+          modelClass: path.join(__dirname, './bcommentLikes'),
+          join: {
+              from: 'bcomments.bcomment_id',
+              to:'bcommentLikes.bcomment_idLike'
+          }
+      }
       }
     }
   
