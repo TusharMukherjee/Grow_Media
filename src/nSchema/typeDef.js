@@ -90,9 +90,56 @@ const typeDefs = gql`
     type subBcomments{
         bcomment_id: ID
         blcomment: String
-        totalBlogComments: Int
         replyComments: [ReplyComm]
         blogsComUsers: [ReplyUsers]
+        bcommentLikesb:[IsLiked]
+    }
+
+    type blogCNTNT{
+        blog_id: ID,
+        bluser_id: ID
+        b_image: String,
+        heading: String,
+        content: String,
+        users: [allSearchBlogsUsers]
+    }
+
+    type onlyCMNT{
+        bcomment_id:ID,
+        blcomment:String,
+        blogsComUsers:[blogsComUsers],
+        replyComments:[replyComments],
+        bcommentLikesb:[bcommentLikesb]
+    }
+
+    type blogsComUsers{
+        user_id: ID,
+        profile_img: String,
+        username: String,
+        bio: String,
+    }
+
+    type replyComments{
+        rcomment_id:ID,
+        replied_comment:String,
+        replyUsers:[replyUsers]
+    }
+
+    type replyUsers{
+        user_id:ID,
+        profile_img: ID,
+        username: String
+    }
+
+    type bcommentLikesb{
+        bluser_id:ID
+    }
+
+
+    type IsLiked{
+        bcommentLike_id: ID,
+        bluser_id: ID,
+        bcomment_idLike: ID
     }
 
     type ReplyComm{
@@ -189,17 +236,26 @@ const typeDefs = gql`
         success: Boolean,
     }
 
+    type bcommentsfortotal{
+        bcomments:[totallikedcmnt]
+    }
+
+    type totallikedcmnt{
+        totalBlogComments:Int
+    }
+
     type Query{
         verifyjwtFunc: jwtInfo
         users: [Users!]!
         user(id: Int!): [User]
         # homeUser(id: Int!): [homeUserInfo]
         searchUser(searchkeyword: String): [User]
-        blog(id: Int!): [SingleBlog]
+        blog(id: Int!): [blogCNTNT]
         blogs: [Blogs!]!
         homeBlogs(id:Int!): [Blogs!]!
         searchBlog(searchkeyword: String): [Blogs]
-        onlycomments(id: Int!): [BlogComments]
+        onlycomments(id: ID!,user_id:ID): [onlyCMNT]
+        totalcomment(id: ID!): [bcommentsfortotal]
 
         checksomeone_followers(user_id: Int!): [checksomeone_followers]
         checksomeone_following(user_id: Int!): [checksomeone_following]
@@ -210,6 +266,7 @@ const typeDefs = gql`
 
         infoquery(id: Int): [allInfo]
         isFollowing(user_id: ID, followers_id: ID):follow
+        isCmntLiked(user_id: ID, bcomment_idLike: ID): follow
     }
 
     type blogData{

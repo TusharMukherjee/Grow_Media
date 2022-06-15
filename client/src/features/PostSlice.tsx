@@ -75,12 +75,16 @@ type UserInfoType = {
     }[];
   }
 
+  // type bluser_id = {
+  //   bluser_id: string
+  // }
 
 
 const initialState:any = {
   blogs:[],
   bcomments: [],
-  users: []
+  users: [],
+  bluser_id: ""
 };
 
 export const postSlice = createSlice({
@@ -98,14 +102,18 @@ export const postSlice = createSlice({
         },
         homeBlogsStore: (state, actions: PayloadAction<UserInfoType | undefined>) =>{
           state.user = actions.payload;
+        },
+        userOwnerId:(state, actions: PayloadAction<string>)=>{
+          state.bluser_id = actions.payload;
         }
     }
 });
 
 
-export const { allPosts, postComm, postOwnerInfo, homeBlogsStore } = postSlice.actions;
+export const { allPosts, postComm, postOwnerInfo, homeBlogsStore, userOwnerId } = postSlice.actions;
 export const getAllMovies = (state:any) => state.postSlice;
 export const getComm = (state:any) => state.postSlice.bcomments;
 export const getOwnerInfo = (state:any) => state.postSlice; 
 export const homeBlogsDataStore = (state: any) => state.postSlice.user;
+export const bluser_id = (state: any) => state;
 export default postSlice.reducer;

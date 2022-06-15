@@ -56,15 +56,30 @@ const resolvers = {
         //     return BlogsModel.query().where('blog_id','=',args.id).withGraphFetched('[users,bcomments.[blogsComUsers,replyComments.[replyUsers]]]');
         // }, /* Resolve A blog fully with comments and replied comments */
         
-        async blog(parent, args){
+        // async blog(parent, args){
+        //     return await BlogsModel.query().where('blog_id','=',args.id).withGraphFetched('[users,bcomments.[blogsComUsers,bcommentLikesb,replyComments.[replyUsers]]]').modifyGraph('bcomments',builder => {
+        //         builder.select('bcomment_id','blcomment',BlogCommentsModel.relatedQuery('bcommentLikesb').count().as('totalBlogComments'));
+        //       });
+        // },
+
+        async blog(_,args){
+            return await BlogsModel.query().where('blog_id','=',args.id).withGraphFetched('users');
+        },
+
+        async totalcomment(parent, args){
             return await BlogsModel.query().where('blog_id','=',args.id).withGraphFetched('[users,bcomments.[blogsComUsers,bcommentLikesb,replyComments.[replyUsers]]]').modifyGraph('bcomments',builder => {
                 builder.select('bcomment_id','blcomment',BlogCommentsModel.relatedQuery('bcommentLikesb').count().as('totalBlogComments'));
               });
         },
 
-        onlycomments(parent, args){
-            return BlogsModel.query().where('blog_id','=',args.id).withGraphFetched('[bcomments.[blogsComUsers,replyComments.[replyUsers]]]');
+        async onlycomments(parent, args){
+            return await BlogCommentsModel.query().where('blblog_id','=',args.id).withGraphFetched('[blogsComUsers,replyComments.[replyUsers],bcommentLikesb]').modifyGraph('bcommentLikesb',builder => { 
+                builder.where('bluser_id','=',args.user_id);
+              });
         },
+
+
+
         blogs(){
             return BlogsModel.query().withGraphFetched('users').modifyGraph('users', whereUser => { whereUser.select('user_id', 'profile_img', 'username') });
         }, /* Resolves all blogs of a particular user "HOMEPAGE OF A USER" */
@@ -98,6 +113,12 @@ const resolvers = {
             const allInfo = await UsersModel.query().where('user_id',args.id).withGraphFetched('usersExtraInfo');
             console.log(allInfo);
             return allInfo;
+        },
+
+        async isCmntLiked(_,args){
+            const iscmntliked = await bCommentLikesModel.query().where('bluser_id',args.user_id).where('bcomment_idLike',args.bcomment_idLike);
+            console.log(Boolean(iscmntliked.length));
+            return {"status":Boolean(iscmntliked.length),"message":"isCmntLiked_Request"};
         }
 
     },

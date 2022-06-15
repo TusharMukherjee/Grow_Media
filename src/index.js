@@ -18,6 +18,8 @@ const { cloudinary } = require('./cloudinary');
 const { bCommentLikesModel } = require('../sqlDB/models/bcommentLikes');
 const { BlogCommentsModel } = require('../sqlDB/models/blogsComments');
 const { buildResolveInfo } = require('graphql/execution/execute');
+const { BlogLikesModel } = require('../sqlDB/models/blogsLikes');
+const { totalmem } = require('os');
 
 const app = express();
 // app.use(express.json());
@@ -152,15 +154,43 @@ const main = async () => {
         res.json(ideas);
     });
 
-    app.get('/read/:id', async (req, res) => {
-        const {id} = req.params;
+    app.get('/read/:id/:user_id', async (req, res) => {
+        const {id,user_id} = req.params;
         // let userInfo = await UsersModel.query().withGraphFetched('blogs').where('user_id','=',id);
         //     let numberOfBlogs = await BlogsModel.query().count('blog_id').where('bluser_id', '=', id);
             // let ok = await BlogsModel.query().where('blog_id','=',id).withGraphFetched('[users,bcomments.[blogsComUsers,replyComments.[replyUsers]]]');
             // const ok = await bCommentLikesModel.query().count('bluser_id as a').where('bcomment_id', id);
-            const ok = await BlogsModel.query().where('blog_id','=',id).withGraphFetched('[users,bcomments.[blogsComUsers,bcommentLikesb,replyComments.[replyUsers]]]').modifyGraph('bcomments',builder => {
-              builder.select('bcomment_id','blcomment',BlogCommentsModel.relatedQuery('bcommentLikesb').count().as('totallikes'));
-            });
+            // const ok = await BlogsModel.query().where('blog_id','=',id).withGraphFetched('[users,bcomments.[blogsComUsers,bcommentLikesb,replyComments.[replyUsers]]]').where('bluser_id',userId);
+            // // });
+              
+            
+              // const ok = await BlogCommentsModel.query().where('blblog_id','=',id).withGraphFetched('[blogsComUsers,replyComments.[replyUsers],bcommentLikesb]').modifyGraph('bcommentLikesb',builder => { 
+              //   builder.where('bluser_id','=',user_id);
+              // });
+              // allcmnt(?liked)
+
+              // const ok = await BlogsModel.query().where('blog_id','=',id).withGraphFetched('[users,bcomments.[blogsComUsers,bcommentLikesb,replyComments.[replyUsers]]]').modifyGraph('bcomments',builder => {
+              //   builder.select('bcomment_id','blcomment',BlogCommentsModel.relatedQuery('bcommentLikesb').count().as('totalBlogComments'));
+              // });
+              // take total
+              
+              // allcomment + counts
+
+
+              // const ok = await BlogCommentsModel.query().where('blblog_id','=',id)
+
+
+              // const ok = await BlogCommentsModel.query().where('blblog_id','=',id).withGraphFetched('[blogsComUsers,replyComments.[replyUsers],bcommentLikesb]').modifyGraph().count('bcommentLikesb')
+                
+
+              const ok = await BlogsModel.query().where('blog_id','=',id).withGraphFetched('users');
+
+              // const ok = await bCommentLikesModel.query().where('blog_id',id).where('bluser_id','=',user_id);
+
+
+              // await BlogsModel.query().where('blog_id','=',args.id).withGraphFetched('[users,bcomments.[blogsComUsers,bcommentLikesb,replyComments.[replyUsers]]]').modifyGraph('bcomments',builder => {
+              //   builder.select('bcomment_id','blcomment',BlogCommentsModel.relatedQuery('bcommentLikesb').count().as('totalBlogComments'));
+              // });
             // const ok = await BlogsModel.query().where('blog_id','=',id).withGraphFetched('[bcomments.[blogsComUsers,bcommentLikesb,replyComments.[replyUsers]]]').modifyGraph('bcommentLikesb',builder => {
             //   builder.select(bCommentLikesModel.relatedQuery('bcommentLikesb').count().as('totallikes'));
             // });

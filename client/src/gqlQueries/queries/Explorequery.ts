@@ -15,39 +15,66 @@ export const GET_ALL_BLOGS = gql`
 }
 `
 export const SINGLE_BLOG = gql`
+    
     query Query($blogId: Int!) {
         blog(id: $blogId) {
             blog_id
+            bluser_id
+            b_image
             heading
             content
-            b_image
             users {
-                user_id
-                username
-                bio
-            }
-            bcomments {
-                bcomment_id
-                blcomment
-                totalBlogComments
-                replyComments {
-                    rcomment_id
-                    replied_comment
-                    replyUsers {
-                    user_id
-                    profile_img
-                    username
-                    }
-                }
-                blogsComUsers {
-                    user_id
-                    profile_img
-                    username
-                }
+            user_id
+            profileImg
+            username
+            bio
             }
         }
     }
+
 `
+
+export const ONLYCMNT = gql`
+
+query Onlycomments($onlycommentsId: ID!, $userId: ID) {
+  onlycomments(id: $onlycommentsId, user_id: $userId) {
+    bcomment_id
+    blcomment
+    blogsComUsers {
+      user_id
+      profile_img
+      username
+      bio
+    }
+    replyComments {
+      rcomment_id
+      replied_comment
+      replyUsers {
+        user_id
+        profile_img
+        username
+      }
+    }
+    bcommentLikesb {
+      bluser_id
+    }
+  }
+}
+
+`
+
+export const REPTOTAL = gql`
+
+query Totalcomment($totalcommentId: ID!) {
+  totalcomment(id: $totalcommentId) {
+    bcomments {
+      totalBlogComments
+    }
+  }
+}
+
+`
+
 
 // export const PROFILE = gql`
 //     query Query($userId: Int!) {

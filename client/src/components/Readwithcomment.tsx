@@ -3,44 +3,14 @@ import { Link, useParams } from "react-router-dom";
 // import { getComm } from ''
 import { useSelector } from 'react-redux';
 import { getComm, getOwnerInfo, postOwnerInfo } from "../features/PostSlice";
-import { useMutation, useQuery } from "@apollo/client";
-import { COMMENT, FOLLOW, REPLY_COMMENTS, UNFOLLOW } from "../gqlQueries/mutations/Allmutation";
+import { useMutation } from "@apollo/client";
+import { COMMENT, FOLLOW, LIKECMNT, REPLY_COMMENTS, UNFOLLOW, UNLIKECMNT } from "../gqlQueries/mutations/Allmutation";
 import { userLoginInfo } from "../features/UserSlice";
-import { IS_FOLLOWING } from "../gqlQueries/queries/Explorequery";
-
-
-
-type bcomments = {
-        bcomment_id: string;
-        blcomment:string;
-        totalBlogComments: number
-        replyComments:{
-          rcomment_id:string;
-          replied_comment:string;
-          replyUsers:{
-            user_id: string;
-            profile_img: string;
-            username: string;
-          }[];
-        }[];
-        blogsComUsers: {
-          user_id: string;
-          profile_img: string;
-          username: string;
-        }[];
-}
-
-type users = {
-    user_id: string;
-    username: string;
-    bio: string | null;
-}
-
-type b_comments = {
-        users:users[]
-}
 
 type refetchMut = {
+    data_onlyblog: data_onlyblog
+    repTOTAL: repTOTAL,
+    onlyCMNT : onlyCMNT,
     refetch_isFollowing:()=> any,
     refetchMut: () => any,
     isFollow: {
@@ -49,47 +19,95 @@ type refetchMut = {
         }
     }|undefined
 }
-type isFollow = {
-    isFollow: {
-        isFollowing:{
-            status: Boolean
-        }
-    }
+
+type onlyCMNT = {
+    onlycomments: [onlycomments]
+} | undefined
+
+type onlycomments = {
+    bcomment_id:string,
+    blcomment:string,
+    blogsComUsers:[blogsComUsers],
+    replyComments:[replyComments],
+    bcommentLikesb:[bcommentLikesb]
 }
 
-const Readwithcomment = ({refetch_isFollowing,refetchMut, isFollow}:refetchMut) => {
-    // const Readwithcomment = (props: b_comments)
+type blogsComUsers = {
+    user_id: string,
+    profile_img: string,
+    username: string,
+    bio: string,
+}
+
+type replyComments = {
+    rcomment_id: string,
+    replied_comment:string,
+    replyUsers:[replyUsers]
+}
+
+type replyUsers = {
+    user_id: string,
+    profile_img:  string,
+    username: string
+}
+
+type bcommentLikesb = {
+    bluser_id: string
+}
+
+type repTOTAL = {
+    totalcomment: [totalcomment] | undefined
+} | undefined
+
+type totalcomment = {
+    bcomments:[totallikedcmnt] | undefined
+}
+
+type totallikedcmnt = {
+    totalBlogComments: number | undefined
+}
+
+type data_onlyblog = {
+    blog: [blog]
+
+} | undefined
+
+type blog = {
+    blog_id: string
+    bluser_id: string
+    b_image: string
+    heading: string
+    content: string
+    users: [data_onlyblog_users]
+}
+
+type data_onlyblog_users = {
+    user_id: string
+    profileImg: string
+    username: string
+    bio: string
+}
+
+const Readwithcomment = ({data_onlyblog,repTOTAL,onlyCMNT,refetch_isFollowing,refetchMut, isFollow}:refetchMut) => {
+    
     const param = useParams();
-    const commSelector:bcomments[] = useSelector(getComm);
-    const ownerInfoSelector: b_comments = useSelector(getOwnerInfo);
     const selector = useSelector(userLoginInfo);
-    console.log(selector);
-    // console.log(ownerInfoSelector.users[0].user_id);
-    console.log(commSelector);
-    // const [commInfo, setcommInfo] = useState<bcomments[] | undefined>();
-    // const [ownerInfo, setownerInfo] = useState<users[]>();
+
+    // console.log(repTOTAL?.totalcomment?.[0].bcomments);
+    // console.log(onlyCMNT?.onlycomments[0]);
+
     const [toggleReply, setToggleReply] = useState<any>(null);
     const [createComment, setCreateComment] = useState("");
     const [replyComment, setReplyComment] = useState("");
 
-    console.log(isFollow?.isFollowing.status);
+    // console.log(isFollow?.isFollowing.status);
 
-    // const {data,refetch} = useQuery(IS_FOLLOWING,{
-    //     onCompleted:()=>{
-    //         console.log(data);
-    //     },
-    //     variables:{
-    //         userId:selector.user_id,
-    //         followersId: ownerInfoSelector.users[0].user_id
-    //     }
-    // });
 
-    // useEffect(()=>{
-        
-    // },[isFollow]);
+    // Comment related functions --------------------------
 
     const [commentFun] = useMutation(COMMENT,{ 
         onCompleted:() => {
+            setCreateComment("");
             refetchMut();
         },
         variables:{
@@ -100,9 +118,12 @@ const Readwithcomment = ({refetch_isFollowing,refetchMut, isFollow}:refetchMut) 
     })
     const [replyFun] = useMutation(REPLY_COMMENTS,{
         onCompleted:() => {
+            setReplyComment("");
             refetchMut();
         }
     });
+
+    // Follow related functions -------------------------------
 
     const [followFun] = useMutation(FOLLOW,{
         onCompleted:(data) => {
@@ -118,17 +139,21 @@ const Readwithcomment = ({refetch_isFollowing,refetchMut, isFollow}:refetchMut) 
         }
     })
 
-    useEffect(()=>{
-        setCreateComment("");
-        setReplyComment("");
-    },[commSelector])
+    // Like Comment rellated function ---------------
 
-    // useEffect(()=>{
-    //     if(props.bcomments != undefined){
-    //         setcommInfo(props.bcomments);
-    //         setownerInfo(props.users);            
-    //     }        
-    // },[props]);
+    const [likecmntFun] = useMutation(LIKECMNT,{
+        onCompleted:(data) =>{
+            console.log(data);
+            // refetch is this cmnt liked by logged in user
+        }
+    })
+
+    const [unlikecmntFun] = useMutation(UNLIKECMNT,{
+        onCompleted:(data) => {
+            console.log(data);
+            // refetch is this unliked?
+        }
+    })
 
 
     function toggleRepButton (index:number){
@@ -146,24 +171,24 @@ const Readwithcomment = ({refetch_isFollowing,refetchMut, isFollow}:refetchMut) 
                 <div className='flex flex-row items-center p-4'>
                     <div className='bg-teal-900 h-20 w-20 rounded-md'></div>
                     <div className='flex flex-col'>
-                    <h1 className='pl-4'><Link to= {`/profile/${ownerInfoSelector.users[0].user_id}`}>{ownerInfoSelector.users[0].username}</Link></h1>
+                    <h1 className='pl-4'><Link to= {`/profile/${data_onlyblog?.blog[0].users[0].user_id}`}>{data_onlyblog?.blog[0].users[0].username}</Link></h1>
                     <p className='pl-4'>10K Followers</p> 
                     </div>
                 </div>
-                <p className='px-4 pb-4'>{ownerInfoSelector.users[0].bio == null? '' : ownerInfoSelector.users[0].bio}</p>
+                <p className='px-4 pb-4'>{data_onlyblog?.blog[0].users[0].bio == null? '' : data_onlyblog?.blog[0].users[0].bio}</p>
                 {
-                    (Number(ownerInfoSelector.users[0].user_id) === Number(selector.user_id))
+                    (Number(data_onlyblog?.blog[0].users[0].user_id) === Number(selector.user_id))
                     ?
                     <></>
                     :
                     (isFollow?.isFollowing.status)
                     ?
                     <div className='pl-4 pb-4'>
-                        <button onClick={() => unfollowFun({variables:{userId:selector.user_id, followersId:ownerInfoSelector.users[0].user_id}})} className=' bg-white border-2 border-teal-500 text-teal-500 px-2 py-1 rounded-md'>Unfollow</button> 
+                        <button onClick={() => unfollowFun({variables:{userId:selector.user_id, followersId:data_onlyblog?.blog[0].users[0].user_id}})} className=' bg-white border-2 border-teal-500 text-teal-500 px-2 py-1 rounded-md'>Unfollow</button> 
                     </div>
                     :
                     <div className='pl-4 pb-4'>
-                        <button onClick={() => followFun({variables:{userId:selector.user_id, followersId:ownerInfoSelector.users[0].user_id}})} className=' bg-teal-500 text-white px-2 py-1 rounded-md'>Follow</button> 
+                        <button onClick={() => followFun({variables:{userId:selector.user_id, followersId:data_onlyblog?.blog[0].users[0].user_id}})} className=' bg-teal-500 text-white px-2 py-1 rounded-md'>Follow</button> 
                     </div>
                 }
             </div>
@@ -174,7 +199,7 @@ const Readwithcomment = ({refetch_isFollowing,refetchMut, isFollow}:refetchMut) 
                         80 Likes
                     </button>
                     <button className=' rounded-md py-1 px-2 col-span-1 bg-white'>
-                        {commSelector.length} Comm.
+                        {onlyCMNT?.onlycomments.length} Comm.
                     </button>
                 </div>
             </div>
@@ -188,22 +213,22 @@ const Readwithcomment = ({refetch_isFollowing,refetchMut, isFollow}:refetchMut) 
                 </div>
 
                 {
-                    commSelector.map((el,index) => {
+                    onlyCMNT?.onlycomments.map((el,index) => {
                         return(
                         
-                            <div className='w-80 my-2 rounded-md bg-white flex flex-col justify-center' key={el.bcomment_id}>
+                            <div className='w-80 my-2 rounded-md bg-white flex flex-col justify-center' key={el?.bcomment_id}>
                                 <div className='flex flex-row p-4'>
                                     <div className=' rounded-full h-6 w-6 bg-stone-700'></div>
                                     <div className='ml-4'>
-                                        <h1>{el.blogsComUsers[0].username}</h1>
+                                        <h1>{el?.blogsComUsers[0].username}</h1>
                                     </div>
                                 </div>
                                 <div className='px-4 pb-4'>
-                                    <p className='w-72'>{el.blcomment}</p>
+                                    <p className='w-72'>{el?.blcomment}</p>
                                 </div>
                                 <div className='px-4 pb-4'>
-                                    <button className='px-2 py-1 rounded-md bg-teal-500 text-white'>{el.totalBlogComments} Likes</button>
-                                    <button className='px-2 py-1 ml-3 rounded-md bg-teal-500 text-white' onClick={() => toggleRepButton(index)} >{el.replyComments.length} Reply</button>
+                                    <button className='px-2 py-1 rounded-md bg-teal-500 text-white'>{repTOTAL?.totalcomment?.[0].bcomments?.[index].totalBlogComments} Likes</button>
+                                    <button className='px-2 py-1 ml-3 rounded-md bg-teal-500 text-white' onClick={() => toggleRepButton(index)} >{el?.replyComments.length} Reply</button>
                                 </div>
 
                                 
@@ -215,13 +240,13 @@ const Readwithcomment = ({refetch_isFollowing,refetchMut, isFollow}:refetchMut) 
                                                                 <div className='flex flex-col items-center mb-4 bg-white'>
                                                                     <textarea value={replyComment} onChange={(e)=>{setReplyComment(e.target.value)}} className=' w-72  border-t-[0.5px] border-x-[0.5px] border-teal-500 rounded-t-md resize-none mx-4 mt-4 outline-0 p-4' rows={1}></textarea>
                                                                     <div className=' w-72 border-b-[0.5px] border-x-[0.5px] border-teal-500 flex flex-row bg-white justify-end py-2  rounded-b-md'>
-                                                                        <button onClick={()=>{replyFun({variables:{userId: selector.user_id,parentCommentId:el.bcomment_id, commentContent:replyComment}})}} className='mr-4 px-2 py-1 bg-teal-500 rounded-md text-white'>Reply</button>
+                                                                        <button onClick={()=>{replyFun({variables:{userId: selector.user_id,parentCommentId:el?.bcomment_id, commentContent:replyComment}})}} className='mr-4 px-2 py-1 bg-teal-500 rounded-md text-white'>Reply</button>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                             <div id = 'subReplies' className='  items-center col-start-2 col-span-6'>
                                                             {
-                                                                el.replyComments.map((allrep) => {
+                                                                el?.replyComments.map((allrep) => {
                                                                     return(
                                                                         <div className=" bg-white my-4" key={allrep.rcomment_id}>
                                                                             {allrep.replyUsers.map((replyUser) => {
