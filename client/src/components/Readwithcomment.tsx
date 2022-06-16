@@ -9,7 +9,7 @@ import { userLoginInfo } from "../features/UserSlice";
 
 type refetchMut = {
     is_liked: {
-        onlycomments: onlycomments[]
+        onlycomments: onlycomments[] | undefined
     } | undefined
     data_onlyblog: data_onlyblog
     repTOTAL: repTOTAL,
@@ -233,11 +233,11 @@ const Readwithcomment = ({refetch_total,is_liked,refetch_isliked ,data_onlyblog,
                                 </div>
                                 <div className='px-4 pb-4'>
                                     {
-                                        (Number(is_liked?.onlycomments[index].bcommentLikesb[0]?.bluser_id) === selector.user_id)
+                                        (Number(is_liked?.onlycomments?.[index]?.bcommentLikesb[0]?.bluser_id) === selector.user_id)
                                         ?
-                                        <button onClick={()=>unlikecmntFun({variables:{userId: selector.user_id, bcommentIdLike: el?.bcomment_id}})} className='px-2 py-1 rounded-md bg-teal-500 text-white'>{repTOTAL?.totalcomment?.[0]?.bcomments?.[index].totalBlogComments} Likes</button>
+                                        <button onClick={()=>unlikecmntFun({variables:{userId: selector.user_id, bcommentIdLike: el?.bcomment_id}})} className='px-2 py-1 rounded-md bg-teal-500 text-white'>{repTOTAL?.totalcomment?.[0]?.bcomments?.[index]?.totalBlogComments} Likes</button>
                                         :
-                                        <button onClick={()=>likecmntFun({variables:{userId: selector.user_id, bcommentIdLike: el?.bcomment_id}})} className='px-2 py-1 rounded-md border-2 border-teal-500 bg-white text-teal-500'>{repTOTAL?.totalcomment?.[0]?.bcomments?.[index].totalBlogComments} Likes</button>
+                                        <button onClick={()=>likecmntFun({variables:{userId: selector.user_id, bcommentIdLike: el?.bcomment_id}})} className='px-2 py-1 rounded-md border-2 border-teal-500 bg-white text-teal-500'>{repTOTAL?.totalcomment?.[0]?.bcomments?.[index]?.totalBlogComments} Likes</button>
                                     }
                                     
                                     <button className='px-2 py-1 ml-3 rounded-md bg-teal-500 text-white' onClick={() => toggleRepButton(index)} >{el?.replyComments.length} Reply</button>
