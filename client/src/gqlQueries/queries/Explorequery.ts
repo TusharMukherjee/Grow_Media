@@ -55,9 +55,6 @@ query Onlycomments($onlycommentsId: ID!, $userId: ID) {
         username
       }
     }
-    bcommentLikesb {
-      bluser_id
-    }
   }
 }
 
@@ -239,6 +236,18 @@ query Query($bcommentId: ID) {
   likecomment(bcomment_id: $bcommentId) {
     count
     success
+  }
+}
+
+`
+
+export const IS_LIKED = gql `
+
+query Onlycomments($onlycommentsId: ID, $userId: ID) {
+  onlycomments(id: $onlycommentsId, user_id: $userId) {
+    bcommentLikesb {
+      bluser_id
+    }
   }
 }
 

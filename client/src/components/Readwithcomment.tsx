@@ -8,11 +8,16 @@ import { COMMENT, FOLLOW, LIKECMNT, REPLY_COMMENTS, UNFOLLOW, UNLIKECMNT } from 
 import { userLoginInfo } from "../features/UserSlice";
 
 type refetchMut = {
+    is_liked: {
+        onlycomments: onlycomments[]
+    } | undefined
     data_onlyblog: data_onlyblog
     repTOTAL: repTOTAL,
     onlyCMNT : onlyCMNT,
+    refetch_total:()=>any,
     refetch_isFollowing:()=> any,
     refetchMut: () => any,
+    refetch_isliked:() => any,
     isFollow: {
         isFollowing:{
             status: boolean
@@ -29,7 +34,7 @@ type onlycomments = {
     blcomment:string,
     blogsComUsers:[blogsComUsers],
     replyComments:[replyComments],
-    bcommentLikesb:[bcommentLikesb]
+    bcommentLikesb:[bcommentLikesb] | [undefined]
 }
 
 type blogsComUsers = {
@@ -52,8 +57,8 @@ type replyUsers = {
 }
 
 type bcommentLikesb = {
-    bluser_id: string
-}
+    bluser_id: string | undefined
+} | undefined
 
 type repTOTAL = {
     totalcomment: [totalcomment] | undefined
@@ -61,7 +66,7 @@ type repTOTAL = {
 
 type totalcomment = {
     bcomments:[totallikedcmnt] | undefined
-}
+} | undefined
 
 type totallikedcmnt = {
     totalBlogComments: number | undefined
@@ -88,20 +93,17 @@ type data_onlyblog_users = {
     bio: string
 }
 
-const Readwithcomment = ({data_onlyblog,repTOTAL,onlyCMNT,refetch_isFollowing,refetchMut, isFollow}:refetchMut) => {
+const Readwithcomment = ({refetch_total,is_liked,refetch_isliked ,data_onlyblog,repTOTAL,onlyCMNT,refetch_isFollowing,refetchMut, isFollow}:refetchMut) => {
     
     const param = useParams();
     const selector = useSelector(userLoginInfo);
 
     // console.log(repTOTAL?.totalcomment?.[0].bcomments);
-    // console.log(onlyCMNT?.onlycomments[0]);
+    // console.log(is_liked?.onlycomments[1].bcommentLikesb[0]?.bluser_id);
 
     const [toggleReply, setToggleReply] = useState<any>(null);
     const [createComment, setCreateComment] = useState("");
     const [replyComment, setReplyComment] = useState("");
-
-    // console.log(isFollow?.isFollowing.status);
-
 
     // Comment related functions --------------------------
 
@@ -139,18 +141,21 @@ const Readwithcomment = ({data_onlyblog,repTOTAL,onlyCMNT,refetch_isFollowing,re
         }
     })
 
+
     // Like Comment rellated function ---------------
 
     const [likecmntFun] = useMutation(LIKECMNT,{
-        onCompleted:(data) =>{
-            console.log(data);
+        onCompleted:() =>{
+            refetch_isliked();
+            refetch_total();
             // refetch is this cmnt liked by logged in user
         }
     })
 
     const [unlikecmntFun] = useMutation(UNLIKECMNT,{
-        onCompleted:(data) => {
-            console.log(data);
+        onCompleted:() => {
+            refetch_isliked();
+            refetch_total();
             // refetch is this unliked?
         }
     })
@@ -227,7 +232,14 @@ const Readwithcomment = ({data_onlyblog,repTOTAL,onlyCMNT,refetch_isFollowing,re
                                     <p className='w-72'>{el?.blcomment}</p>
                                 </div>
                                 <div className='px-4 pb-4'>
-                                    <button className='px-2 py-1 rounded-md bg-teal-500 text-white'>{repTOTAL?.totalcomment?.[0].bcomments?.[index].totalBlogComments} Likes</button>
+                                    {
+                                        (Number(is_liked?.onlycomments[index].bcommentLikesb[0]?.bluser_id) === selector.user_id)
+                                        ?
+                                        <button onClick={()=>unlikecmntFun({variables:{userId: selector.user_id, bcommentIdLike: el?.bcomment_id}})} className='px-2 py-1 rounded-md bg-teal-500 text-white'>{repTOTAL?.totalcomment?.[0]?.bcomments?.[index].totalBlogComments} Likes</button>
+                                        :
+                                        <button onClick={()=>likecmntFun({variables:{userId: selector.user_id, bcommentIdLike: el?.bcomment_id}})} className='px-2 py-1 rounded-md border-2 border-teal-500 bg-white text-teal-500'>{repTOTAL?.totalcomment?.[0]?.bcomments?.[index].totalBlogComments} Likes</button>
+                                    }
+                                    
                                     <button className='px-2 py-1 ml-3 rounded-md bg-teal-500 text-white' onClick={() => toggleRepButton(index)} >{el?.replyComments.length} Reply</button>
                                 </div>
 

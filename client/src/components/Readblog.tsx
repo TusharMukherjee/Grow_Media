@@ -2,7 +2,7 @@ import Readwithcomment from './Readwithcomment'
 import {useParams} from 'react-router-dom'
 import { useQuery } from '@apollo/client'
 
-import {COUNT_CMNT_LIKE, IS_FOLLOWING, ONLYCMNT, REPTOTAL, SINGLE_BLOG} from '../gqlQueries/queries/Explorequery';
+import {COUNT_CMNT_LIKE, IS_FOLLOWING, IS_LIKED, ONLYCMNT, REPTOTAL, SINGLE_BLOG} from '../gqlQueries/queries/Explorequery';
 import { useSelector, useDispatch } from 'react-redux';
 import { bluser_id, getComm, postComm, postOwnerInfo, userOwnerId } from '../features/PostSlice'
 import { useEffect, useState } from 'react';
@@ -90,6 +90,13 @@ const Readblog = () => {
         }
       })
 
+      const {data:is_liked, refetch: refetch_isliked} = useQuery(IS_LIKED,{
+        variables:{
+          onlycommentsId : blog_id,
+          userId: String(selector.user_id)
+        }
+      })
+
       const {data: repTOTAL, refetch:refetch_total} = useQuery(REPTOTAL,{
         variables:{
           totalcommentId: blog_id
@@ -124,7 +131,7 @@ const Readblog = () => {
                     </div>
                     <div className='col-span-3 bg-teal-400 grid justify-center py-14 z-10 h-screen sticky top-12 right-0 overflow-y-scroll'>
                         {/* <Readwithcomment bcomments = {selector} users = {ownerInfo} /> */}
-                        <Readwithcomment data_onlyblog ={data_onlyblog} repTOTAL= {repTOTAL} onlyCMNT={onlyCMNT} refetch_isFollowing={refetch_isFollowing} refetchMut={refetch_onlycmnt} isFollow = {isFollow}/>
+                        <Readwithcomment refetch_total={refetch_total} refetch_isliked={refetch_isliked} is_liked={is_liked} data_onlyblog ={data_onlyblog} repTOTAL= {repTOTAL} onlyCMNT={onlyCMNT} refetch_isFollowing={refetch_isFollowing} refetchMut={refetch_onlycmnt} isFollow = {isFollow}/>
                     </div> 
                   </>)
                   }

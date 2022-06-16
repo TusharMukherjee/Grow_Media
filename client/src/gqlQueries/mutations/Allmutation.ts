@@ -129,8 +129,8 @@ mutation Mutation($userId: ID, $bcommentIdLike: ID) {
 
 export const UNLIKECMNT = gql`
 
-mutation UnlikecommentMutation($userId: ID, $bcommentId: ID) {
-  unlikecommentMutation(user_id: $userId, bcomment_id: $bcommentId) {
+mutation UnlikecommentMutation($userId: ID, $bcommentIdLike: ID) {
+  unlikecommentMutation(user_id: $userId, bcomment_idLike: $bcommentIdLike) {
     status
     message
   }

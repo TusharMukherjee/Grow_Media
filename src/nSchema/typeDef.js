@@ -254,7 +254,7 @@ const typeDefs = gql`
         blogs: [Blogs!]!
         homeBlogs(id:Int!): [Blogs!]!
         searchBlog(searchkeyword: String): [Blogs]
-        onlycomments(id: ID!,user_id:ID): [onlyCMNT]
+        onlycomments(id: ID,user_id:ID): [onlyCMNT]
         totalcomment(id: ID!): [bcommentsfortotal]
 
         checksomeone_followers(user_id: Int!): [checksomeone_followers]
@@ -310,7 +310,7 @@ const typeDefs = gql`
         unlikeBlog(user_id: Int, blog_id: Int): BlogLikes
         commentBlog(user_id: ID!, blog_id: ID!, commentContent: String!): Comment
         likecommentMutation(user_id:ID, bcomment_idLike:ID): likeMutation
-        unlikecommentMutation(user_id:ID,bcomment_id:ID):likeMutation
+        unlikecommentMutation(user_id:ID,bcomment_idLike:ID):likeMutation
         replyComm(user_id: ID!, parentComment_id: ID!, commentContent: String!): ReplyComm
         deleteComment(rcomment_id: ID!, user_id: ID!, bcomment_id: ID!): Comment
         deleteReplyComment(user_id: ID!, blog_id: ID!, parentComment_id: ID!): ReplyComm
