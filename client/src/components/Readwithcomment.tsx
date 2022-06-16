@@ -65,7 +65,7 @@ type repTOTAL = {
 } | undefined
 
 type totalcomment = {
-    bcomments:[totallikedcmnt] | undefined
+    bcomments: totallikedcmnt[] | undefined
 } | undefined
 
 type totallikedcmnt = {
