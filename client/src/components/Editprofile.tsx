@@ -1,9 +1,9 @@
 import { useMutation, useQuery } from '@apollo/client'
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { userLoginInfo } from '../features/UserSlice'
-import { EDITPROFILE_MUTATION, DELETE_PROFILE, LOG_OUT } from '../gqlQueries/mutations/Allmutation'
+import { logIn, userLoginInfo } from '../features/UserSlice'
+import { EDITPROFILE_MUTATION, DELETE_PROFILE, LOG_OUT, UPDATEPFP } from '../gqlQueries/mutations/Allmutation'
 import { EDIT_QUERY } from '../gqlQueries/queries/Explorequery'
 import Sidebar from './Sidebar'
 
@@ -44,14 +44,16 @@ type mutationVAR = {
 }
 
 const Editprofile:React.FC = () => {
+    const dispatchJwt = useDispatch();
 
     // const [username, setUsername] = useState<string>();
-    const [bio, setBio] = useState<string>();
-    const [link, setLink] = useState<string>();
-    const [qualification, setQualification] = useState<string>();
-    const [work, setWork] = useState<string>();
-    const [college, setCollege] = useState<string>();
-    const [hometown, setHometown] = useState<string>();
+    const [selectedImage, setSelectedImage] = useState<ArrayBuffer | string | null>("");
+    const [bio, setBio] = useState<string>("");
+    const [link, setLink] = useState<string>("");
+    const [qualification, setQualification] = useState<string>("");
+    const [work, setWork] = useState<string>("");
+    const [college, setCollege] = useState<string>("");
+    const [hometown, setHometown] = useState<string>("");
 
     const [delCover, setDelCover] = useState<boolean>(false);
 
@@ -61,23 +63,44 @@ const Editprofile:React.FC = () => {
     const selector:selectortype = useSelector(userLoginInfo);
     console.log(selector);
     const {data} = useQuery<infoquery, queryvar>(EDIT_QUERY,{ onCompleted(data){
+        console.log(data);
         // setUsername(`${data.infoquery[0].username}`);
-        setBio(`${data?.infoquery[0].bio}`);
-        setLink(`${data?.infoquery[0].link}`);
-        setQualification(`${data?.infoquery[0].usersExtraInfo[0].qualification}`);
-        setWork(`${data?.infoquery[0].usersExtraInfo[0].work}`);
-        setCollege(`${data?.infoquery[0].usersExtraInfo[0].college}`);
-        setHometown(`${data?.infoquery[0].usersExtraInfo[0].hometown}`);
+        (data?.infoquery[0]?.bio != undefined || data?.infoquery[0]?.bio!="")?setBio(`${data?.infoquery[0]?.bio}`):setBio("");
+        (data?.infoquery[0]?.link != undefined || data?.infoquery[0]?.link!="")?setLink(`${data?.infoquery[0]?.link}`):setLink("");
+        (data?.infoquery[0]?.usersExtraInfo[0]?.qualification != undefined || data?.infoquery[0]?.usersExtraInfo[0]?.qualification!="")?setQualification(`${data?.infoquery[0]?.usersExtraInfo[0]?.qualification}`):setQualification("");
+        (data?.infoquery[0]?.usersExtraInfo[0]?.work!=undefined || data?.infoquery[0]?.usersExtraInfo[0]?.work!="")?setWork(`${data?.infoquery[0]?.usersExtraInfo[0]?.work}`):setWork("");
+        (data?.infoquery[0]?.usersExtraInfo[0]?.college!=undefined||data?.infoquery[0]?.usersExtraInfo[0]?.college!="")?setCollege(`${data?.infoquery[0]?.usersExtraInfo[0]?.college}`):setCollege("");
+        (data?.infoquery[0]?.usersExtraInfo[0]?.hometown!=undefined||data?.infoquery[0]?.usersExtraInfo[0]?.hometown!="")?setHometown(`${data?.infoquery[0]?.usersExtraInfo[0]?.hometown}`):setHometown("");
     } ,variables:{infoqueryId: Number(selector.user_id)}});
 
-    const [updateBio, {loading}] = useMutation (EDITPROFILE_MUTATION,{
-        variables: {userId: selector.user_id, bio: bio, link: link, qualification: qualification, hometown: hometown, work: work, college: college}
+    const [updateBio] = useMutation (EDITPROFILE_MUTATION,{
+        variables: { userId: selector.user_id, bio: bio, link: link, qualification: qualification, hometown: hometown, work: work, college: college}
     });
+
+    const [updatePfp] = useMutation(UPDATEPFP,{
+        onCompleted:()=>{
+            navigate(`/profile/${selector.user_id}`);
+        },
+        variables:{
+            bImage:selectedImage,
+            userId: selector.user_id
+        }
+    })
+
     const navigate = useNavigate();
 
     const [calllogout] = useMutation(LOG_OUT,{
-        onCompleted(data){
-            settologout(data);
+        onCompleted:(data)=>{
+            settologout(data?.logout);
+        }
+    });
+
+    const [calldelete] = useMutation(DELETE_PROFILE,{
+        onCompleted:()=>{
+            calllogout();
+        },
+        variables:{
+            userId: selector.user_id
         }
     });
 
@@ -88,10 +111,37 @@ const Editprofile:React.FC = () => {
     useEffect(()=>{
         if(tologout){
             navigate('/login');
+            dispatchJwt(logIn(undefined));
         }
     },[tologout]);
 
-    console.log(data);
+    // console.log(tologout);
+
+    function imagePreview(e: React.ChangeEvent<HTMLInputElement>){
+        if(e.target.files){
+            console.log(typeof(e.target.files[0]));
+            // getImageURL(file);
+            const reader = new FileReader();
+            reader.readAsDataURL(e.target.files[0]);
+            reader.onloadend = () => {
+                setSelectedImage(reader.result);
+                console.log(reader.result);
+            };
+        }
+    }
+
+    useEffect(()=>{
+
+        if(selectedImage!=""){
+            updatePfp();
+            console.log("useEff Edit");
+        }
+
+    },[selectedImage]);
+
+    // function getImageURL(file: File){
+        
+    // }
 
     function delToggelOff(){
         setDelCover(false);
@@ -118,7 +168,7 @@ const Editprofile:React.FC = () => {
                                                 <button onClick={delToggelOff} className=' border border-teal-500 rounded-md mr-5 p-1 bg-white hover:bg-gray-300 shadow-md  w-16'>
                                                     No
                                                 </button>
-                                                <button onClick={()=>calllogout()} className=' border rounded-md ml-5 p-1 bg-teal-500 hover:bg-teal-700 text-white  shadow-md w-16'>
+                                                <button onClick={()=>calldelete()} className=' border rounded-md ml-5 p-1 bg-teal-500 hover:bg-teal-700 text-white  shadow-md w-16'>
                                                     Yes
                                                 </button>
                                             </div>
@@ -135,21 +185,21 @@ const Editprofile:React.FC = () => {
                         <div className=' w-3/4 grid gap-8 p-5'>
                         <div className=''>
                                 <div>
-                                    <h1 className='text-2xl font-semibold'>{data?.infoquery[0].username}</h1>
+                                    <h1 className='text-2xl font-semibold'>{data?.infoquery[0]?.username}</h1>
                                     <label htmlFor="imageinput" className=' cursor-pointer text-blue-700'>Change profile photo</label>
-                                    <input className='hidden' type="file" accept=".gif,.jpg,.jpeg,.png" id='imageinput' />
+                                    <input onChange={imagePreview} className='hidden' type="file" accept=".gif,.jpg,.jpeg,.png" id='imageinput' />
                                 </div>
                             </div>
                             <div className='pl-4'>
                                 <div className='flex flex-row justify-between w-10/12'>
                                     <label className='col-span-1' htmlFor="bio">Bio</label>
-                                    <textarea value= {`${bio}`} onChange={e => {setBio(e.target.value)}} id='bio'  className=' bg-slate-200 text-sm resize-none h-24 px-3 pt-2 w-48 rounded-md border-[1px] border-gray-400 focus:border-teal-500 outline-0 col-span-1'/>
+                                    <textarea placeholder='Bio' value= {`${bio}`} onChange={e => {setBio(e.target.value)}} id='bio'  className=' bg-slate-200 text-sm resize-none h-24 px-3 pt-2 w-48 rounded-md border-[1px] border-gray-400 focus:border-teal-500 outline-0 col-span-1'/>
                                 </div>
                             </div>
                             <div className='pl-4'>
                                 <div className='flex flex-row justify-between w-10/12'>
                                     <label className='col-span-1' htmlFor="website">Website</label>
-                                    <input value= {`${link}`} onChange={e => {setLink(e.target.value)}} type="text" id='website'  className=' px-3 w-48 rounded-md h-8 border-[1px] border-gray-400 focus:border-teal-500 bg-slate-200 outline-0 col-span-1'/>
+                                    <input placeholder='Website' value= {`${link}`} onChange={e => {setLink(e.target.value)}} type="text" id='website'  className=' px-3 w-48 text-sm rounded-md h-8 border-[1px] border-gray-400 focus:border-teal-500 bg-slate-200 outline-0 col-span-1'/>
                                 </div>
                             </div> 
                         </div>
@@ -159,19 +209,19 @@ const Editprofile:React.FC = () => {
                                 </div>
                                         <div className=' pl-4 flex flex-row justify-between w-10/12'>
                                             <label className='col-span-1' htmlFor="qualificaton">Qualification</label>
-                                            <input value= {`${qualification}`} onChange={e => {setQualification(e.target.value)}} type="text" id='qualificaton'  className=' px-3 w-48 rounded-md h-8 border-[1px] border-gray-400 focus:border-teal-500 bg-slate-200 outline-0 col-span-1'/>
+                                            <input placeholder='Qualification' value= {`${qualification}`} onChange={e => {setQualification(e.target.value)}} type="text" id='qualificaton'  className=' px-3 w-48 text-sm rounded-md h-8 border-[1px] border-gray-400 focus:border-teal-500 bg-slate-200 outline-0 col-span-1'/>
                                         </div>
                                         <div className=' pl-4 flex flex-row justify-between w-10/12'>
                                             <label className='col-span-1' htmlFor="work">Work</label>
-                                            <input value= {`${work}`} onChange={e => {setWork(e.target.value)}} type="text" id='work' className=' px-3 w-48 rounded-md h-8 border-[1px] border-gray-400 focus:border-teal-500 bg-slate-200 outline-0 col-span-1'/>
+                                            <input placeholder='Work' value= {`${work}`} onChange={e => {setWork(e.target.value)}} type="text" id='work' className=' px-3 w-48 text-sm rounded-md h-8 border-[1px] border-gray-400 focus:border-teal-500 bg-slate-200 outline-0 col-span-1'/>
                                         </div>
                                         <div className=' pl-4 flex flex-row justify-between w-10/12'>
                                             <label className='col-span-1' htmlFor="college">College</label>
-                                            <input value= {`${college}`} onChange={e => {setCollege(e.target.value)}} type="text" id='college' className=' px-3 w-48 rounded-md h-8 border-[1px] border-gray-400 focus:border-teal-500 bg-slate-200 outline-0 col-span-1'/>
+                                            <input placeholder='College' value= {`${college}`} onChange={e => {setCollege(e.target.value)}} type="text" id='college' className=' px-3 w-48 text-sm rounded-md h-8 border-[1px] border-gray-400 focus:border-teal-500 bg-slate-200 outline-0 col-span-1'/>
                                         </div>
                                         <div className=' pl-4 flex flex-row justify-between w-10/12'>
                                             <label className='col-span-1' htmlFor="hometown">Hometown</label>
-                                            <input value= {`${hometown}`} onChange={e => {setHometown(e.target.value)}} type="text" id='hometown' className=' px-3 w-48 rounded-md h-8 border-[1px] border-gray-400 focus:border-teal-500 bg-slate-200 outline-0 col-span-1'/>
+                                            <input placeholder='Hometown' value= {`${hometown}`} onChange={e => {setHometown(e.target.value)}} type="text" id='hometown' className=' px-3 w-48 text-sm rounded-md h-8 border-[1px] border-gray-400 focus:border-teal-500 bg-slate-200 outline-0 col-span-1'/>
                                         </div>
                             </div>
                             <div className=' w-3/4 grid gap-8 p-3 m-6'>

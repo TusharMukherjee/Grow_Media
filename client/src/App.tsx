@@ -23,7 +23,7 @@ import PrivateRoute from './PrivateRoute';
 
 type verifyjwtFunc = {
   verifyjwtFunc:{
-     user_id: Number 
+     user_id: number 
   }
 }
 

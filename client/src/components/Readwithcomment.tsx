@@ -27,14 +27,14 @@ type refetchMut = {
 
 type onlyCMNT = {
     onlycomments: [onlycomments]
-} | undefined
+}
 
 type onlycomments = {
     bcomment_id:string,
     blcomment:string,
     blogsComUsers:[blogsComUsers],
     replyComments:[replyComments],
-    bcommentLikesb:[bcommentLikesb] | [undefined]
+    bcommentLikesb:[bcommentLikesb]
 }
 
 type blogsComUsers = {
@@ -58,23 +58,22 @@ type replyUsers = {
 
 type bcommentLikesb = {
     bluser_id: string | undefined
-} | undefined
+} 
 
 type repTOTAL = {
     totalcomment: [totalcomment] | undefined
-} | undefined
+} 
 
 type totalcomment = {
-    bcomments: totallikedcmnt[] | undefined
-} | undefined
+    bcomments: totallikedcmnt[] 
+} 
 
 type totallikedcmnt = {
-    totalBlogComments: number | undefined
+    totalBlogComments: number 
 }
 
 type data_onlyblog = {
     blog: [blog]
-
 } | undefined
 
 type blog = {
@@ -88,7 +87,7 @@ type blog = {
 
 type data_onlyblog_users = {
     user_id: string
-    profileImg: string
+    profile_img: string
     username: string
     bio: string
 }
@@ -115,7 +114,7 @@ const Readwithcomment = ({refetch_total,is_liked,refetch_isliked ,data_onlyblog,
         variables:{
             userId: selector.user_id,
             blogId: param.blog_id,
-            commentContent: createComment
+            commentContent: createComment.trim()
         }
     })
     const [replyFun] = useMutation(REPLY_COMMENTS,{
@@ -174,13 +173,13 @@ const Readwithcomment = ({refetch_total,is_liked,refetch_isliked ,data_onlyblog,
             <div className='flex flex-col items-center'>
             <div className=' h-auto w-80 flex flex-col bg-white rounded-md'>
                 <div className='flex flex-row items-center p-4'>
-                    <div className='bg-teal-900 h-20 w-20 rounded-md'></div>
+                    <img src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1652613376/${data_onlyblog?.blog[0]?.users[0]?.profile_img}`} className='h-20 w-20 rounded-md'/>
                     <div className='flex flex-col'>
                     <h1 className='pl-4'><Link to= {`/profile/${data_onlyblog?.blog[0].users[0].user_id}`}>{data_onlyblog?.blog[0].users[0].username}</Link></h1>
                     <p className='pl-4'>10K Followers</p> 
                     </div>
                 </div>
-                <p className='px-4 pb-4'>{data_onlyblog?.blog[0].users[0].bio == null? '' : data_onlyblog?.blog[0].users[0].bio}</p>
+                <p className='px-4 pb-4'>{(data_onlyblog?.blog[0].users[0].bio == null)? '' : data_onlyblog?.blog[0].users[0].bio}</p>
                 {
                     (Number(data_onlyblog?.blog[0].users[0].user_id) === Number(selector.user_id))
                     ?
@@ -213,7 +212,7 @@ const Readwithcomment = ({refetch_total,is_liked,refetch_isliked ,data_onlyblog,
                 <div className='flex flex-col items-center mb-4'>
                     <textarea placeholder="Comment" value={createComment} onChange={(e) => {setCreateComment(e.target.value)}} className=' w-80 rounded-t-md resize-none mx-4 mt-4 outline-0 p-4'></textarea>
                     <div className='flex flex-row bg-white w-80 justify-end py-2  rounded-b-md'>
-                        <button onClick={()=>commentFun()} className='mr-4 px-2 py-1 bg-teal-500 rounded-md text-white'>Reply</button>
+                        <button onClick={()=>(createComment.trim()!="")?commentFun():null} className='mr-4 px-2 py-1 bg-teal-500 rounded-md text-white'>Reply</button>
                     </div>
                 </div>
 
@@ -223,7 +222,7 @@ const Readwithcomment = ({refetch_total,is_liked,refetch_isliked ,data_onlyblog,
                         
                             <div className='w-80 my-2 rounded-md bg-white flex flex-col justify-center' key={el?.bcomment_id}>
                                 <div className='flex flex-row p-4'>
-                                    <div className=' rounded-full h-6 w-6 bg-stone-700'></div>
+                                    <img src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1652613376/${el.blogsComUsers[0].profile_img}`} className=' rounded-full h-6 w-6 '/>
                                     <div className='ml-4'>
                                         <h1>{el?.blogsComUsers[0].username}</h1>
                                     </div>
@@ -252,7 +251,7 @@ const Readwithcomment = ({refetch_total,is_liked,refetch_isliked ,data_onlyblog,
                                                                 <div className='flex flex-col items-center mb-4 bg-white'>
                                                                     <textarea value={replyComment} onChange={(e)=>{setReplyComment(e.target.value)}} className=' w-72  border-t-[0.5px] border-x-[0.5px] border-teal-500 rounded-t-md resize-none mx-4 mt-4 outline-0 p-4' rows={1}></textarea>
                                                                     <div className=' w-72 border-b-[0.5px] border-x-[0.5px] border-teal-500 flex flex-row bg-white justify-end py-2  rounded-b-md'>
-                                                                        <button onClick={()=>{replyFun({variables:{userId: selector.user_id,parentCommentId:el?.bcomment_id, commentContent:replyComment}})}} className='mr-4 px-2 py-1 bg-teal-500 rounded-md text-white'>Reply</button>
+                                                                        <button onClick={()=>(replyComment.trim()!="")? replyFun({variables:{userId: selector.user_id,parentCommentId:el?.bcomment_id, commentContent: replyComment.trim()}}):null} className='mr-4 px-2 py-1 bg-teal-500 rounded-md text-white'>Reply</button>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -264,7 +263,7 @@ const Readwithcomment = ({refetch_total,is_liked,refetch_isliked ,data_onlyblog,
                                                                             {allrep.replyUsers.map((replyUser) => {
                                                                                 return(
                                                                                     <div className="flex flex-row items-center bg-white" key={replyUser.user_id}>
-                                                                                        <div className='rounded-full h-5 w-5 bg-stone-700'></div>
+                                                                                        <img src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1652613376/${replyUser.profile_img}`} className='rounded-full h-5 w-5 '/>
                                                                                         <h1 className='ml-2 text-base'>{replyUser.username}</h1>
                                                                                     </div>
                                                                                 )

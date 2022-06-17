@@ -25,7 +25,7 @@ export const SINGLE_BLOG = gql`
             content
             users {
             user_id
-            profileImg
+            profile_img
             username
             bio
             }
@@ -114,7 +114,7 @@ export const PROFILE_INFO = gql`
     query Query($userId: Int!) {
         user(id: $userId) {
             user_id
-            profileImg
+            profile_img
             username
             bio
             link
@@ -149,6 +149,7 @@ export const USER_HOME_POSTS = gql`
         blogs {
             users {
             username
+            profile_img
             }
             blog_id
             heading

@@ -93,7 +93,7 @@ const Userhome: React.FC = () => {
         <div className='col-span-8 grid grid-cols-8 mt-6'>
             <div className='col-start-2 col-span-6 grid grid-cols-5 h-56'>
                 <div className=' col-span-2 h-56 flex justify-center items-center'>
-                    <div className='bg-purple-500 rounded-lg w-32 h-32'></div>
+                    <img src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1652613376/${data?.user[0]?.profile_img}`} className='rounded-lg w-32 h-32'/>
                 </div>
                 <div className='col-span-3 flex flex-col justify-center '>
                     <div className=' w-4/6 flex items-center font-semibold my-2 justify-between' ><h1>{data?.user[0].username}</h1>

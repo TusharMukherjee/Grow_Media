@@ -18,7 +18,7 @@ const typeDefs = gql`
 
     type User{
         user_id: ID
-        profileImg: String
+        profile_img: String
         username: String
         email: String
         password: String
@@ -39,7 +39,7 @@ const typeDefs = gql`
 
     type allSearchBlogsUsers{
         user_id: ID
-        profileImg: String
+        profile_img: String
         username: String
         bio: String
     }
@@ -292,13 +292,15 @@ const typeDefs = gql`
         createUser(input: cuserInfo!): Users
 
         updateUser(
-            user_id: Int!
+            user_id: Int!,
             bio: String,
             link: String,
             qualification: String,
             hometown: String,
             work: String,
             college: String): Boolean
+
+        updatePfp(b_image:String, user_id:ID):Boolean
 
         deleteUser(user_id: Int): Boolean
 

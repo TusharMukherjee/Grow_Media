@@ -31,7 +31,7 @@ type blog = {
 
 type data_onlyblog_users = {
   user_id: string
-  profileImg: string
+  profile_img: string
   username: string
   bio: string
 }
@@ -103,7 +103,7 @@ const Readblog = () => {
         }
       })
 
-      // console.log(data_onlyblog?.blog[0].bluser_id);
+      console.log(data_onlyblog);
       // console.log(onlyCMNT);
       // console.log(repTOTAL);
     

@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 type usersslogin = {
-    user_id: Number | undefined
+    user_id: number | undefined
 }
 
 const initialState:any = {

@@ -6,7 +6,7 @@ import Sidebar from './Sidebar'
 
 type allSearchBlogsUsers = {
     user_id: String
-    profileImg: String
+    profile_img: String
     username: String
     bio: String
 }
@@ -43,7 +43,7 @@ const Followingspost:React.FC = () => {
                         <div className='bg-white grid grid-cols-8 items-center pt-8' key={Number(el.blog_id)}>
                             <Link to={`/read/${el.blog_id}`} className='bg-white col-start-2 col-span-6 grid grid-cols-5 grid-rows-6 h-52 mb-8 border rounded-md hover:drop-shadow' >
                                     <div className='col-span-3 row-span-1 flex flex-row  items-center border-b-[0.5px]'>
-                                        <div className='ml-3 rounded-full h-5 w-5 bg-orange-400'></div>
+                                        <img src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1652613376/${el.users[0].profile_img}`} className='ml-3 rounded-full h-5 w-5'/>
                                         <h1 className='ml-3'>{el.users[0].username}</h1>
                                     </div>
                                     <div className='col-span-3 row-span-4  grid grid-rows-6 '>

@@ -212,8 +212,10 @@ const resolvers = {
 
         updateUser: async (parent, args) => {
             const updUser = args;
+
             await UsersModel.query().patch({"bio": updUser.bio, "link": updUser.link}).where('user_id', args.user_id);
             const check_ei = await ExtraInfoModel.query().where('bluser_id',args.user_id);
+            
             console.log(updUser);
             console.log(check_ei.length === 0);
             if(check_ei.length === 0){
@@ -237,6 +239,13 @@ const resolvers = {
                 return true;
             }
             // return updUser;
+        },
+        updatePfp: async (_,args) => {
+            const uploadResponse = await cloudinary.uploader.upload(args.b_image, {
+                upload_preset: "grow_media",
+            });
+            await UsersModel.query().patch({"profile_img":uploadResponse.public_id+'.'+uploadResponse.format}).where('user_id', args.user_id);;
+            return true;
         },
         deleteUser: async (parent, args) => {
             await UsersModel.query().delete().where('user_id', args.user_id);
