@@ -154,19 +154,55 @@ const main = async () => {
         res.json(ideas);
     });
 
-    app.get('/read/:id/:user_id', async (req, res) => {
-        const {id,user_id} = req.params;
+    app.get('/read', async (req, res) => {
+        // const {id} = req.params;
         // let userInfo = await UsersModel.query().withGraphFetched('blogs').where('user_id','=',id);
         //     let numberOfBlogs = await BlogsModel.query().count('blog_id').where('bluser_id', '=', id);
             // let ok = await BlogsModel.query().where('blog_id','=',id).withGraphFetched('[users,bcomments.[blogsComUsers,replyComments.[replyUsers]]]');
             // const ok = await bCommentLikesModel.query().count('bluser_id as a').where('bcomment_id', id);
             // const ok = await BlogsModel.query().where('blog_id','=',id).withGraphFetched('[users,bcomments.[blogsComUsers,bcommentLikesb,replyComments.[replyUsers]]]').where('bluser_id',userId);
             // // });
+
+            // const ok = await BlogsModel.query().withGraphFetched('[users, blikes]')
+            // .modifyGraph('users', whereUser => { whereUser.select('user_id', 'profile_img', 'username') })
+            // .modifyGraph('blikes',builder=>{
+            //   builder.select('blblog_id', BlogLikesModel.relatedQuery('blogsLikesBlogs').count('blblog_id').as('totallike'));  
+            // });
+
+        //     select  blogs.blog_id, blogs.heading, blogs.content, blogs.b_image,
+        //     users.user_id, users.profile_img, users.username,
+        //         count(distinct blikes.blike_id) as totalblikes ,
+        //         count(distinct bcomments.bcomment_id) as totalbcomments
+        // from	blogs
+        // right join users on blogs.bluser_id = users.user_id 
+        // right join blikes on blogs.blog_id = blikes.blblog_id
+        // right join bcomments on bcomments.blblog_id = blogs.blog_id
+
+        // group by blogs.blog_id
+
+            const ok = await BlogsModel.query().select('blogs.blog_id', 'blogs.heading', 'blogs.content', 'blogs.b_image', 'users.user_id', 'users.profile_img', 'users.username')
+            .countDistinct('blikes.blike_id', {as: 'totalblikes'})
+            .countDistinct('bcomments.bcomment_id', {as: 'totalbcomments'})
+            .from('blogs')
+            .rightJoin('users', function(){
+              this
+              .on('blogs.bluser_id', '=', 'users.user_id ')
+            })
+            .rightJoin('blikes', function(){
+              this
+              .on('blogs.blog_id', '=', 'blikes.blblog_id')
+            })
+            .rightJoin('bcomments', function(){
+              this
+              .on('blogs.blog_id', '=', 'bcomments.blblog_id')
+            })
+            .groupBy('blogs.blog_id');
               
             
               // const ok = await BlogCommentsModel.query().where('blblog_id','=',id).withGraphFetched('[blogsComUsers,replyComments.[replyUsers],bcommentLikesb]').modifyGraph('bcommentLikesb',builder => { 
               //   builder.where('bluser_id','=',user_id);
-              // });
+              // }); 
+              // is liked
               // allcmnt(?liked)
 
               // const ok = await BlogsModel.query().where('blog_id','=',id).withGraphFetched('[users,bcomments.[blogsComUsers,bcommentLikesb,replyComments.[replyUsers]]]').modifyGraph('bcomments',builder => {
@@ -183,7 +219,7 @@ const main = async () => {
               // const ok = await BlogCommentsModel.query().where('blblog_id','=',id).withGraphFetched('[blogsComUsers,replyComments.[replyUsers],bcommentLikesb]').modifyGraph().count('bcommentLikesb')
                 
 
-              const ok = await BlogsModel.query().where('blog_id','=',id).withGraphFetched('users');
+              // const ok = await BlogsModel.query().where('blog_id','=',id).withGraphFetched('users');
 
               // const ok = await bCommentLikesModel.query().where('blog_id',id).where('bluser_id','=',user_id);
 
@@ -220,6 +256,9 @@ const main = async () => {
         // userInfo = {...userInfo,...numberOfBlogs};
         console.log(ok);
         res.json(ok);
+        // res.json(ok.map((el)=>{
+        //   return el.blikes.length;
+        // }));
     });
 
     // BlogsModel.query().where('blog_id','=',args.id).withGraphFetched('[users,bcomments.[blogsComUsers,replyComments.[replyUsers]]]');

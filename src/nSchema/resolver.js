@@ -71,18 +71,41 @@ const resolvers = {
                 builder.select('bcomment_id','blcomment',BlogCommentsModel.relatedQuery('bcommentLikesb').count().as('totalBlogComments'));
               });
         },
+        //islike + total like
 
         async onlycomments(parent, args){
             return await BlogCommentsModel.query().where('blblog_id','=',args.id).withGraphFetched('[blogsComUsers,replyComments.[replyUsers],bcommentLikesb]').modifyGraph('bcommentLikesb',builder => { 
                 builder.where('bluser_id','=',args.user_id);
               });
         },
+        // fetch only comments
 
 
 
-        blogs(){
-            return BlogsModel.query().withGraphFetched('users').modifyGraph('users', whereUser => { whereUser.select('user_id', 'profile_img', 'username') });
-        }, /* Resolves all blogs of a particular user "HOMEPAGE OF A USER" */
+        // blogs(){
+        //     return BlogsModel.query().withGraphFetched('users').modifyGraph('users', whereUser => { whereUser.select('user_id', 'profile_img', 'username') });
+        // }, /* Resolves all blogs of a particular user "HOMEPAGE OF A USER" */
+
+        blogs:async ()=>{
+            return await BlogsModel.query().select('blogs.blog_id', 'blogs.heading', 'blogs.content', 'blogs.b_image', 'users.user_id', 'users.profile_img', 'users.username')
+            .countDistinct('blikes.blike_id', {as: 'totalblikes'})
+            .countDistinct('bcomments.bcomment_id', {as: 'totalbcomments'})
+            .from('blogs')
+            .rightJoin('users', function(){
+              this
+              .on('blogs.bluser_id', '=', 'users.user_id ')
+            })
+            .rightJoin('blikes', function(){
+              this
+              .on('blogs.blog_id', '=', 'blikes.blblog_id')
+            })
+            .rightJoin('bcomments', function(){
+              this
+              .on('blogs.blog_id', '=', 'bcomments.blblog_id')
+            })
+            .groupBy('blogs.blog_id');
+        },
+
         likecomment: async (_,args) => {
             const ok = await bCommentLikesModel.query().count('bluser_id as a').where('bcomment_id', args.bcomment_id);
             console.log(ok);
@@ -269,9 +292,9 @@ const resolvers = {
 
 
         likeBlog: async (parents,args) => {
-            const isExist = BlogLikesModel.query().where('bluser_id',args.user_id).where('blblog_id',args.blog_id);
+            const isExist = await BlogLikesModel.query().where('bluser_id',args.user_id).where('blblog_id',args.blog_id);
             let value;
-            if (!((await isExist).length)){
+            if (!Boolean(isExist.length)){
                 value = true;
                 console.log(value, "in if, not liked inserting");
                 await BlogLikesModel.query().insert({"bluser_id": args.user_id, "blblog_id": args.blog_id});
@@ -285,8 +308,8 @@ const resolvers = {
         },
         
         unlikeBlog: async (parents,args) => {
-            const isExist = BlogLikesModel.query().where('bluser_id',args.user_id).where('blblog_id',args.blog_id);
-            if ((await isExist).length){
+            const isExist = await BlogLikesModel.query().where('bluser_id',args.user_id).where('blblog_id',args.blog_id);
+            if (!Boolean(isExist.length)){
                 console.log("deleted like");
                 await BlogLikesModel.query().delete().where('bluser_id',args.user_id).where('blblog_id',args.blog_id);
             }

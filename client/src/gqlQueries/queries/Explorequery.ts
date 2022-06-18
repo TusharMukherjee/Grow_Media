@@ -144,19 +144,37 @@ export const FROM_COOKIE = gql`
 
 `
 
+// export const USER_HOME_POSTS = gql`
+//     query Blogs {
+//         blogs {
+//             users {
+//             username
+//             profile_img
+//             }
+//             blog_id
+//             heading
+//             content
+//             b_image
+//         }
+//     }
+// `
+
 export const USER_HOME_POSTS = gql`
-    query Blogs {
-        blogs {
-            users {
-            username
-            profile_img
-            }
-            blog_id
-            heading
-            content
-            b_image
-        }
-    }
+
+query Query {
+  blogs {
+    blog_id
+    heading
+    content
+    b_image
+    user_id
+    profile_img
+    username
+    totalblikes
+    totalbcomments
+  }
+}
+
 `
 
 export const USER_HOME_INFO = gql`

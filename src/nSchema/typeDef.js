@@ -244,6 +244,18 @@ const typeDefs = gql`
         totalBlogComments:Int
     }
 
+    type allblogs{
+        blog_id:Int,
+        heading:String,
+        content:String,
+        b_image:String,
+        user_id:String,
+        profile_img:String,
+        username: String,
+        totalblikes:Int,
+        totalbcomments:Int
+    }
+
     type Query{
         verifyjwtFunc: jwtInfo
         users: [Users!]!
@@ -251,7 +263,7 @@ const typeDefs = gql`
         # homeUser(id: Int!): [homeUserInfo]
         searchUser(searchkeyword: String): [User]
         blog(id: Int!): [blogCNTNT]
-        blogs: [Blogs!]!
+        blogs: [allblogs]
         homeBlogs(id:Int!): [Blogs!]!
         searchBlog(searchkeyword: String): [Blogs]
         onlycomments(id: ID,user_id:ID): [onlyCMNT]
