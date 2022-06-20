@@ -29,23 +29,30 @@ type blogsData = {
   //   blogs: [homeBlogsData]
   // }
 
-  type blogs = {
-    blog_id: string;
-    heading: string;
-    content: string;
-    b_image: string;
-  }
+  type UserInfoType = {
+        user: {
+            user_id: string,
+            profile_img: string,
+            username: string,
+            bio: string,
+            link: string,
+            totalblogs: number,
+            no_followingbyuser: number
+        }[]
+}
 
-
-type UserInfoType = {
-    user: [{
-        profileImg: string;
-        username: string;
-        email: string;
-        bio: string;
-        link: string;
-        blogs: blogs[];
-    }]
+type homeblogs = {
+  homeBlogs:{
+      blog_id: string,
+      heading: string,
+      content: string,
+      b_image: string,
+      user_id: string,
+      profile_img: string,
+      username: string,
+      totalblikes: string,
+      totalbcomments: string 
+  }[]
 }
   
 
@@ -100,7 +107,7 @@ export const postSlice = createSlice({
         postOwnerInfo: (state, actions: PayloadAction<users[]>) => {
           state.users = actions.payload;
         },
-        homeBlogsStore: (state, actions: PayloadAction<UserInfoType | undefined>) =>{
+        homeBlogsStore: (state, actions: PayloadAction<homeblogs | undefined>) =>{
           state.user = actions.payload;
         },
         userOwnerId:(state, actions: PayloadAction<string>)=>{

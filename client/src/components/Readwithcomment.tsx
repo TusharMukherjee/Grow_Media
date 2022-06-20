@@ -3,9 +3,10 @@ import { Link, useParams } from "react-router-dom";
 // import { getComm } from ''
 import { useSelector } from 'react-redux';
 import { getComm, getOwnerInfo, postOwnerInfo } from "../features/PostSlice";
-import { useMutation } from "@apollo/client";
-import { COMMENT, FOLLOW, LIKECMNT, REPLY_COMMENTS, UNFOLLOW, UNLIKECMNT } from "../gqlQueries/mutations/Allmutation";
+import { useMutation, useQuery } from "@apollo/client";
+import { LIKEBLOG, UNLIKEBLOG, COMMENT, FOLLOW, LIKECMNT, REPLY_COMMENTS, UNFOLLOW, UNLIKECMNT } from "../gqlQueries/mutations/Allmutation";
 import { userLoginInfo } from "../features/UserSlice";
+import { BLOGS_LIKES } from "../gqlQueries/queries/Explorequery";
 
 type refetchMut = {
     is_liked: {
@@ -18,6 +19,12 @@ type refetchMut = {
     refetch_isFollowing:()=> any,
     refetchMut: () => any,
     refetch_isliked:() => any,
+    refetch_followers:()=> any,
+    data_followers: {
+        followers:{
+            followers: number
+        }[]
+    }
     isFollow: {
         isFollowing:{
             status: boolean
@@ -92,7 +99,7 @@ type data_onlyblog_users = {
     bio: string
 }
 
-const Readwithcomment = ({refetch_total,is_liked,refetch_isliked ,data_onlyblog,repTOTAL,onlyCMNT,refetch_isFollowing,refetchMut, isFollow}:refetchMut) => {
+const Readwithcomment = ({data_followers,refetch_followers,refetch_total,is_liked,refetch_isliked ,data_onlyblog,repTOTAL,onlyCMNT,refetch_isFollowing,refetchMut, isFollow}:refetchMut) => {
     
     const param = useParams();
     const selector = useSelector(userLoginInfo);
@@ -103,6 +110,38 @@ const Readwithcomment = ({refetch_total,is_liked,refetch_isliked ,data_onlyblog,
     const [toggleReply, setToggleReply] = useState<any>(null);
     const [createComment, setCreateComment] = useState("");
     const [replyComment, setReplyComment] = useState("");
+
+    const{data:data_blikes, refetch:refetch_blikes} = useQuery(BLOGS_LIKES,{
+        variables:{
+            blogId: param.blog_id,
+            userId: selector.user_id
+        }
+    });
+    console.log(data_blikes);
+
+    // Likeblog -------------------------------------------
+
+    const[likeblogFun] = useMutation(LIKEBLOG,{
+        onCompleted:() => {
+            refetch_blikes();
+        },
+        variables:{
+            userId: Number(selector.user_id),
+            blogId: Number(param.blog_id),
+        }
+    });
+
+    // Unlikeblog -----------------------------------------
+
+    const[unlikeblogFun] = useMutation(UNLIKEBLOG,{
+        onCompleted:() => {
+            refetch_blikes();
+        },
+        variables:{
+            userId: Number(selector.user_id),
+            blogId: Number(param.blog_id),
+        }
+    });
 
     // Comment related functions --------------------------
 
@@ -130,6 +169,7 @@ const Readwithcomment = ({refetch_total,is_liked,refetch_isliked ,data_onlyblog,
         onCompleted:(data) => {
             console.log(data);
             refetch_isFollowing();
+            refetch_followers();
         }
     });
 
@@ -137,6 +177,7 @@ const Readwithcomment = ({refetch_total,is_liked,refetch_isliked ,data_onlyblog,
         onCompleted:(data) => {
             console.log(data);
             refetch_isFollowing();
+            refetch_followers();
         }
     })
 
@@ -176,7 +217,7 @@ const Readwithcomment = ({refetch_total,is_liked,refetch_isliked ,data_onlyblog,
                     <img src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1652613376/${data_onlyblog?.blog[0]?.users[0]?.profile_img}`} className='h-20 w-20 rounded-md'/>
                     <div className='flex flex-col'>
                     <h1 className='pl-4'><Link to= {`/profile/${data_onlyblog?.blog[0].users[0].user_id}`}>{data_onlyblog?.blog[0].users[0].username}</Link></h1>
-                    <p className='pl-4'>10K Followers</p> 
+                    <p className='pl-4'>{data_followers?.followers[0]?.followers} Followers</p> 
                     </div>
                 </div>
                 <p className='px-4 pb-4'>{(data_onlyblog?.blog[0].users[0].bio == null)? '' : data_onlyblog?.blog[0].users[0].bio}</p>
@@ -199,9 +240,17 @@ const Readwithcomment = ({refetch_total,is_liked,refetch_isliked ,data_onlyblog,
 
             <div className=' w-80 my-5 py-1 px-2 rounded-md'>
                 <div className='grid grid-cols-2 gap-3'>
-                    <button className=' rounded-md py-1 px-2 col-span-1 bg-white'>
-                        80 Likes
-                    </button>
+                    {
+                        (data_blikes?.likeblogs[0]?.islikedbyuser === selector.user_id)
+                        ?
+                        <button onClick={()=>unlikeblogFun()} className=' bg-teal-500 rounded-md py-1 px-2 col-span-1 text-white'>
+                            {data_blikes?.likeblogs[0]?.totalblikes} Likes
+                        </button>
+                        :
+                        <button onClick={()=>likeblogFun()} className=' rounded-md py-1 px-2 col-span-1 bg-white'>
+                            {data_blikes?.likeblogs[0]?.totalblikes} Likes
+                        </button>
+                    }
                     <button className=' rounded-md py-1 px-2 col-span-1 bg-white'>
                         {onlyCMNT?.onlycomments.length} Comm.
                     </button>

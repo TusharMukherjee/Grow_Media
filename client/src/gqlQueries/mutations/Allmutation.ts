@@ -76,6 +76,29 @@ export const CREATE_POST = gql`
 
 `
 
+export const LIKEBLOG = gql`
+
+mutation Mutation($userId: Int, $blogId: Int) {
+  likeBlog(user_id: $userId, blog_id: $blogId) {
+    status
+    msg
+  }
+}
+
+`
+
+export const UNLIKEBLOG = gql`
+
+mutation UnlikeBlog($userId: Int, $blogId: Int) {
+  unlikeBlog(user_id: $userId, blog_id: $blogId) {
+    status
+    msg
+  }
+}
+
+`
+
+
 export const COMMENT = gql`
 
     mutation Mutation($userId: ID!, $blogId: ID!, $commentContent: String!) {

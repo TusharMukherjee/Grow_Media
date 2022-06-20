@@ -20,12 +20,12 @@ const typeDefs = gql`
         user_id: ID
         profile_img: String
         username: String
-        email: String
-        password: String
         bio: String
         link: String
-        blogs: [Blogs] # to be parent
-        skills: [extraInfo] # to be parent
+        totalblogs: Int
+        no_followingbyuser: Int
+        # blogs: [Blogs] # to be parent
+        # skills: [extraInfo] # to be parent
     }
 
     type numberOfBlogs{
@@ -69,12 +69,12 @@ const typeDefs = gql`
         blog_id: ID!
     }
 
-    type BlogLikes{
-        blike_id: ID
-        bluser_id: ID
-        blblog_id: ID
-        totalBlogLikes: Int
-    }
+    # type BlogLikes{
+    #     blike_id: ID
+    #     bluser_id: ID
+    #     blblog_id: ID
+    #     totalBlogLikes: Int
+    # }
 
     type Comment{
         bcomment_id: ID
@@ -255,6 +255,14 @@ const typeDefs = gql`
         totalblikes:Int,
         totalbcomments:Int
     }
+    type followerstype{
+        followers:Int
+    }
+
+    type bloglikes{
+        totalblikes:Int
+        islikedbyuser:Int
+    }
 
     type Query{
         verifyjwtFunc: jwtInfo
@@ -264,7 +272,10 @@ const typeDefs = gql`
         searchUser(searchkeyword: String): [User]
         blog(id: Int!): [blogCNTNT]
         blogs: [allblogs]
-        homeBlogs(id:Int!): [Blogs!]!
+        followingblogs(user_id:Int): [allblogs]
+        likeblogs(blog_id:ID,user_id:ID): [bloglikes]
+        homeBlogs(id:Int!): [allblogs!]!
+        followers(user_id:Int): [followerstype]
         searchBlog(searchkeyword: String): [Blogs]
         onlycomments(id: ID,user_id:ID): [onlyCMNT]
         totalcomment(id: ID!): [bcommentsfortotal]
@@ -320,8 +331,8 @@ const typeDefs = gql`
         createBlog(user_id: ID!, b_image: String, heading: String!, content:String!): Blogs
         deleteBlog(user_id: ID!, blog_id: String!): Blogs
 
-        likeBlog(user_id: Int, blog_id: Int): [BlogLikes]
-        unlikeBlog(user_id: Int, blog_id: Int): BlogLikes
+        likeBlog(user_id: Int, blog_id: Int): likeblogmut
+        unlikeBlog(user_id: Int, blog_id: Int): likeblogmut
         commentBlog(user_id: ID!, blog_id: ID!, commentContent: String!): Comment
         likecommentMutation(user_id:ID, bcomment_idLike:ID): likeMutation
         unlikecommentMutation(user_id:ID,bcomment_idLike:ID):likeMutation
@@ -331,6 +342,11 @@ const typeDefs = gql`
 
         toFollow(user_id: ID!, followers_id: ID!): follow
         toUnfollow(user_id: ID!, followers_id: ID!): follow
+    }
+
+    type likeblogmut{
+        status:Boolean,
+        msg: String
     }
 
     input cuserInfo{

@@ -109,17 +109,89 @@ export const PROFILE = gql`
     }
 `
 
+// export const PROFILE_INFO = gql`
+
+//     query Query($userId: Int!) {
+//         user(id: $userId) {
+//             user_id
+//             profile_img
+//             username
+//             bio
+//             link
+//         }
+//     }
+
+// `
+
 export const PROFILE_INFO = gql`
 
-    query Query($userId: Int!) {
-        user(id: $userId) {
-            user_id
-            profile_img
-            username
-            bio
-            link
-        }
-    }
+query User($userId: Int!) {
+  user(id: $userId) {
+    user_id
+    profile_img
+    username
+    bio
+    link
+    totalblogs
+    no_followingbyuser
+  }
+}
+
+`
+
+export const HOMEBLOGS = gql`
+
+query HomeBlogs($homeBlogsId: Int!) {
+  homeBlogs(id: $homeBlogsId) {
+    blog_id
+    heading
+    content
+    b_image
+    user_id
+    profile_img
+    username
+    totalblikes
+    totalbcomments
+  }
+}
+
+`
+export const FOLLOWINGPOSTS = gql`
+
+query Query($userId: Int) {
+  followingblogs(user_id: $userId) {
+    blog_id
+    heading
+    content
+    b_image
+    user_id
+    profile_img
+    username
+    totalblikes
+    totalbcomments
+  }
+}
+
+`
+
+export const FOLLOWERS = gql `
+
+query Followers($userId: Int) {
+  followers(user_id: $userId) {
+    followers
+  }
+}
+
+`
+
+export const BLOGS_LIKES = gql`
+
+query Query($blogId: ID, $userId: ID) {
+  likeblogs(blog_id: $blogId, user_id: $userId) {
+    totalblikes
+    islikedbyuser
+  }
+}
 
 `
 

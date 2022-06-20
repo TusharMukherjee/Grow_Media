@@ -2,37 +2,34 @@ import { useMutation, useQuery } from '@apollo/client'
 import React, { useEffect, useState } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { useParams } from 'react-router-dom'
-import { IS_FOLLOWING, PROFILE, PROFILE_INFO } from '../gqlQueries/queries/Explorequery'
+import { FOLLOWERS, HOMEBLOGS, IS_FOLLOWING, PROFILE, PROFILE_INFO } from '../gqlQueries/queries/Explorequery'
 import { useDispatch } from 'react-redux'
 import { homeBlogsStore } from '../features/PostSlice'
 
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { homeBlogsDataStore } from '../features/PostSlice'
+
 import { userLoginInfo } from '../features/UserSlice'
 import { FOLLOW, UNFOLLOW } from '../gqlQueries/mutations/Allmutation'
 
-type blogs = {
-        blog_id: string;
-        heading: string;
-        content: string;
-        b_image:string;
-}
+// type blogs = {
+//         blog_id: string;
+//         heading: string;
+//         content: string;
+//         b_image:string;
+// }
 
 
 type UserInfoType = {
-        user: [{
-            profileImg: string;
-            username: string;
-            email: string;
-            bio: string;
-            link: string;
-            blogs: blogs[];
-        }]
-}
-
-type UserId = {
-    userId:number;
+        user: {
+            user_id: string,
+            profile_img: string,
+            username: string,
+            bio: string,
+            link: string,
+            totalblogs: number,
+            no_followingbyuser: number
+        }[]
 }
 
 type isFollow = {
@@ -47,14 +44,17 @@ const Userhome: React.FC = () => {
 
     const {profile_id} = useParams();
 
-    const homeBlogsDataSelector: UserInfoType = useSelector(homeBlogsDataStore);
-    console.log(homeBlogsDataSelector);
-
-    const{data} = useQuery(PROFILE_INFO,{variables:{
+    const{data} = useQuery<UserInfoType>(PROFILE_INFO,{variables:{
         userId: Number(profile_id)
     }});
 
     const selector = useSelector(userLoginInfo);
+
+    const {data:data_followers, refetch:refetch_followers} = useQuery(FOLLOWERS,{
+        variables:{
+            userId: Number(profile_id)
+        }
+    });
 
     const {data:data_isFollowing,refetch:refetch_isFollowing} = useQuery<isFollow>(IS_FOLLOWING,{
         variables:{
@@ -68,6 +68,7 @@ const Userhome: React.FC = () => {
         onCompleted:(data) => {
             console.log(data);
             refetch_isFollowing();
+            refetch_followers();
         },
         variables:{
             userId:selector.user_id,
@@ -79,6 +80,7 @@ const Userhome: React.FC = () => {
         onCompleted:(data) => {
             console.log(data);
             refetch_isFollowing();
+            refetch_followers();
         },
         variables:{
             userId:selector.user_id,
@@ -96,7 +98,7 @@ const Userhome: React.FC = () => {
                     <img src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1652613376/${data?.user[0]?.profile_img}`} className='rounded-lg w-32 h-32'/>
                 </div>
                 <div className='col-span-3 flex flex-col justify-center '>
-                    <div className=' w-4/6 flex items-center font-semibold my-2 justify-between' ><h1>{data?.user[0].username}</h1>
+                    <div className=' w-4/6 flex items-center font-semibold my-2 justify-between' ><h1>{data?.user[0]?.username}</h1>
                     {
                         (Number(selector.user_id) === Number(profile_id))
                         ?
@@ -111,12 +113,12 @@ const Userhome: React.FC = () => {
                     }
                     </div>
                     <div className=' w-4/6 my-2 flex justify-between'>
-                        <div className=""> 100 Blogs</div>
-                        <div className=""> 114 Followers </div>
-                        <div className=""> 316 Following </div>
+                        <div className=""> {data?.user[0]?.totalblogs} Blogs</div>
+                        <div className=""> {data_followers?.followers[0]?.followers} Followers </div>
+                        <div className=""> {data?.user[0]?.no_followingbyuser} Following </div>
                     </div>
-                    <p className=' w-4/6 flex items-center '>{data?.user[0].bio == null ? '' : data?.user[0].bio}</p>
-                    <a href={data?.user[0].link} className=' w-4/6 my-1 flex items-center' >{data?.user[0].link}</a>
+                    <p className=' w-4/6 flex items-center '>{data?.user[0]?.bio == null ? '' : data?.user[0]?.bio}</p>
+                    <a href={data?.user[0]?.link} className=' w-4/6 my-1 flex items-center' >{data?.user[0]?.link}</a>
                 </div>
             </div>
             <hr className='col-start-2 col-span-6'/>

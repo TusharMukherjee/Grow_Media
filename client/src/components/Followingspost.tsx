@@ -1,7 +1,9 @@
 import { useQuery } from '@apollo/client'
 import React, { useEffect } from 'react'
+import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { USER_HOME_POSTS } from '../gqlQueries/queries/Explorequery'
+import { userLoginInfo } from '../features/UserSlice'
+import { FOLLOWINGPOSTS, USER_HOME_POSTS } from '../gqlQueries/queries/Explorequery'
 import Sidebar from './Sidebar'
 
 // type allSearchBlogsUsers = {
@@ -12,7 +14,7 @@ import Sidebar from './Sidebar'
 // }
 
 type Blogs = {
-    blogs:[blogs]
+    followingblogs:[blogs]
 }
 
 type blogs = {
@@ -29,8 +31,14 @@ type blogs = {
 
 const Followingspost:React.FC = () => {
 
-    const {data,loading,refetch} = useQuery<Blogs>(USER_HOME_POSTS);
-    console.log(data?.blogs);
+    const selector = useSelector(userLoginInfo)
+
+    const {data,loading,refetch} = useQuery<Blogs>(FOLLOWINGPOSTS,{
+        variables:{
+            userId: selector.user_id
+        }
+    });
+    console.log(data?.followingblogs);
 
     useEffect(()=>{
         refetch();
@@ -41,7 +49,7 @@ const Followingspost:React.FC = () => {
     <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col mt-6'>
             {
                 (loading)?(<p>Loading...</p>):
-                data?.blogs.map((el) => {
+                data?.followingblogs?.map((el) => {
                     return (
                         
                         <div className='bg-white grid grid-cols-8 items-center pt-8' key={Number(el.blog_id)}>

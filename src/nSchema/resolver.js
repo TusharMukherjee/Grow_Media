@@ -43,8 +43,22 @@ const resolvers = {
         users(){
             return UsersModel.query(); /* Resolve all users  */
         },
-        user(parent, args){
-            return UsersModel.query().withGraphFetched('blogs').where('user_id','=',args.id);
+        user: async (parent, args)=>{
+            // .select(BlogLikesModel.query().select('blikes.bluser_id').from('blikes').where('blikes.blblog_id','=',args.blog_id).andWhere('blikes.bluser_id','=', args.user_id).as('islikedbyuser'))
+            // return UsersModel.query().withGraphFetched('blogs').where('user_id','=',args.id);
+            return await UsersModel.query().select('users.user_id', 'users.profile_img', 'users.username', 'users.bio', 'users.link')
+            .select(UsersModel.query().count('blogs.bluser_id').from('blogs').where('blogs.bluser_id', '=', args.id).as('totalblogs'))
+            .count('friends.uUser_id',{as:'no_followingbyuser'})
+            .from('users')
+            .leftJoin('blogs',function(){
+              this
+              .on('blogs.bluser_id', '=', 'users.user_id')
+            })
+            .leftJoin('friends',function(){
+              this
+              .on('friends.uUser_id', '=', 'users.user_id')
+            })
+            .where('users.user_id','=',args.id);
         }, /* Resolve Blogs of a particular user */
         searchUser(parent, args){
             return UsersModel.query().where('username', 'LIKE', `%${args.searchkeyword}%`);
@@ -87,22 +101,59 @@ const resolvers = {
         // }, /* Resolves all blogs of a particular user "HOMEPAGE OF A USER" */
 
         blogs:async ()=>{
-            return await BlogsModel.query().select('blogs.blog_id', 'blogs.heading', 'blogs.content', 'blogs.b_image', 'users.user_id', 'users.profile_img', 'users.username')
+            return await BlogsModel.query().select('blogs.blog_id', 'blogs.heading', 'blogs.created_at', 'blogs.content', 'blogs.b_image', 'users.user_id', 'users.profile_img', 'users.username')
             .countDistinct('blikes.blike_id', {as: 'totalblikes'})
             .countDistinct('bcomments.bcomment_id', {as: 'totalbcomments'})
             .from('blogs')
-            .rightJoin('users', function(){
+            .leftJoin('users', function(){
               this
               .on('blogs.bluser_id', '=', 'users.user_id ')
             })
-            .rightJoin('blikes', function(){
+            .leftJoin('blikes', function(){
               this
               .on('blogs.blog_id', '=', 'blikes.blblog_id')
             })
-            .rightJoin('bcomments', function(){
+            .leftJoin('bcomments', function(){
               this
               .on('blogs.blog_id', '=', 'bcomments.blblog_id')
             })
+            .groupBy('blogs.blog_id')
+            .orderBy('blogs.created_at','desc');
+        },
+        followingblogs:async (_,args)=>{
+            return await BlogsModel.query().select('blogs.blog_id', 'blogs.heading', 'blogs.content', 'blogs.b_image', 'blogs.created_at', 'users.user_id', 'users.profile_img', 'users.username')
+            .countDistinct('blikes.blike_id', {as: 'totalblikes'})
+            .countDistinct('bcomments.bcomment_id', {as: 'totalbcomments'})
+            .from('blogs')
+            .leftJoin('users', function(){
+              this
+              .on('blogs.bluser_id', '=', 'users.user_id ')
+            })
+            .leftJoin('blikes', function(){
+              this
+              .on('blogs.blog_id', '=', 'blikes.blblog_id')
+            })
+            .leftJoin('bcomments', function(){
+              this
+              .on('blogs.blog_id', '=', 'bcomments.blblog_id')
+            })
+            .leftJoin('friends', function(){
+                this
+                .on('friends.followers_id', '=', ' users.user_id')
+              })
+            .whereIn('followers_id',function(){
+                this.select('followers_id').from('friends').where('uUser_id','=',args.user_id)
+            })
+            .groupBy('blogs.blog_id')
+            .orderBy('blogs.created_at','desc');
+        },
+        likeblogs:async (_,args)=>{
+            return await BlogsModel.query().select()
+            .select(BlogLikesModel.query().countDistinct('blikes.blike_id').from('blikes').where('blikes.blblog_id','=',args.blog_id).as('totalblikes'))
+            
+            .select(BlogLikesModel.query().select('blikes.bluser_id').from('blikes').where('blikes.blblog_id','=',args.blog_id).andWhere('blikes.bluser_id','=', args.user_id).as('islikedbyuser'))
+            .from('blogs')
+            .where('blogs.blog_id', '=', args.blog_id)
             .groupBy('blogs.blog_id');
         },
 
@@ -111,8 +162,35 @@ const resolvers = {
             console.log(ok);
             return {"count": ok[0].a, "success": true}
         },
-        homeBlogs(parent,args){
-            return BlogsModel.query().where('bluser_id',args.id);
+        homeBlogs: async (parent,args)=>{
+            return await BlogsModel.query().select('blogs.blog_id', 'blogs.heading', 'blogs.content', 'blogs.b_image', 'blogs.created_at', 'users.user_id', 'users.profile_img', 'users.username')
+            .countDistinct('blikes.blike_id', {as: 'totalblikes'})
+            .countDistinct('bcomments.bcomment_id', {as: 'totalbcomments'})
+            .from('blogs')
+            .leftJoin('users', function(){
+              this
+              .on('blogs.bluser_id', '=', 'users.user_id ')
+            })
+            .leftJoin('blikes', function(){
+              this
+              .on('blogs.blog_id', '=', 'blikes.blblog_id')
+            })
+            .leftJoin('bcomments', function(){
+              this
+              .on('blogs.blog_id', '=', 'bcomments.blblog_id')
+            })
+            .where('users.user_id','=',args.id)
+            .groupBy('blogs.blog_id')
+            .orderBy('blogs.created_at','desc');
+        },
+        followers: async (_, args)=>{
+            return await UsersModel.query().select().count('friends.followers_id',{as: 'followers'})
+            .from('users')
+            .rightJoin('friends',function(){
+              this
+              .on('friends.followers_id','=','users.user_id')
+            })
+            .where('users.user_id', '=', args.user_id);
         },
         searchBlog(parent, args){
             return BlogsModel.query().where('heading', 'LIKE', `%${args.searchkeyword}%`).orWhere('content', 'LIKE', `%${args.searchkeyword}%`);
@@ -298,22 +376,30 @@ const resolvers = {
                 value = true;
                 console.log(value, "in if, not liked inserting");
                 await BlogLikesModel.query().insert({"bluser_id": args.user_id, "blblog_id": args.blog_id});
-                return await BlogLikesModel.query()
+                return {
+                    "status": true,
+                    "msg": "liked!"
+                };
             }
-            else{
                 value = false;
                 console.log(value, "in else, already liked");
-                return BlogLikesModel.query();
-            }
+                return {
+                    "status": false,
+                    "msg": "already liked!"
+                };
         },
         
         unlikeBlog: async (parents,args) => {
             const isExist = await BlogLikesModel.query().where('bluser_id',args.user_id).where('blblog_id',args.blog_id);
-            if (!Boolean(isExist.length)){
+            console.log(Boolean(isExist.length));
+            if (Boolean(isExist.length)){
                 console.log("deleted like");
                 await BlogLikesModel.query().delete().where('bluser_id',args.user_id).where('blblog_id',args.blog_id);
             }
-            return await BlogLikesModel.query();
+            return {
+                "status": true,
+                "msg": "unliked!"
+            };
         },
 
         commentBlog: async (parent,args) => {

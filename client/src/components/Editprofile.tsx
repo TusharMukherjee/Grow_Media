@@ -193,13 +193,13 @@ const Editprofile:React.FC = () => {
                             <div className='pl-4'>
                                 <div className='flex flex-row justify-between w-10/12'>
                                     <label className='col-span-1' htmlFor="bio">Bio</label>
-                                    <textarea placeholder='Bio' value= {`${bio}`} onChange={e => {setBio(e.target.value)}} id='bio'  className=' bg-slate-200 text-sm resize-none h-24 px-3 pt-2 w-48 rounded-md border-[1px] border-gray-400 focus:border-teal-500 outline-0 col-span-1'/>
+                                    <textarea maxLength={149} placeholder='Bio' value= {`${bio}`} onChange={e => {setBio(e.target.value)}} id='bio'  className=' bg-slate-200 text-sm resize-none h-24 px-3 pt-2 w-48 rounded-md border-[1px] border-gray-400 focus:border-teal-500 outline-0 col-span-1'/>
                                 </div>
                             </div>
                             <div className='pl-4'>
                                 <div className='flex flex-row justify-between w-10/12'>
                                     <label className='col-span-1' htmlFor="website">Website</label>
-                                    <input placeholder='Website' value= {`${link}`} onChange={e => {setLink(e.target.value)}} type="text" id='website'  className=' px-3 w-48 text-sm rounded-md h-8 border-[1px] border-gray-400 focus:border-teal-500 bg-slate-200 outline-0 col-span-1'/>
+                                    <input maxLength={149} placeholder='Website' value= {`${link}`} onChange={e => {setLink(e.target.value)}} type="text" id='website'  className=' px-3 w-48 text-sm rounded-md h-8 border-[1px] border-gray-400 focus:border-teal-500 bg-slate-200 outline-0 col-span-1'/>
                                 </div>
                             </div> 
                         </div>
@@ -209,19 +209,19 @@ const Editprofile:React.FC = () => {
                                 </div>
                                         <div className=' pl-4 flex flex-row justify-between w-10/12'>
                                             <label className='col-span-1' htmlFor="qualificaton">Qualification</label>
-                                            <input placeholder='Qualification' value= {`${qualification}`} onChange={e => {setQualification(e.target.value)}} type="text" id='qualificaton'  className=' px-3 w-48 text-sm rounded-md h-8 border-[1px] border-gray-400 focus:border-teal-500 bg-slate-200 outline-0 col-span-1'/>
+                                            <input maxLength={9} placeholder='Qualification' value= {`${qualification}`} onChange={e => {setQualification(e.target.value)}} type="text" id='qualificaton'  className=' px-3 w-48 text-sm rounded-md h-8 border-[1px] border-gray-400 focus:border-teal-500 bg-slate-200 outline-0 col-span-1'/>
                                         </div>
                                         <div className=' pl-4 flex flex-row justify-between w-10/12'>
                                             <label className='col-span-1' htmlFor="work">Work</label>
-                                            <input placeholder='Work' value= {`${work}`} onChange={e => {setWork(e.target.value)}} type="text" id='work' className=' px-3 w-48 text-sm rounded-md h-8 border-[1px] border-gray-400 focus:border-teal-500 bg-slate-200 outline-0 col-span-1'/>
+                                            <input maxLength={14} placeholder='Work' value= {`${work}`} onChange={e => {setWork(e.target.value)}} type="text" id='work' className=' px-3 w-48 text-sm rounded-md h-8 border-[1px] border-gray-400 focus:border-teal-500 bg-slate-200 outline-0 col-span-1'/>
                                         </div>
                                         <div className=' pl-4 flex flex-row justify-between w-10/12'>
                                             <label className='col-span-1' htmlFor="college">College</label>
-                                            <input placeholder='College' value= {`${college}`} onChange={e => {setCollege(e.target.value)}} type="text" id='college' className=' px-3 w-48 text-sm rounded-md h-8 border-[1px] border-gray-400 focus:border-teal-500 bg-slate-200 outline-0 col-span-1'/>
+                                            <input maxLength={14} placeholder='College' value= {`${college}`} onChange={e => {setCollege(e.target.value)}} type="text" id='college' className=' px-3 w-48 text-sm rounded-md h-8 border-[1px] border-gray-400 focus:border-teal-500 bg-slate-200 outline-0 col-span-1'/>
                                         </div>
                                         <div className=' pl-4 flex flex-row justify-between w-10/12'>
                                             <label className='col-span-1' htmlFor="hometown">Hometown</label>
-                                            <input placeholder='Hometown' value= {`${hometown}`} onChange={e => {setHometown(e.target.value)}} type="text" id='hometown' className=' px-3 w-48 text-sm rounded-md h-8 border-[1px] border-gray-400 focus:border-teal-500 bg-slate-200 outline-0 col-span-1'/>
+                                            <input maxLength={14} placeholder='Hometown' value= {`${hometown}`} onChange={e => {setHometown(e.target.value)}} type="text" id='hometown' className=' px-3 w-48 text-sm rounded-md h-8 border-[1px] border-gray-400 focus:border-teal-500 bg-slate-200 outline-0 col-span-1'/>
                                         </div>
                             </div>
                             <div className=' w-3/4 grid gap-8 p-3 m-6'>
