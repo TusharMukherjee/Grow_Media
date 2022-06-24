@@ -83,7 +83,7 @@ const Signup = () => {
                         <input type="email" onChange={(e) => setEmail((e.target.value).trim().replace(/\s/g, ''))} placeholder='Email' className=' bg-gray-200 text-gray-900 h-9 rounded-md outline-0 p-2' required/>
                     </div>
                     <div className=" my-5">
-                        <input type="password" onChange={(e) => setPassword((e.target.value).trim())} placeholder='Password' className=' bg-gray-200 text-gray-900 h-9 rounded-md outline-0 p-2' required/>
+                        <input onKeyDownCapture={(e) => e.key === 'Enter' && Sign_up_the_user()} type="password" onChange={(e) => setPassword((e.target.value).trim())} placeholder='Password' className=' bg-gray-200 text-gray-900 h-9 rounded-md outline-0 p-2' required/>
                     </div>
                     <div className=" mt-5 flex justify-around">
                         <Link to="/login" className=' text-blue-700'>

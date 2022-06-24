@@ -1,24 +1,13 @@
 import { useMutation, useQuery } from '@apollo/client'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { useParams } from 'react-router-dom'
-import { FOLLOWERS, HOMEBLOGS, IS_FOLLOWING, PROFILE, PROFILE_INFO } from '../gqlQueries/queries/Explorequery'
-import { useDispatch } from 'react-redux'
-import { homeBlogsStore } from '../features/PostSlice'
+import { FOLLOWERS, IS_FOLLOWING, PROFILE_INFO } from '../gqlQueries/queries/Explorequery'
 
 import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
 
 import { userLoginInfo } from '../features/UserSlice'
 import { FOLLOW, UNFOLLOW } from '../gqlQueries/mutations/Allmutation'
-
-// type blogs = {
-//         blog_id: string;
-//         heading: string;
-//         content: string;
-//         b_image:string;
-// }
-
 
 type UserInfoType = {
         user: {
@@ -62,11 +51,11 @@ const Userhome: React.FC = () => {
             followersId: Number(profile_id)
         }
     });
-    console.log(data_isFollowing?.isFollowing.status);
+    // console.log(data_isFollowing?.isFollowing.status);
 
     const [followFun] = useMutation(FOLLOW,{
         onCompleted:(data) => {
-            console.log(data);
+            // console.log(data);
             refetch_isFollowing();
             refetch_followers();
         },
@@ -78,7 +67,7 @@ const Userhome: React.FC = () => {
 
     const [unfollowFun] = useMutation(UNFOLLOW,{
         onCompleted:(data) => {
-            console.log(data);
+            // console.log(data);
             refetch_isFollowing();
             refetch_followers();
         },
@@ -88,14 +77,19 @@ const Userhome: React.FC = () => {
         }
     })
 
-    console.log(data);
+    // console.log(data);
 
   return (
       <>
         <div className='col-span-8 grid grid-cols-8 mt-6'>
             <div className='col-start-2 col-span-6 grid grid-cols-5 h-56'>
                 <div className=' col-span-2 h-56 flex justify-center items-center'>
-                    <img src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1652613376/${data?.user[0]?.profile_img}`} className='rounded-lg w-32 h-32'/>
+                    {
+                        (data?.user[0]?.profile_img !== null)?
+                        <img src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1652613376/${data?.user[0]?.profile_img}`} alt={data?.user[0]?.profile_img} className='rounded-lg w-32 h-32'/>
+                        :
+                        <img src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1656086069/e0gy9inebvobnauo1um2.gif`} alt="Default img (Grow_Media)" className='rounded-lg w-32 h-32'/>
+                    }
                 </div>
                 <div className='col-span-3 flex flex-col justify-center '>
                     <div className=' w-4/6 flex items-center font-semibold my-2 justify-between' ><h1>{data?.user[0]?.username}</h1>

@@ -1,5 +1,3 @@
-import React from 'react'
-
 const Rootpage = () => {
   return (
     <div className=' bg-white rounded-md shadow-xl shadow-teal-700 p-4'>

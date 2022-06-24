@@ -1,28 +1,14 @@
 const express = require('express');
 const path = require('path');
 const {ApolloServer} = require('apollo-server-express');
-const {BlogsModel} = require('../sqlDB/models/blogsModel')
 
 
 const {typeDefs} = require('./nSchema/typeDef');
 const {resolvers} = require('./nSchema/resolver');
-const { UsersModel } = require('../sqlDB/models/users');
-// const { FriendsModel } = require('../sqlDB/models/friends');
-// const { BlogCommentsModel } = require('../sqlDB/models/blogsComments');
-// const { default: knex } = require('knex');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
-const { ExtraInfoModel } = require('../sqlDB/models/extraInfo');
-// const { response } = require('express');
-const { cloudinary } = require('./cloudinary');
-const { bCommentLikesModel } = require('../sqlDB/models/bcommentLikes');
-const { BlogCommentsModel } = require('../sqlDB/models/blogsComments');
-const { buildResolveInfo } = require('graphql/execution/execute');
-const { BlogLikesModel } = require('../sqlDB/models/blogsLikes');
-const { totalmem } = require('os');
 
 const app = express();
-// app.use(express.json());
 app.use(express.json({
   limit: '200mb'
 }));
@@ -30,21 +16,6 @@ app.use(express.urlencoded({
   limit: '200mb',
   extended: true 
 }));
-
-// app.use(bodyParser.json({
-//   limit: '50mb'
-// }));
-
-// app.use(bodyParser.urlencoded({
-//   limit: '50mb',
-//   parameterLimit: 100000,
-//   extended: true 
-// }));
-
-// const options = {
-//   port: 3001,
-//   bodyParserOptions: { limit: "50mb", type: "application/json" },
-// };
 
 
 const main = async () => {
@@ -152,8 +123,7 @@ const main = async () => {
         // }));
     });
 
-    // BlogsModel.query().where('blog_id','=',args.id).withGraphFetched('[users,bcomments.[blogsComUsers,replyComments.[replyUsers]]]');
-
+    
     // app.post('/post', async (req, res) => {
     //     // creates a new idea from the request body
     //     // only allows the idea and creator fields for safety

@@ -1,8 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-// import { getComm } from ''
 import { useSelector } from 'react-redux';
-import { getComm, getOwnerInfo, postOwnerInfo } from "../features/PostSlice";
 import { useMutation, useQuery } from "@apollo/client";
 import { LIKEBLOG, UNLIKEBLOG, COMMENT, FOLLOW, LIKECMNT, REPLY_COMMENTS, UNFOLLOW, UNLIKECMNT } from "../gqlQueries/mutations/Allmutation";
 import { userLoginInfo } from "../features/UserSlice";
@@ -105,7 +103,7 @@ const Readwithcomment = ({data_followers,refetch_followers,refetch_total,is_like
     const selector = useSelector(userLoginInfo);
 
     // console.log(repTOTAL?.totalcomment?.[0].bcomments);
-    // console.log(is_liked?.onlycomments[1].bcommentLikesb[0]?.bluser_id);
+    // console.log(is_liked?.onlycomments[1].bcommentLikesb[0]?.bluser_id); alt=
 
     const [toggleReply, setToggleReply] = useState<any>(null);
     const [createComment, setCreateComment] = useState("");
@@ -117,7 +115,6 @@ const Readwithcomment = ({data_followers,refetch_followers,refetch_total,is_like
             userId: selector.user_id
         }
     });
-    console.log(data_blikes);
 
     // Likeblog -------------------------------------------
 
@@ -167,7 +164,7 @@ const Readwithcomment = ({data_followers,refetch_followers,refetch_total,is_like
 
     const [followFun] = useMutation(FOLLOW,{
         onCompleted:(data) => {
-            console.log(data);
+            // console.log(data);
             refetch_isFollowing();
             refetch_followers();
         }
@@ -175,7 +172,7 @@ const Readwithcomment = ({data_followers,refetch_followers,refetch_total,is_like
 
     const [unfollowFun] = useMutation(UNFOLLOW,{
         onCompleted:(data) => {
-            console.log(data);
+            // console.log(data);
             refetch_isFollowing();
             refetch_followers();
         }
@@ -214,7 +211,12 @@ const Readwithcomment = ({data_followers,refetch_followers,refetch_total,is_like
             <div className='flex flex-col items-center'>
             <div className=' h-auto w-80 flex flex-col bg-white rounded-md'>
                 <div className='flex flex-row items-center p-4'>
-                    <img src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1652613376/${data_onlyblog?.blog[0]?.users[0]?.profile_img}`} className='h-20 w-20 rounded-md'/>
+                    {
+                        (data_onlyblog?.blog[0]?.users[0]?.profile_img !== null)?
+                        <img src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1652613376/${data_onlyblog?.blog[0]?.users[0]?.profile_img}`} alt={data_onlyblog?.blog[0]?.users[0]?.profile_img} className='h-20 w-20 rounded-md'/>
+                        :
+                        <img src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1656086069/e0gy9inebvobnauo1um2.gif`} alt="Default img (Grow_Media)" className='h-20 w-20 rounded-md'/>
+                    }
                     <div className='flex flex-col'>
                     <h1 className='pl-4'><Link to= {`/profile/${data_onlyblog?.blog[0].users[0].user_id}`}>{data_onlyblog?.blog[0].users[0].username}</Link></h1>
                     <p className='pl-4'>{data_followers?.followers[0]?.followers} Followers</p> 
@@ -251,17 +253,17 @@ const Readwithcomment = ({data_followers,refetch_followers,refetch_total,is_like
                             {data_blikes?.likeblogs[0]?.totalblikes} Likes
                         </button>
                     }
-                    <button className=' rounded-md py-1 px-2 col-span-1 bg-white'>
+                    <div className=' rounded-md py-1 px-2 col-span-1 bg-white'>
                         {onlyCMNT?.onlycomments.length} Comm.
-                    </button>
+                    </div>
                 </div>
             </div>
 
             <div className='flex flex-col items-center'>
                 <div className='flex flex-col items-center mb-4'>
-                    <textarea placeholder="Comment" value={createComment} onChange={(e) => {setCreateComment(e.target.value)}} className=' w-80 rounded-t-md resize-none mx-4 mt-4 outline-0 p-4'></textarea>
+                    <textarea onKeyDownCapture={(e) => e.key === 'Enter' && (createComment.trim()!=="")?commentFun():null} placeholder="Comment" value={createComment} onChange={(e) => {setCreateComment(e.target.value)}} className=' w-80 rounded-t-md resize-none mx-4 mt-4 outline-0 p-4'></textarea>
                     <div className='flex flex-row bg-white w-80 justify-end py-2  rounded-b-md'>
-                        <button onClick={()=>(createComment.trim()!="")?commentFun():null} className='mr-4 px-2 py-1 bg-teal-500 rounded-md text-white'>Reply</button>
+                        <button onClick={()=>(createComment.trim()!=="")?commentFun():null} className='mr-4 px-2 py-1 bg-teal-500 rounded-md text-white'>Reply</button>
                     </div>
                 </div>
 
@@ -271,7 +273,12 @@ const Readwithcomment = ({data_followers,refetch_followers,refetch_total,is_like
                         
                             <div className='w-80 my-2 rounded-md bg-white flex flex-col justify-center' key={el?.bcomment_id}>
                                 <div className='flex flex-row p-4'>
-                                    <img src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1652613376/${el.blogsComUsers[0].profile_img}`} className=' rounded-full h-6 w-6 '/>
+                                    {(el.blogsComUsers[0].profile_img !== null)?
+                                        <img src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1652613376/${el.blogsComUsers[0].profile_img}`} alt={el.blogsComUsers[0].profile_img} className=' rounded-full h-6 w-6 '/>
+                                        :
+                                        <img src="https://res.cloudinary.com/dmtfoyuuq/image/upload/v1656086069/e0gy9inebvobnauo1um2.gif" alt={el.blogsComUsers[0].profile_img} className=' rounded-full h-6 w-6 '/>
+                                    }
+                                    
                                     <div className='ml-4'>
                                         <h1>{el?.blogsComUsers[0].username}</h1>
                                     </div>
@@ -298,9 +305,9 @@ const Readwithcomment = ({data_followers,refetch_followers,refetch_total,is_like
                                                 { toggleReply === index ? (<>
                                                             <div className="flex flex-col col-span-8">
                                                                 <div className='flex flex-col items-center mb-4 bg-white'>
-                                                                    <textarea value={replyComment} onChange={(e)=>{setReplyComment(e.target.value)}} className=' w-72  border-t-[0.5px] border-x-[0.5px] border-teal-500 rounded-t-md resize-none mx-4 mt-4 outline-0 p-4' rows={1}></textarea>
+                                                                    <textarea onKeyDownCapture={(e) => e.key === 'Enter' && (replyComment.trim()!=="")? replyFun({variables:{userId: selector.user_id,parentCommentId:el?.bcomment_id, commentContent: replyComment.trim()}}):null} value={replyComment} onChange={(e)=>{setReplyComment(e.target.value)}} className=' w-72  border-t-[0.5px] border-x-[0.5px] border-teal-500 rounded-t-md resize-none mx-4 mt-4 outline-0 p-4' rows={1}></textarea>
                                                                     <div className=' w-72 border-b-[0.5px] border-x-[0.5px] border-teal-500 flex flex-row bg-white justify-end py-2  rounded-b-md'>
-                                                                        <button onClick={()=>(replyComment.trim()!="")? replyFun({variables:{userId: selector.user_id,parentCommentId:el?.bcomment_id, commentContent: replyComment.trim()}}):null} className='mr-4 px-2 py-1 bg-teal-500 rounded-md text-white'>Reply</button>
+                                                                        <button onClick={()=>(replyComment.trim()!=="")? replyFun({variables:{userId: selector.user_id,parentCommentId:el?.bcomment_id, commentContent: replyComment.trim()}}):null} className='mr-4 px-2 py-1 bg-teal-500 rounded-md text-white'>Reply</button>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -312,7 +319,13 @@ const Readwithcomment = ({data_followers,refetch_followers,refetch_total,is_like
                                                                             {allrep.replyUsers.map((replyUser) => {
                                                                                 return(
                                                                                     <div className="flex flex-row items-center bg-white" key={replyUser.user_id}>
-                                                                                        <img src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1652613376/${replyUser.profile_img}`} className='rounded-full h-5 w-5 '/>
+                                                                                        {
+                                                                                            (replyUser.profile_img !== null)?
+                                                                                            <img src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1652613376/${replyUser.profile_img}`} alt={replyUser.profile_img} className='rounded-full h-5 w-5 '/>
+                                                                                            :
+                                                                                            <img src="https://res.cloudinary.com/dmtfoyuuq/image/upload/v1656086069/e0gy9inebvobnauo1um2.gif" alt="Default img (Grow_Media)" className='rounded-full h-5 w-5 '/>
+                                                                                        }
+                                                                                        
                                                                                         <h1 className='ml-2 text-base'>{replyUser.username}</h1>
                                                                                     </div>
                                                                                 )

@@ -33,16 +33,6 @@ type usersExtraInfo = {
     college: String
 }
 
-type mutationVAR = {
-    user_id: number
-    bio: String,
-    link: String,
-    qualification: String,
-    hometown: String,
-    work: String,
-    college: String
-}
-
 const Editprofile:React.FC = () => {
     const dispatchJwt = useDispatch();
 
@@ -58,22 +48,24 @@ const Editprofile:React.FC = () => {
     const [delCover, setDelCover] = useState<boolean>(false);
 
     const [tologout, settologout] = useState<boolean>(false);
-    const [checkB,setCheckB] = useState<boolean>(false);
 
     const selector:selectortype = useSelector(userLoginInfo);
-    console.log(selector);
+    // console.log(selector);
     const {data} = useQuery<infoquery, queryvar>(EDIT_QUERY,{ onCompleted(data){
-        console.log(data);
+        // console.log(data);
         // setUsername(`${data.infoquery[0].username}`);
-        (data?.infoquery[0]?.bio != undefined || data?.infoquery[0]?.bio!="")?setBio(`${data?.infoquery[0]?.bio}`):setBio("");
-        (data?.infoquery[0]?.link != undefined || data?.infoquery[0]?.link!="")?setLink(`${data?.infoquery[0]?.link}`):setLink("");
-        (data?.infoquery[0]?.usersExtraInfo[0]?.qualification != undefined || data?.infoquery[0]?.usersExtraInfo[0]?.qualification!="")?setQualification(`${data?.infoquery[0]?.usersExtraInfo[0]?.qualification}`):setQualification("");
-        (data?.infoquery[0]?.usersExtraInfo[0]?.work!=undefined || data?.infoquery[0]?.usersExtraInfo[0]?.work!="")?setWork(`${data?.infoquery[0]?.usersExtraInfo[0]?.work}`):setWork("");
-        (data?.infoquery[0]?.usersExtraInfo[0]?.college!=undefined||data?.infoquery[0]?.usersExtraInfo[0]?.college!="")?setCollege(`${data?.infoquery[0]?.usersExtraInfo[0]?.college}`):setCollege("");
-        (data?.infoquery[0]?.usersExtraInfo[0]?.hometown!=undefined||data?.infoquery[0]?.usersExtraInfo[0]?.hometown!="")?setHometown(`${data?.infoquery[0]?.usersExtraInfo[0]?.hometown}`):setHometown("");
+        (data?.infoquery[0]?.bio !== undefined || data?.infoquery[0]?.bio!=="")?setBio(`${data?.infoquery[0]?.bio}`):setBio("");
+        (data?.infoquery[0]?.link !== undefined || data?.infoquery[0]?.link!=="")?setLink(`${data?.infoquery[0]?.link}`):setLink("");
+        (data?.infoquery[0]?.usersExtraInfo[0]?.qualification !== undefined || data?.infoquery[0]?.usersExtraInfo[0]?.qualification!=="")?setQualification(`${data?.infoquery[0]?.usersExtraInfo[0]?.qualification}`):setQualification("");
+        (data?.infoquery[0]?.usersExtraInfo[0]?.work!==undefined || data?.infoquery[0]?.usersExtraInfo[0]?.work!=="")?setWork(`${data?.infoquery[0]?.usersExtraInfo[0]?.work}`):setWork("");
+        (data?.infoquery[0]?.usersExtraInfo[0]?.college!==undefined||data?.infoquery[0]?.usersExtraInfo[0]?.college!=="")?setCollege(`${data?.infoquery[0]?.usersExtraInfo[0]?.college}`):setCollege("");
+        (data?.infoquery[0]?.usersExtraInfo[0]?.hometown!==undefined||data?.infoquery[0]?.usersExtraInfo[0]?.hometown!=="")?setHometown(`${data?.infoquery[0]?.usersExtraInfo[0]?.hometown}`):setHometown("");
     } ,variables:{infoqueryId: Number(selector.user_id)}});
 
-    const [updateBio] = useMutation (EDITPROFILE_MUTATION,{
+    const [updateBio,{loading:loadingbio}] = useMutation (EDITPROFILE_MUTATION,{
+        onCompleted(){
+            navigate('/home')
+        },
         variables: { userId: selector.user_id, bio: bio, link: link, qualification: qualification, hometown: hometown, work: work, college: college}
     });
 
@@ -104,40 +96,36 @@ const Editprofile:React.FC = () => {
         }
     });
 
-    // const handleLogout = () => {
-    //     calllogout();
-    // }
-
     useEffect(()=>{
         if(tologout){
             navigate('/login');
             dispatchJwt(logIn(undefined));
         }
-    },[tologout]);
+    },[tologout,dispatchJwt,navigate]);
 
     // console.log(tologout);
 
     function imagePreview(e: React.ChangeEvent<HTMLInputElement>){
         if(e.target.files){
-            console.log(typeof(e.target.files[0]));
+            // console.log(typeof(e.target.files[0]));
             // getImageURL(file);
             const reader = new FileReader();
             reader.readAsDataURL(e.target.files[0]);
             reader.onloadend = () => {
                 setSelectedImage(reader.result);
-                console.log(reader.result);
+                // console.log(reader.result);
             };
         }
     }
 
     useEffect(()=>{
 
-        if(selectedImage!=""){
+        if(selectedImage!==""){
             updatePfp();
-            console.log("useEff Edit");
+            // console.log("useEff Edit");
         }
 
-    },[selectedImage]);
+    },[selectedImage,updatePfp]);
 
     // function getImageURL(file: File){
         
@@ -154,6 +142,12 @@ const Editprofile:React.FC = () => {
   return (
       <>
       {
+      
+                    (loadingbio)?
+                    <div className=' z-30 h-screen w-full bg-white grid place-items-center fixed'>
+                        <h1 className=' z-40 text-xl'>Updating...</h1>
+                    </div>
+                    :
                     (delCover && 
                         <>
           

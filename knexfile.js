@@ -1,5 +1,5 @@
 // Update with your config settings.
-
+require('dotenv').config();
 /**
  * @type { Object.<string, import("knex").Knex.Config> }
  */
@@ -10,7 +10,7 @@ module.exports = {
     connection: {
       database: 'test_app',
       user:     'root',
-      password: 'qwertyMYSQLtushar10!'
+      password: process.env.MYSQLPASS
     },
     migrations:{
       directory: './sqlDB/migration'

@@ -276,7 +276,7 @@ const typeDefs = gql`
         likeblogs(blog_id:ID,user_id:ID): [bloglikes]
         homeBlogs(id:Int!): [allblogs!]!
         followers(user_id:Int): [followerstype]
-        searchBlog(searchkeyword: String): [Blogs]
+        searchBlog(searchkeyword: String): [allblogs]
         onlycomments(id: ID,user_id:ID): [onlyCMNT]
         totalcomment(id: ID!): [bcommentsfortotal]
 

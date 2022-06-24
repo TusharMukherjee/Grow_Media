@@ -3,24 +3,7 @@ import { Link } from 'react-router-dom'
 import { useParams } from 'react-router-dom'
 import { HOMEBLOGS } from '../gqlQueries/queries/Explorequery'
 
-import { useDispatch, useSelector } from 'react-redux'
-import { homeBlogsDataStore, homeBlogsStore } from '../features/PostSlice'
-
 import { useQuery } from '@apollo/client'
-import { useEffect } from 'react'
-
-
-type UserInfoType = {
-    user: {
-        user_id: string,
-        profile_img: string,
-        username: string,
-        bio: string,
-        link: string,
-        totalblogs: number,
-        no_followingbyuser: number
-    }[]
-}
 
 type homeblogs = {
     homeBlogs:{
@@ -36,55 +19,27 @@ type homeblogs = {
     }[]
 }
 
-type UserId = {
-    userId:number;
-}
-
 const HomePosts = () => {
 
 const {profile_id} = useParams();
 
 const {data:data_homeblogs} = useQuery<homeblogs>(HOMEBLOGS,{
-    onCompleted:()=>{
-        console.log("home");
-    },
     variables:{
         homeBlogsId: Number(profile_id)
     }
 });
 
-// useEffect(() => {
-//     if(Boolean(data_homeblogs?.homeBlogs.length)){
-//         dispatch(homeBlogsStore(data_homeblogs));
-//         console.log("first");
-//     }
-// },[data_homeblogs,profile_id,dispatch]);
-
-// const homeBlogsDataSelector: UserInfoType = useSelector(homeBlogsDataStore);
-// console.log(homeBlogsDataSelector);
-// const {data} = useQuery<UserInfoType,UserId>(PROFILE,{
-//     variables:{
-//         userId: Number(profile_id)
-//     }
-// });
-// console.log(data);
-
-// useEffect(() => {
-
-//     dispatch(homeBlogsStore(data));
-//     console.log("first");
-
-// },[data,profile_id,dispatch]);
 
   return (
        <div className='col-start-2 col-span-6 grid grid-cols-8'> <div className='col-start-2 col-span-6 flex flex-col justify-center items-center'>
         {
+            (data_homeblogs?.homeBlogs.length !== 0)?
             data_homeblogs?.homeBlogs.map((el:any) => {
                     return(
                     <div className='bg-white grid grid-cols-8 items-center pt-8' key={Number(el.blog_id)}>
                         <Link to={`/read/${el.blog_id}`} className='bg-white col-start-2 col-span-6 grid grid-cols-5 grid-rows-6 h-52 mb-8 border rounded-md hover:drop-shadow' >
                                 <div className='col-span-3 row-span-1 flex flex-row  items-center border-b-[0.5px]'>
-                                <img src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1652613376/${el.profile_img}`} className='ml-3 rounded-full h-5 w-5'/>
+                                <img src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1652613376/${el.profile_img}`} alt={el.profile_img} className='ml-3 rounded-full h-5 w-5'/>
                                     <h1 className='ml-3'>{el.username}</h1>
                                 </div>
                                 <div className='col-span-3 row-span-4  grid grid-rows-6 '>
@@ -113,7 +68,14 @@ const {data:data_homeblogs} = useQuery<homeblogs>(HOMEBLOGS,{
                         </Link>      
                     </div>)
                 }
-  )}
+                )
+                    :
+                    <div className='grid place-items-center'>
+                        <h1 className=' text-gray-600 text-lg mt-20 bg-gray-200 p-8 rounded-md '>
+                            No Blogs from user!
+                        </h1>
+                    </div>
+}
                 </div>
                 </div>
 )

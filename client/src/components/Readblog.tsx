@@ -2,10 +2,9 @@ import Readwithcomment from './Readwithcomment'
 import {useParams} from 'react-router-dom'
 import { useQuery } from '@apollo/client'
 
-import {COUNT_CMNT_LIKE, FOLLOWERS, IS_FOLLOWING, IS_LIKED, ONLYCMNT, REPTOTAL, SINGLE_BLOG} from '../gqlQueries/queries/Explorequery';
-import { useSelector, useDispatch } from 'react-redux';
-import { bluser_id, getComm, postComm, postOwnerInfo, userOwnerId } from '../features/PostSlice'
-import { useEffect, useState } from 'react';
+import { FOLLOWERS, IS_FOLLOWING, IS_LIKED, ONLYCMNT, REPTOTAL, SINGLE_BLOG} from '../gqlQueries/queries/Explorequery';
+import { useSelector } from 'react-redux';
+import { useState } from 'react';
 import { userLoginInfo } from '../features/UserSlice';
 // import { allPosts, getAllMovies } from '../features/PostSlice'
 
@@ -38,9 +37,6 @@ type data_onlyblog_users = {
 
 const Readblog = () => {
 
-    const dispatch = useDispatch();
-    // const selector = useSelector(getComm);
-
     const {blog_id} = useParams<string>();
     const selector = useSelector(userLoginInfo);
     const [isFollow,setIsFollow] = useState<isFollow>();
@@ -56,8 +52,7 @@ const Readblog = () => {
 
       const {loading, data:data_onlyblog} = useQuery<data_onlyblog>(SINGLE_BLOG,{
         onCompleted:(data)=>{
-          console.log(data?.blog[0].bluser_id);
-          console.log("okokok")
+          // console.log(data?.blog[0].bluser_id);
           setOnlybluser_id(data?.blog[0].bluser_id);
         },
         variables:{
@@ -109,7 +104,7 @@ const Readblog = () => {
           }
       });
 
-      console.log(data_onlyblog);
+      // console.log(data_onlyblog);
       // console.log(onlyCMNT);
       // console.log(repTOTAL);
     

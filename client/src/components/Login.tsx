@@ -72,8 +72,7 @@ const Login = () => {
         if(selector){
             navigate('/home', {replace: true});
         }
-    },[]);
-
+    },[selector, navigate]);
 
     return (
 
@@ -86,10 +85,10 @@ const Login = () => {
                 <div className=' grid place-content-center py-5'>
                     <h1 className=' font-light text-teal-500 text-2xl text-center mb-8 '>Log In</h1>
                     <div className=" my-5">
-                        <input type="text" onChange={(e) => setUser((e.target.value).trim())} placeholder='Name' className=' bg-gray-200 text-gray-900 h-9 rounded-md outline-0 p-2' required/>
+                        <input onKeyDownCapture={(e) => e.key === 'Enter' && callLogin()} type="text" onChange={(e) => setUser((e.target.value).trim())} placeholder='Name' className=' bg-gray-200 text-gray-900 h-9 rounded-md outline-0 p-2' required/>
                     </div>
                     <div className=" my-5">
-                        <input type="password" onChange={(e)=> setLoginPassword((e.target.value))} placeholder='Password' className=' bg-gray-200 text-gray-900 h-9 rounded-md outline-0 p-2' required/>
+                        <input onKeyDownCapture={(e) => e.key === 'Enter' && callLogin()} type="password" onChange={(e)=> setLoginPassword((e.target.value))} placeholder='Password' className=' bg-gray-200 text-gray-900 h-9 rounded-md outline-0 p-2' required/>
                     </div>
                     <div className=" mt-5 flex justify-around">
                         <Link to="/" className=' text-blue-700'>

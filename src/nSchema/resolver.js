@@ -6,7 +6,6 @@ const {BlogLikesModel} = require('../../sqlDB/models/blogsLikes');
 const {FriendsModel} = require('../../sqlDB/models/friends');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const isAuth = require('../isAuth');
 const { ExtraInfoModel } = require('../../sqlDB/models/extraInfo');
 const {cloudinary} = require('../cloudinary');
 const { bCommentLikesModel } = require('../../sqlDB/models/bcommentLikes');
@@ -20,32 +19,15 @@ const jwtToken = (value) =>  {
     
 }
 
-
-const verifyjwtFunc = (jwtAToken) => {
-    jwt.verify(jwtAToken, `tKBw+m]$#VC"&P3_Lq:u`, function(err, decode){
-        if(decode){
-            return decode;
-        }
-        else{
-            return err;
-        }
-    });
-}
-
 const resolvers = {
     Query: {
         verifyjwtFunc(parent,args, {req,checkContext}){
             return ({"user_id":checkContext(req)})
-
-            // const verifyjwt = verifyjwtFunc(token);
-            // return {"user_id":verifyjwt.user_id};
         },
         users(){
             return UsersModel.query(); /* Resolve all users  */
         },
         user: async (parent, args)=>{
-            // .select(BlogLikesModel.query().select('blikes.bluser_id').from('blikes').where('blikes.blblog_id','=',args.blog_id).andWhere('blikes.bluser_id','=', args.user_id).as('islikedbyuser'))
-            // return UsersModel.query().withGraphFetched('blogs').where('user_id','=',args.id);
             return await UsersModel.query().select('users.user_id', 'users.profile_img', 'users.username', 'users.bio', 'users.link')
             .select(UsersModel.query().count('blogs.bluser_id').from('blogs').where('blogs.bluser_id', '=', args.id).as('totalblogs'))
             .count('friends.uUser_id',{as:'no_followingbyuser'})
@@ -62,19 +44,7 @@ const resolvers = {
         }, /* Resolve Blogs of a particular user */
         searchUser(parent, args){
             return UsersModel.query().where('username', 'LIKE', `%${args.searchkeyword}%`);
-        }, /* search user with keyword "normal sql like function used" */
-        // homeUser(parent,args){
-        //     return UsersModel.query().where('user_id',args.id);
-        // },
-        // blog(parent, args){
-        //     return BlogsModel.query().where('blog_id','=',args.id).withGraphFetched('[users,bcomments.[blogsComUsers,replyComments.[replyUsers]]]');
-        // }, /* Resolve A blog fully with comments and replied comments */
-        
-        // async blog(parent, args){
-        //     return await BlogsModel.query().where('blog_id','=',args.id).withGraphFetched('[users,bcomments.[blogsComUsers,bcommentLikesb,replyComments.[replyUsers]]]').modifyGraph('bcomments',builder => {
-        //         builder.select('bcomment_id','blcomment',BlogCommentsModel.relatedQuery('bcommentLikesb').count().as('totalBlogComments'));
-        //       });
-        // },
+        }, 
 
         async blog(_,args){
             return await BlogsModel.query().where('blog_id','=',args.id).withGraphFetched('users');
@@ -93,12 +63,6 @@ const resolvers = {
               });
         },
         // fetch only comments
-
-
-
-        // blogs(){
-        //     return BlogsModel.query().withGraphFetched('users').modifyGraph('users', whereUser => { whereUser.select('user_id', 'profile_img', 'username') });
-        // }, /* Resolves all blogs of a particular user "HOMEPAGE OF A USER" */
 
         blogs:async ()=>{
             return await BlogsModel.query().select('blogs.blog_id', 'blogs.heading', 'blogs.created_at', 'blogs.content', 'blogs.b_image', 'users.user_id', 'users.profile_img', 'users.username')
@@ -192,8 +156,31 @@ const resolvers = {
             })
             .where('users.user_id', '=', args.user_id);
         },
-        searchBlog(parent, args){
-            return BlogsModel.query().where('heading', 'LIKE', `%${args.searchkeyword}%`).orWhere('content', 'LIKE', `%${args.searchkeyword}%`);
+        async searchBlog(parent, args){
+            return await BlogsModel.query().select('blogs.blog_id', 'blogs.heading', 'blogs.content', 'blogs.b_image', 'blogs.created_at', 'users.user_id', 'users.profile_img', 'users.username')
+            .countDistinct('blikes.blike_id', {as: 'totalblikes'})
+            .countDistinct('bcomments.bcomment_id', {as: 'totalbcomments'})
+            .from('blogs')
+            .leftJoin('users', function(){
+              this
+              .on('blogs.bluser_id', '=', 'users.user_id ')
+            })
+            .leftJoin('blikes', function(){
+              this
+              .on('blogs.blog_id', '=', 'blikes.blblog_id')
+            })
+            .leftJoin('bcomments', function(){
+              this
+              .on('blogs.blog_id', '=', 'bcomments.blblog_id')
+            })
+            .leftJoin('friends', function(){
+                this
+                .on('friends.followers_id', '=', ' users.user_id')
+              })
+            .where('heading', 'LIKE', `%${args.searchkeyword}%`)
+            .groupBy('blogs.blog_id')
+            .orderBy('blogs.created_at','desc');
+
         },/* Search a blog with keyword matching word in blog heading or content */
         checksomeone_followers(parent, args){
             return FriendsModel.query().select('uUser_id').where('followers_id',args.user_id).withGraphFetched('friendsUsers');
@@ -244,10 +231,6 @@ const resolvers = {
             console.log(resultBcrypt);
 
             const jwtAccessToken = jwtToken(usersblog[0].user_id);
-            // console.log(jwtToken(usersblog[0].user_id))
-            // const token = req.cookie.jwtAccessToken;
-            // console.log(token);
-            // const verifyjwt = verifyjwtFunc(token);
 
             if(resultBcrypt){
                 res.cookie("aces_token",jwtAccessToken, {maxAge: 1000 * 60 * 60 * 24, httpOnly:true});
@@ -281,31 +264,7 @@ const resolvers = {
                 password:hashPass
             }
             await UsersModel.query().insert(newUserHash);
-            // await ExtraInfoModel.query().insert([
-            //     {
-            //         bluser_id: await UsersModel.query().select(user_id).where('username',newUser.username),
-            //         qualification: null,
-            //         hometown:null,
-            //         work:null,
-            //         college:null
-            //     }
-            // ]);
-            // await UsersModel.query().insertGraph({
-            //  username,
-            //  email,
-            //  password:hashPass,
-
-            //  usersExtraInfo:[
-            //     {
-            //         bluser_id: ,
-            //         qualification:null,
-            //         hometown:null,
-            //         work:null,
-            //         college:null
-            //     }
-            //  ]
-
-            // })
+            
             console.log(newUser);
             console.log(newUserHash);
             return newUser;
@@ -360,7 +319,7 @@ const resolvers = {
                     upload_preset: "grow_media",
             });
             await BlogsModel.query().insert({"bluser_id": user_id, "b_image": uploadResponse.public_id+'.'+uploadResponse.format,"heading": blog_heading, "content": blog_content});
-            // await UsersModel.relatedQuery('blogs').insert({"bluser_id": user_id, "b_image": uploadResponse.public_id+'.'+uploadResponse.format,"heading": blog_heading, "content": blog_content});
+
             return {"isUploaded": true};
         },
         deleteBlog: async(parent,args) => {

@@ -37,15 +37,13 @@ function App() {
   useEffect(()=>{
     callLazy();
     if(data){
-      console.log(data);
       dispatchJwt(logIn(data?.verifyjwtFunc))
     }
-  },[data])
+  },[data,callLazy,dispatchJwt])
 
   return ( loading ? <div className='bg-teal-500 w-screen h-screen grid place-items-center'><div className=' h-32 w-32 border-white rounded-full border-t-[1rem] border-[1rem] border-t-teal-900 animate-spin ' ></div></div>:
           <Router>
               <Routes>
-              {console.log("in cp")}
               <Route path='/' element={ <Signup/> }/>
               <Route path='/login' element={<Login/>}/>
                 <Route path = '/' element={<Navbar/>}>
@@ -56,8 +54,8 @@ function App() {
                 <Route path = "/read/:blog_id" element={<PrivateRoute path='/read/:blog_id'><Readblog/></PrivateRoute>}/>
                 </Route>
                 <Route path = '/' element={<Navbar/>}>
-                <Route path = "/search/people" element={<><PrivateRoute path="/search/people"><People/></PrivateRoute></>}/>
-                <Route path = "/search/blogs" element={<><PrivateRoute path="/search/blogs"><Searchposts/></PrivateRoute></>}/>
+                <Route path = "/search/people/:searchquery" element={<><PrivateRoute path="/search/people"><People/></PrivateRoute></>}/>
+                <Route path = "/search/blogs/:searchquery" element={<><PrivateRoute path="/search/blogs"><Searchposts/></PrivateRoute></>}/>
                 <Route path = "/explore" element={<><PrivateRoute path="/explore"><Posts /></PrivateRoute></>}/>
                 <Route path = "/home" element={<><PrivateRoute path="/home"><Followingspost/></PrivateRoute></>}/>
                 <Route path = "/editprofile" element={<><PrivateRoute path="/editprofile"><Editprofile/></PrivateRoute></>}/>

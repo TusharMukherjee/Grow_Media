@@ -72,25 +72,6 @@ query Totalcomment($totalcommentId: ID!) {
 
 `
 
-
-// export const PROFILE = gql`
-//     query Query($userId: Int!) {
-//         user(id: $userId) {
-//             profileImg
-//             username
-//             email
-//             bio
-//             link
-//             blogs {
-//                 blog_id
-//                 heading
-//                 content
-//                 b_image
-//             }
-//         }
-//     }
-// `
-
 export const PROFILE = gql`
     query Query($userId: Int!) {
         user(id: $userId) {
@@ -108,20 +89,6 @@ export const PROFILE = gql`
         }
     }
 `
-
-// export const PROFILE_INFO = gql`
-
-//     query Query($userId: Int!) {
-//         user(id: $userId) {
-//             user_id
-//             profile_img
-//             username
-//             bio
-//             link
-//         }
-//     }
-
-// `
 
 export const PROFILE_INFO = gql`
 
@@ -195,17 +162,6 @@ query Query($blogId: ID, $userId: ID) {
 
 `
 
-
-// export const USER_LOGIN_INFO = gql`
-//     query UserAuthenticationCheck($username: String!, $password: String!) {
-//         userAuthenticationCheck(username: $username, password: $password) {
-//             user_id
-//             username
-//             authorized
-//         }
-//     }
-// `
-
 export const FROM_COOKIE = gql`
 
     query VerifyjwtFunc {
@@ -215,21 +171,6 @@ export const FROM_COOKIE = gql`
     }
 
 `
-
-// export const USER_HOME_POSTS = gql`
-//     query Blogs {
-//         blogs {
-//             users {
-//             username
-//             profile_img
-//             }
-//             blog_id
-//             heading
-//             content
-//             b_image
-//         }
-//     }
-// `
 
 export const USER_HOME_POSTS = gql`
 
@@ -339,6 +280,37 @@ query Onlycomments($onlycommentsId: ID, $userId: ID) {
     bcommentLikesb {
       bluser_id
     }
+  }
+}
+
+`
+
+export const SEARCHBLOG = gql `
+
+query Query($searchkeyword: String) {
+  searchBlog(searchkeyword: $searchkeyword) {
+    blog_id
+    heading
+    content
+    b_image
+    user_id
+    profile_img
+    username
+    totalblikes
+    totalbcomments
+  }
+}
+
+`
+
+export const SEARCHUSER = gql`
+
+query Query($searchkeyword: String) {
+  searchUser(searchkeyword: $searchkeyword) {
+    user_id
+    profile_img
+    username
+    bio
   }
 }
 

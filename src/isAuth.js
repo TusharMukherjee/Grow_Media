@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 const isAuth = (context) => {
     const authorization = context.req.headers['authorization'];
@@ -7,7 +8,7 @@ const isAuth = (context) => {
     }
     try {
         const token = authorization.split(" ")[1];
-        const validateVar = jwt.verify(token, `tKBw+m]$#VC"&P3_Lq:u`);
+        const validateVar = jwt.verify(token, process.env.VERIFICATIONTOKEN);
         return validateVar;
     }
     catch(err) {

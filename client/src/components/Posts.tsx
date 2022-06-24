@@ -30,7 +30,7 @@ type blogs = {
 const Followingspost:React.FC = () => {
 
     const {data,loading,refetch} = useQuery<Blogs>(USER_HOME_POSTS);
-    console.log(data?.blogs);
+    // console.log(data?.blogs);
 
     useEffect(()=>{
         refetch();
@@ -47,7 +47,13 @@ const Followingspost:React.FC = () => {
                         <div className='bg-white grid grid-cols-8 items-center pt-8' key={Number(el.blog_id)}>
                             <Link to={`/read/${el.blog_id}`} className='bg-white col-start-2 col-span-6 grid grid-cols-5 grid-rows-6 h-52 mb-8 border rounded-md hover:drop-shadow' >
                                     <div className='col-span-3 row-span-1 flex flex-row  items-center border-b-[0.5px]'>
-                                        <img src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1652613376/${el.profile_img}`} className='ml-3 rounded-full h-5 w-5'/>
+                                    {
+                                        (el.profile_img !== null)?
+                                        <img src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1652613376/${el.profile_img}`} alt={el.profile_img} className='ml-3 rounded-full h-5 w-5'/>
+                                        :
+                                        <img src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1656086069/e0gy9inebvobnauo1um2.gif`} alt="Default img (Grow Media)" className='ml-3 rounded-full h-5 w-5'/>
+                                    }
+                                        
                                         <h1 className='ml-3'>{el.username}</h1>
                                     </div>
                                     <div className='col-span-3 row-span-4  grid grid-rows-6 '>
@@ -56,7 +62,7 @@ const Followingspost:React.FC = () => {
                                     </div>
                                     <div className='col-start-4 col-span-2 row-start-1 row-span-6 flex justify-center items-center'>
                                         {/* <div className=' bg-purple-700 w-[12rem] h-[8rem]'></div> */}
-                                        <img className=' w-[12rem] h-[8rem] object-cover' src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1652613376/${el.b_image}`} alt="" />
+                                        <img className=' w-[12rem] h-[8rem] object-cover' src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1652613376/${el.b_image}`} alt={el.b_image} />
                                     </div>
                                     <div className=' row-span-1 grid grid-cols-2 w-56 items-center pl-3'>
                                         <div className='col-span-1 flex justify-center'>

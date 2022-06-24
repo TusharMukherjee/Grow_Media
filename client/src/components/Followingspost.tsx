@@ -3,7 +3,7 @@ import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { userLoginInfo } from '../features/UserSlice'
-import { FOLLOWINGPOSTS, USER_HOME_POSTS } from '../gqlQueries/queries/Explorequery'
+import { FOLLOWINGPOSTS } from '../gqlQueries/queries/Explorequery'
 import Sidebar from './Sidebar'
 
 // type allSearchBlogsUsers = {
@@ -38,7 +38,6 @@ const Followingspost:React.FC = () => {
             userId: selector.user_id
         }
     });
-    console.log(data?.followingblogs);
 
     useEffect(()=>{
         refetch();
@@ -47,15 +46,21 @@ const Followingspost:React.FC = () => {
   return (
 <>
     <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col mt-6'>
-            {
+            {   
                 (loading)?(<p>Loading...</p>):
+                (Boolean(data?.followingblogs.length))?
                 data?.followingblogs?.map((el) => {
                     return (
                         
                         <div className='bg-white grid grid-cols-8 items-center pt-8' key={Number(el.blog_id)}>
                             <Link to={`/read/${el.blog_id}`} className='bg-white col-start-2 col-span-6 grid grid-cols-5 grid-rows-6 h-52 mb-8 border rounded-md hover:drop-shadow' >
                                     <div className='col-span-3 row-span-1 flex flex-row  items-center border-b-[0.5px]'>
-                                        <img src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1652613376/${el.profile_img}`} className='ml-3 rounded-full h-5 w-5'/>
+                                    {
+                                        (el.profile_img !== undefined)?
+                                        <img src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1652613376/${el.profile_img}`} alt={el.profile_img} className='ml-3 rounded-full h-5 w-5'/>
+                                        :
+                                        <img src="https://res.cloudinary.com/dmtfoyuuq/image/upload/v1656086069/e0gy9inebvobnauo1um2.gif" alt='Default (Grow_Media)' className='ml-3 rounded-full h-5 w-5'/>
+                                    }
                                         <h1 className='ml-3'>{el.username}</h1>
                                     </div>
                                     <div className='col-span-3 row-span-4  grid grid-rows-6 '>
@@ -87,6 +92,12 @@ const Followingspost:React.FC = () => {
                         
                     )
                 })
+                :
+                <div className='grid place-items-center'>
+                    <h1 className=' text-gray-600 text-lg mt-40 bg-gray-200 p-8 rounded-md '>
+                        You'll get blogs here from those users, which you are following!
+                    </h1>
+                </div>
             }
             </div>
             </div>

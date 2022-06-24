@@ -1,8 +1,5 @@
 import React from 'react';
 import Tabs from './Tabs';
-import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
-import Posts from '../Posts';
-import People from './People';
 
 const MainSearch: React.FC = () => {
   return (
