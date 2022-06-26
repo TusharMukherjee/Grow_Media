@@ -1,8 +1,8 @@
 import { useQuery } from '@apollo/client'
 import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { mobileInfo, toggleSearchdis } from '../features/UserSlice'
+import { toggleSearchdis } from '../features/UserSlice'
 import { USER_HOME_POSTS } from '../gqlQueries/queries/Explorequery'
 import Sidebar from './Sidebar'
 
@@ -32,7 +32,6 @@ type blogs = {
 const Followingspost:React.FC = () => {
 
     const {data,loading,refetch} = useQuery<Blogs>(USER_HOME_POSTS);
-    const mobile = useSelector(mobileInfo);
     const dispatch = useDispatch();
     // console.log(data?.blogs);
 
@@ -46,7 +45,7 @@ const Followingspost:React.FC = () => {
 
   return (
 <>
-    <div className='grid grid-cols-8 sm:grid-rows-6 sm:h-screen sm:w-screen grid-rows-6 h-screen w-screen mb-40'> <Sidebar/> <div className='row-span-5 row-start-1 col-span-8 sm:row-span-5 sm:row-start-1 sm:col-span-8  h-full flex flex-col mt-6 '>
+    <div className='grid grid-cols-8 sm:grid-rows-6 sm:h-screen sm:w-screen grid-rows-6 h-full w-screen mb-40'> <Sidebar/> <div className='row-span-5 row-start-1 col-span-8 sm:row-span-5 sm:row-start-1 sm:col-span-8  h-full flex flex-col mt-6 '>
             {
                 (loading)?(<p>Loading...</p>):
                 data?.blogs.map((el) => {

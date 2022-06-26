@@ -14,10 +14,15 @@ const Navbar: React.FC = () => {
   const navigate = useNavigate();
   const [searchquery,setsearchquery] = useState("");
   // const [mobile, setMobile] = useState(false);
+  const [logout, setlogout] = useState();
 
-  const [calllogout,{data}] = useMutation(LOG_OUT);
+  const [calllogout] = useMutation(LOG_OUT,{
+    onCompleted:(data)=>{
+      setlogout(data);
+    }
+  });
   // let toggleSearch:boolean = false;
-  // const [toggleSe, settoggleSe] = useState(toggleSearch);
+  const [toggleSide, settoggleSide] = useState(false);
   const toggleSearch = useSelector(toggleSearchInfo);
   
 
@@ -26,18 +31,18 @@ const Navbar: React.FC = () => {
   }
 
   useEffect(()=>{
-    if(data){
+    
+    if(logout){
       navigate('/login');
       dispatchJwt(logIn(undefined));
     }
-    console.log(window.innerWidth);
     // if(window.innerWidth < 640){
     //   setMobile(true);
     // }
     // else{
     //   setMobile(false);
     // }
-  },[data,navigate,dispatchJwt]);
+  },[logout,navigate,dispatchJwt]);
 
   const navLinkStyle = ({isActive}:any) =>{
     return{
@@ -59,7 +64,7 @@ const Navbar: React.FC = () => {
 
   return(
     <>
-      <div className='col-span-7 flex justify-center h-12 items-center sticky left-0 right-0 top-0 sm:sticky sm:left-0 sm:right-0 sm:top-0 z-20  bg-teal-500'>
+      <div className='col-span-7 flex justify-center h-12 items-center sticky left-0 right-0 top-0 sm:sticky sm:left-0 sm:right-0 sm:top-0 z-[70]  bg-teal-500'>
         <div className=' flex justify-center items-center mx-auto grow'>
             <div className=' flex flex-row justify-between mx-5 w-full'>
               <NavLink onClick={toggleSeFalse} to="/home" className='font-semibold text-white'>
@@ -83,16 +88,54 @@ const Navbar: React.FC = () => {
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" clipRule="evenodd" d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7ZM14 7C14 8.10457 13.1046 9 12 9C10.8954 9 10 8.10457 10 7C10 5.89543 10.8954 5 12 5C13.1046 5 14 5.89543 14 7Z" fill="currentColor" /><path d="M16 15C16 14.4477 15.5523 14 15 14H9C8.44772 14 8 14.4477 8 15V21H6V15C6 13.3431 7.34315 12 9 12H15C16.6569 12 18 13.3431 18 15V21H16V15Z" fill="currentColor" /></svg>
                   </NavLink>)}
 
-                  <div onClick={() => handleLogout()} className=' cursor-pointer font-semibold text-white '>
+                  <div onClick={() => handleLogout()} className={` cursor-pointer font-semibold text-white ${mobile?"hidden":"visible"} `}>
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.51428 20H4.51428C3.40971 20 2.51428 19.1046 2.51428 18V6C2.51428 4.89543 3.40971 4 4.51428 4H8.51428V6H4.51428V18H8.51428V20Z" fill="currentColor" /><path d="M13.8418 17.385L15.262 15.9768L11.3428 12.0242L20.4857 12.0242C21.038 12.0242 21.4857 11.5765 21.4857 11.0242C21.4857 10.4719 21.038 10.0242 20.4857 10.0242L11.3236 10.0242L15.304 6.0774L13.8958 4.6572L7.5049 10.9941L13.8418 17.385Z" fill="currentColor" /></svg>
                   </div>
+
+                  <div onClick={() => {settoggleSide(!toggleSide)}} className={` cursor-pointer font-semibold text-white ${mobile?"visible":"hidden"} `}>
+                    {
+                      toggleSide?
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                      :
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16m-7 6h7" />
+                      </svg>
+                    }
+                  </div>
+
                 </div>
                 
               </div>
             </div>
+            
         </div>
             
       </div>
+      {
+        mobile?
+        <div className={` z-[60] fixed top-0 right-0 h-screen bg-teal-500 w-2/5 flex flex-col px-5 justify-center justify-items-center ease-in-out duration-300 ${toggleSide?" translate-x-0 ":" translate-x-full "}`}>
+        <NavLink onClick={()=>{settoggleSide(!toggleSide); searchandremove();}} to={`/profile/${selector?.user_id}`} style={navLinkStyle} >
+          <div className={` mb-8 font-light hover:drop-shadow bg-white hover:border-teal-600 border text-teal-500 h-10 w-28 pl-3 flex justify-items-center rounded-lg items-center `}>
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+            <span>&nbsp;Profile</span>
+          </div>
+        </NavLink>
+
+        <div onClick={() => { toggleSeFalse(); handleLogout();}} className={`mt-8 font-light hover:drop-shadow bg-white hover:border-teal-600 border text-teal-500 h-10 w-28 pl-3 flex justify-items-center rounded-lg items-center `}>
+          <svg xmlns="http://www.w3.org/2000/svg" className="  h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg>
+          <span>&nbsp;Logout</span>
+        </div>
+      </div>
+      :
+      <></>
+      }
+      
       <Outlet/>
     </>
       

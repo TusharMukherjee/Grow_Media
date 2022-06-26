@@ -1,14 +1,11 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { NavLink } from 'react-router-dom';
-import { Link } from 'react-router-dom';
-import { mobileInfo, toggleSearchdis, toggleSearchInfo } from '../features/UserSlice';
+import { toggleSearchdis } from '../features/UserSlice';
 
 const Sidebar: React.FC = () => {
 
   const dispatch = useDispatch();
-  const mobile = useSelector(mobileInfo);
-  const toggleSearch = useSelector(toggleSearchInfo);
 
   const navLinkStyle = ({isActive}:any) =>{
     return{
@@ -27,7 +24,7 @@ const Sidebar: React.FC = () => {
 
   return (
         <div>
-            <div className=' bg-teal-500 justify-center items-center w-screen sm:w-screen mt-8 h-16 sm:h-20 fixed sm:bottom-0 sm:grid gap-12 sm:gap-28 sm:grid-flow-col bottom-0 grid grid-flow-col'>
+            <div className=' z-[70] bg-teal-500 justify-center items-center w-screen sm:w-screen mt-8 h-16 sm:h-20 fixed sm:bottom-0 sm:grid gap-12 sm:gap-28 sm:grid-flow-col bottom-0 grid grid-flow-col'>
 
               <NavLink to="/home" style={navLinkStyle} className={` z-10 hover:drop-shadow font-medium bg-white hover:border-teal-600 border text-teal-500 mb-3 h-12 w-48 pl-3 sm:w-auto p-3 rounded-lg items-center hidden lg:visible `}>
                   <h1>

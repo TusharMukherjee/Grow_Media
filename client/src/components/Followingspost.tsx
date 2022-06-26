@@ -45,7 +45,7 @@ const Followingspost:React.FC = () => {
 
   return (
 <>
-    <div className='grid grid-cols-8 sm:grid-rows-6 sm:h-screen sm:w-screen grid-rows-6 h-screen w-screen mb-40'> <Sidebar/> <div className='row-span-5 row-start-1 col-span-8 sm:row-span-5 sm:row-start-1 sm:col-span-8  h-full flex flex-col mt-6 '>
+    <div className='grid grid-cols-8 sm:grid-rows-6 sm:h-screen sm:w-screen grid-rows-6 h-full w-screen mb-40'> <Sidebar/> <div className='row-span-5 row-start-1 col-span-8 sm:row-span-5 sm:row-start-1 sm:col-span-8  h-full flex flex-col mt-6 '>
             {   
                 (loading)?(<p>Loading...</p>):
                 (Boolean(data?.followingblogs.length))?
@@ -94,8 +94,8 @@ const Followingspost:React.FC = () => {
                     )
                 })
                 :
-                <div className='grid place-items-center'>
-                    <h1 className=' text-gray-600 text-lg mt-40 bg-gray-200 p-8 rounded-md '>
+                <div className=' fixed top-0 grid place-items-center h-screen w-full'>
+                    <h1 className=' text-center text-gray-600 text-base w-11/12 sm:text-lg bg-gray-200 p-8 rounded-md '>
                         You'll get blogs here from those users, which you are following!
                     </h1>
                 </div>
