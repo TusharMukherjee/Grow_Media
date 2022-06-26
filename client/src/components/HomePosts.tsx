@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom'
 import { HOMEBLOGS } from '../gqlQueries/queries/Explorequery'
 
 import { useQuery } from '@apollo/client'
+import Sidebar from './Sidebar'
 
 type homeblogs = {
     homeBlogs:{
@@ -31,23 +32,23 @@ const {data:data_homeblogs} = useQuery<homeblogs>(HOMEBLOGS,{
 
 
   return (
-       <div className='col-start-2 col-span-6 grid grid-cols-8'> <div className='col-start-2 col-span-6 flex flex-col justify-center items-center'>
+       <div className=' sm:col-span-8 grid grid-cols-8'> <Sidebar/> <div className='col-start-2 col-span-6 flex flex-col justify-center items-center'>
         {
             (data_homeblogs?.homeBlogs.length !== 0)?
             data_homeblogs?.homeBlogs.map((el:any) => {
                     return(
                     <div className='bg-white grid grid-cols-8 items-center pt-8' key={Number(el.blog_id)}>
-                        <Link to={`/read/${el.blog_id}`} className='bg-white col-start-2 col-span-6 grid grid-cols-5 grid-rows-6 h-52 mb-8 border rounded-md hover:drop-shadow' >
+                        <Link to={`/read/${el.blog_id}`} className='bg-white sm:col-span-8 grid grid-cols-5 grid-rows-6 h-52 mb-8 border rounded-md hover:drop-shadow' >
                                 <div className='col-span-3 row-span-1 flex flex-row  items-center border-b-[0.5px]'>
                                 <img src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1652613376/${el.profile_img}`} alt={el.profile_img} className='ml-3 rounded-full h-5 w-5'/>
                                     <h1 className='ml-3'>{el.username}</h1>
                                 </div>
-                                <div className='col-span-3 row-span-4  grid grid-rows-6 '>
-                                    <h1 className=' text-xl row-start-1 row-span-3 pl-3 flex items-center'>{el.heading}</h1>
-                                    <p className='text-base row-span-3 pl-3 flex items-center'>{el.content.slice(0,120) + "..."}</p>
+                                <div className='col-span-3 row-span-4  '>
+                                    <h1 className=' font-medium sm:text-lg text-xl sm:mt-4 sm:mb-2  pl-3 flex items-center'>{el.heading}</h1>
+                                    <p className=' sm:leading-5 text-base px-3 sm:mt-2 flex items-center'>{el.content.slice(0,60) + "..."}</p>
                                 </div>
                                 <div className='col-start-4 col-span-2 row-start-1 row-span-6 flex justify-center items-center'>
-                                <img className=' w-[12rem] h-[8rem] object-cover' src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1652613376/${el.b_image}`} alt={el.b_image} />
+                                <img className=' w-[10rem] sm:mx-4 h-[8rem] object-cover' src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1652613376/${el.b_image}`} alt={el.b_image} />
                                 </div>
                                 <div className=' row-span-1 grid grid-cols-2 w-56 items-center pl-3'>
                                     <div className='col-span-1 flex justify-center'>
@@ -65,7 +66,7 @@ const {data:data_homeblogs} = useQuery<homeblogs>(HOMEBLOGS,{
                                             </svg>
                                     </div>
                                 </div> 
-                        </Link>      
+                        </Link>    
                     </div>)
                 }
                 )

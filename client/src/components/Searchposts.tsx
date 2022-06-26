@@ -28,7 +28,7 @@ const Posts = () => {
 
     return (
         <>
-            <div className='grid grid-cols-8'> <Sidebar/> <div className=' col-start-3 col-span-6 flex flex-col'>
+            <div className='grid grid-cols-8 mb-40'> <Sidebar/> <div className=' sm:col-start-1 sm:col-span-8 flex flex-col'>
             <Tabs/>
         {   (data?.searchBlog.length !== 0)?
             data?.searchBlog.map((el:searchblogs) => {
@@ -46,7 +46,7 @@ const Posts = () => {
                                 </div>
                                 <div className='col-span-3 row-span-4  grid grid-rows-6 '>
                                     <h1 className=' text-xl row-start-1 row-span-3 pl-3 flex items-center'>{el.heading}</h1>
-                                    <p className='text-base row-span-3 pl-3 flex items-center'>{el.content.slice(0,120) + "..."}</p>
+                                    <p className='text-base row-span-3 pl-3 flex items-center'>{el.content.slice(0,90) + "..."}</p>
                                 </div>
                                 <div className='col-start-4 col-span-2 row-start-1 row-span-6 flex justify-center items-center'>
                                 <img className=' w-[12rem] h-[8rem] object-cover' src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1652613376/${el.b_image}`} alt={el.b_image} />

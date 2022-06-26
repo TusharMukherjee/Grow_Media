@@ -2,6 +2,7 @@ import { useQuery } from '@apollo/client'
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { EDIT_QUERY } from '../gqlQueries/queries/Explorequery'
+import Sidebar from './Sidebar'
 
 type infoquery = {
     infoquery: [allInfo]
@@ -29,6 +30,7 @@ const About:React.FC = () => {
 
   return (
     <div className='col-start-2 col-span-6 grid grid-cols-8 my-12'> 
+    <Sidebar/>
     <div className='bg-white  col-start-3 col-span-4 grid gap-1 border-[1px] border-gray-300 rounded-md px-5'>
         <div className='px-12 py-5'>
             <h1 className='text-2xl mb-5'>Hometown</h1>

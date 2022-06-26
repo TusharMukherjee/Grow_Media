@@ -154,11 +154,11 @@ const Editprofile:React.FC = () => {
                             <div className=' h-screen w-screen top-0 z-30 fixed opacity-70 bg-gray-800'>
                             </div>
                             <div onClick={delToggelOff} className=' h-screen w-screen flex justify-center items-center top-0 fixed z-40'>
-                                <div className='bg-white h-1/3 w-1/3 rounded-md border-[0.75px] border-gray-600'>
+                                <div className='bg-white py-5 w-80 sm:h-1/6 sm:w-2/4 rounded-md border-[0.75px] border-gray-600'>
                                     <div className=' h-full w-full flex justify-center items-center'>
                                         <div className=' flex flex-col'>
-                                            <h1 className=' mb-8 text-lg text-red-500'>Are you sure you want to delete your account?</h1>
-                                            <div className=' self-end'>
+                                            <h1 className=' mb-8 text-center text-lg text-red-500'>Are you sure you want to delete your account?</h1>
+                                            <div className='flex flex-row justify-center justify-items-center sm:self-end'>
                                                 <button onClick={delToggelOff} className=' border border-teal-500 rounded-md mr-5 p-1 bg-white hover:bg-gray-300 shadow-md  w-16'>
                                                     No
                                                 </button>
@@ -173,47 +173,47 @@ const Editprofile:React.FC = () => {
 
                         </>)
                 }
-            <div className='grid grid-cols-8 '> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col my-8'>
-                <div className=' p-8 flex justify-center items-center h-full'>
-                    <div className=' w-3/4 border-[1px] border-teal-500 rounded-md flex flex-col justify-center items-center'>
-                        <div className=' w-3/4 grid gap-8 p-5'>
-                        <div className=''>
+            <div className='grid grid-cols-8 '> <Sidebar/> <div className=' col-span-8 sm:col-span-8 flex flex-col sm:mt-20'>
+                <div className=' flex justify-center items-center h-full'>
+                    <div className=' mb-24 w-screen sm:w-3/4 sm:border-[1px] sm:border-teal-500 sm:rounded-md flex flex-col justify-center items-center'>
+                        <div className=' w-full sm:w-3/4 grid gap-8 p-5'>
+                        <div>
                                 <div>
                                     <h1 className='text-2xl font-semibold'>{data?.infoquery[0]?.username}</h1>
                                     <label htmlFor="imageinput" className=' cursor-pointer text-blue-700'>Change profile photo</label>
                                     <input onChange={imagePreview} className='hidden' type="file" accept=".gif,.jpg,.jpeg,.png" id='imageinput' />
                                 </div>
                             </div>
-                            <div className='pl-4'>
-                                <div className='flex flex-row justify-between w-10/12'>
+                            <div className='sm:pl-4'>
+                                <div className='flex flex-row justify-between w-full sm:w-10/12'>
                                     <label className='col-span-1' htmlFor="bio">Bio</label>
                                     <textarea maxLength={149} placeholder='Bio' value= {`${bio}`} onChange={e => {setBio(e.target.value)}} id='bio'  className=' bg-slate-200 text-sm resize-none h-24 px-3 pt-2 w-48 rounded-md border-[1px] border-gray-400 focus:border-teal-500 outline-0 col-span-1'/>
                                 </div>
                             </div>
-                            <div className='pl-4'>
-                                <div className='flex flex-row justify-between w-10/12'>
+                            <div className='sm:pl-4'>
+                                <div className='flex flex-row justify-between w-full sm:w-10/12'>
                                     <label className='col-span-1' htmlFor="website">Website</label>
                                     <input maxLength={149} placeholder='Website' value= {`${link}`} onChange={e => {setLink(e.target.value)}} type="text" id='website'  className=' px-3 w-48 text-sm rounded-md h-8 border-[1px] border-gray-400 focus:border-teal-500 bg-slate-200 outline-0 col-span-1'/>
                                 </div>
                             </div> 
                         </div>
-                            <div className=' w-3/4 grid gap-8 p-5'>
-                                <div className='flex flex-row justify-between w-10/12'>
+                            <div className='w-full sm:w-3/4 grid gap-8 p-5'>
+                                <div className='flex flex-row justify-between w-full sm:w-10/12'>
                                     <h1 className='text-xl'>About</h1>
                                 </div>
-                                        <div className=' pl-4 flex flex-row justify-between w-10/12'>
+                                        <div className=' sm:pl-4 flex flex-row justify-between w-full sm:w-10/12'>
                                             <label className='col-span-1' htmlFor="qualificaton">Qualification</label>
                                             <input maxLength={9} placeholder='Qualification' value= {`${qualification}`} onChange={e => {setQualification(e.target.value)}} type="text" id='qualificaton'  className=' px-3 w-48 text-sm rounded-md h-8 border-[1px] border-gray-400 focus:border-teal-500 bg-slate-200 outline-0 col-span-1'/>
                                         </div>
-                                        <div className=' pl-4 flex flex-row justify-between w-10/12'>
+                                        <div className=' sm:pl-4 flex flex-row justify-between w-full sm:w-10/12'>
                                             <label className='col-span-1' htmlFor="work">Work</label>
                                             <input maxLength={14} placeholder='Work' value= {`${work}`} onChange={e => {setWork(e.target.value)}} type="text" id='work' className=' px-3 w-48 text-sm rounded-md h-8 border-[1px] border-gray-400 focus:border-teal-500 bg-slate-200 outline-0 col-span-1'/>
                                         </div>
-                                        <div className=' pl-4 flex flex-row justify-between w-10/12'>
+                                        <div className=' sm:pl-4 flex flex-row justify-between w-full sm:w-10/12'>
                                             <label className='col-span-1' htmlFor="college">College</label>
                                             <input maxLength={14} placeholder='College' value= {`${college}`} onChange={e => {setCollege(e.target.value)}} type="text" id='college' className=' px-3 w-48 text-sm rounded-md h-8 border-[1px] border-gray-400 focus:border-teal-500 bg-slate-200 outline-0 col-span-1'/>
                                         </div>
-                                        <div className=' pl-4 flex flex-row justify-between w-10/12'>
+                                        <div className=' sm:pl-4 flex flex-row justify-between w-full sm:w-10/12'>
                                             <label className='col-span-1' htmlFor="hometown">Hometown</label>
                                             <input maxLength={14} placeholder='Hometown' value= {`${hometown}`} onChange={e => {setHometown(e.target.value)}} type="text" id='hometown' className=' px-3 w-48 text-sm rounded-md h-8 border-[1px] border-gray-400 focus:border-teal-500 bg-slate-200 outline-0 col-span-1'/>
                                         </div>

@@ -77,10 +77,9 @@ const Addblog:React.FC = () => {
                     <h1 className=' z-40 text-xl'>Uploading...</h1>
                 </div>
             :     
-    <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-3 col-span-6 flex flex-col py-8 h-full'>
-    <div className='grid grid-cols-8'>
-        <div className=' col-start-2 col-span-6 grid gap-4 rounded-md shadow-md shadow-teal-300'>
-                <textarea id="headingTextArea" maxLength={75} onChange={(e) => setHeading((e.target.value).trim())} onInput={checkHeadingCount} className=' resize-none outline-0 w-full p-4 text-3xl font-bold'  placeholder='Your Heading'></textarea>
+    <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-2 col-span-6 sm:col-start-2 sm:col-span-6 flex flex-col pt-12 pb-60 sm:pt-20 sm:pb-60 h-full'>
+        <div className=' col-start-1 col-span-8 grid gap-4 rounded-md border '>
+                <textarea id="headingTextArea" maxLength={75} onChange={(e) => setHeading((e.target.value).trim())} onInput={checkHeadingCount} className=' resize-none outline-0 w-full sm:h-80 rounded-t-md p-4 text-3xl font-bold'  placeholder='Your Heading'></textarea>
                 {
                     (headingCount! >= 1)?
                     <div className=' w-full flex justify-end py-2 pr-16 bg-white'>
@@ -108,8 +107,8 @@ const Addblog:React.FC = () => {
                         (<>
                             {/* <label htmlFor="imageinput"  id='dropArea' className=' my-8 cursor-pointer flex justify-center items-center h-44 bg-gray-100'> */}
                                 <div className=' my-8  flex justify-center items-center h-44 bg-gray-100' >
-                                    <input className=' cursor-pointer z-20 absolute w-[40rem] opacity-0 h-44 flex justify-center items-center' type="file" accept=".jpg,.jpeg,.png" id='imageinput' onChange={imagePreview}/>
-                                    <div className=' relative z-10 bg-transparent border self-center border-dashed border-gray-500 rounded-md w-52 h-32 flex justify-center items-center'>
+                                    <input className=' cursor-pointer z-20 absolute w-52 h-32 sm:w-80 sm:mx-10 opacity-0 flex justify-center items-center' type="file" accept=".jpg,.jpeg,.png" id='imageinput' onChange={imagePreview}/>
+                                    <div className=' relative z-10 bg-transparent border self-center border-dashed border-gray-500 rounded-md sm:w-80 w-52 h-32 flex justify-center items-center'>
                                         Add Photo
                                     </div>
                                 </div>
@@ -137,7 +136,6 @@ const Addblog:React.FC = () => {
                     
                 </div>
         </div>
-    </div>
     </div>
     </div>
   )

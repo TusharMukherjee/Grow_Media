@@ -207,7 +207,7 @@ const Readwithcomment = ({data_followers,refetch_followers,refetch_total,is_like
 
 
   return (
-      <div className='sticky flex flex-col items-center'>
+      <div className='sm:mb-40 mb-20 sticky flex flex-col items-center'>
             <div className='flex flex-col items-center'>
             <div className=' h-auto w-80 flex flex-col bg-white rounded-md'>
                 <div className='flex flex-row items-center p-4'>
@@ -253,7 +253,7 @@ const Readwithcomment = ({data_followers,refetch_followers,refetch_total,is_like
                             {data_blikes?.likeblogs[0]?.totalblikes} Likes
                         </button>
                     }
-                    <div className=' rounded-md py-1 px-2 col-span-1 bg-white'>
+                    <div className=' rounded-md text-center py-1 px-2 col-span-1 bg-white'>
                         {onlyCMNT?.onlycomments.length} Comm.
                     </div>
                 </div>
