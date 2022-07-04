@@ -131,7 +131,7 @@ const Readblog = () => {
                             <p className='sm:col-start-2 sm:col-span-9 mx-10 text-lg sm:text-xl mb-8'>{data_onlyblog?.blog[0].content}</p>
                         </div>
                     </div>
-                    <div className='col-start-1 col-span-12 sm:col-start-2 sm:col-span-8 lg:col-start-9 lg:col-span-4 bg-teal-400 grid justify-center py-14 lg:z-10 h-screen lg:top-12 lg:right-0 sticky overflow-y-scroll'>
+                    <div className='col-start-1 col-span-12 sm:col-start-2 sm:col-span-8 lg:col-start-9 lg:col-span-4 bg-teal-400 grid justify-center py-14 lg:z-10 h-screen lg:top-12 lg:right-0 sticky overflow-y-hidden scrollbar'>
                         {/* <Readwithcomment bcomments = {selector} users = {ownerInfo} /> */}
                         <Readwithcomment refetch_followers={refetch_followers} data_followers={data_followers} refetch_total={refetch_total} refetch_isliked={refetch_isliked} is_liked={is_liked} data_onlyblog ={data_onlyblog} repTOTAL= {repTOTAL} onlyCMNT={onlyCMNT} refetch_isFollowing={refetch_isFollowing} refetchMut={refetch_onlycmnt} isFollow = {isFollow}/>
                     </div> 
