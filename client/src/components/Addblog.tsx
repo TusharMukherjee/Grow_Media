@@ -77,8 +77,8 @@ const Addblog:React.FC = () => {
                     <h1 className=' z-40 text-xl'>Uploading...</h1>
                 </div>
             :     
-    <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-2 col-span-6 sm:col-start-2 sm:col-span-6 flex flex-col pt-12 pb-60 sm:pt-20 sm:pb-60 h-full'>
-        <div className=' col-start-1 col-span-8 grid gap-4 rounded-md border '>
+    <div className='grid grid-cols-8'> <Sidebar/> <div className='col-start-2 col-span-6 sm:col-start-2 sm:col-span-6 lg:col-start-3 lg:col-span-6 flex flex-col pt-12 pb-60 sm:pt-20 sm:pb-60 h-full lg:grid lg:grid-cols-12'>
+        <div className=' col-start-1 col-span-8 lg:col-start-2 lg:col-span-10 grid gap-4 rounded-md border '>
                 <textarea id="headingTextArea" maxLength={75} onChange={(e) => setHeading((e.target.value).trim())} onInput={checkHeadingCount} className=' resize-none outline-0 w-full sm:h-80 rounded-t-md p-4 text-3xl font-bold'  placeholder='Your Heading'></textarea>
                 {
                     (headingCount! >= 1)?

@@ -82,7 +82,7 @@ const Userhome: React.FC = () => {
   return (
       <>
         <div className='grid grid-cols-12 sm:grid-cols-8 mt-2 sm:mt-6'>
-            <div className='col-start-2 col-span-10 sm:col-start-2 sm:col-span-6 grid grid-cols-5 h-56'>
+            <div className='col-start-2 col-span-10 sm:col-start-2 sm:col-span-6 lg:col-start-3 lg:col-span-4 grid grid-cols-5 h-56'>
                 <div className=' col-span-2 h-56 flex justify-center items-center'>
                     {
                         (data?.user[0]?.profile_img !== null)?
@@ -115,8 +115,8 @@ const Userhome: React.FC = () => {
                     <a href={data?.user[0]?.link} className=' text-blue-800 inline-block break-words ml-2 sm:ml-0 sm:text-base text-sm w-full sm:w-4/6 my-1 sm:flex items-center' >{data?.user[0]?.link}</a>
                 </div>
             </div>
-            <hr className=' col-start-2 col-span-10 sm:col-start-2 sm:col-span-6'/>
-            <div className='col-start-2 col-span-10 sm:col-start-2 sm:col-span-6 grid grid-cols-2 my-5 place-items-center'>
+            <hr className=' col-start-2 col-span-10 sm:col-start-2 sm:col-span-6 lg:col-start-3 lg:col-span-4'/>
+            <div className='col-start-2 col-span-10 sm:col-start-2 sm:col-span-6 lg:col-start-3 lg:col-span-4 grid grid-cols-2 my-5 place-items-center'>
                 <button onClick={() => navigate(`/profile/${profile_id}`)} className='text-white col-span-1 flex justify-center bg-purple-500 w-20 py-0.5 rounded-md'>Blogs</button>
                 <button onClick={() => navigate(`/profile/about/${profile_id}`)} className='text-white col-span-1 flex justify-center bg-purple-500 w-20 py-0.5 rounded-md'>About</button>
             </div>

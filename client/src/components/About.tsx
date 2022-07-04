@@ -30,7 +30,9 @@ const About:React.FC = () => {
 
   return (
     <div className=' col-span-12 sm:col-start-2 sm:col-span-6 grid grid-cols-8 my-12'> 
-    <Sidebar/>
+    <div className='lg:hidden'>
+      <Sidebar/>  
+    </div>
     <div className='bg-white col-start-2 col-span-6 sm:col-start-3 sm:col-span-4 grid gap-1 border-[1px] border-gray-300 rounded-md px-5 mb-16 sm:mb-0'>
         <div className=' px-3 sm:px-12 py-5'>
             <h1 className='text-2xl mb-5'>Hometown</h1>

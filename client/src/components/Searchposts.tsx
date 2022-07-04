@@ -23,7 +23,7 @@ const Posts = () => {
     const {searchquery} = useParams();
     const dispatch = useDispatch();
 
-    const {data} = useQuery(SEARCHBLOG,{
+    const {loading,data} = useQuery(SEARCHBLOG,{
         variables:{
             searchkeyword: searchquery
         }
@@ -33,8 +33,10 @@ const Posts = () => {
         dispatch(toggleSearchdis(false))
     }
     return (
-        <>
-            <div className='grid grid-cols-8 mb-40'> <Sidebar/> <div className=' sm:col-start-1 sm:col-span-8 col-start-1 col-span-8 flex flex-col'>
+        
+        (loading)?(<div className='bg-teal-200 h-screen fixed z-[60] top-0 left-0 bottom-0 right-0 w-screen grid place-items-center'><div className=' h-28 w-28 border-white rounded-full border-t-[0.5rem] border-[0.5rem] border-t-teal-500 animate-spin ' ></div></div>):
+
+            <div className='grid grid-cols-8 mb-40 lg:mb-0'> <Sidebar/> <div className=' lg:row-span-6 sm:col-start-1 sm:col-span-8 lg:col-start-3 lg:col-span-6 col-start-1 col-span-8 lg:h-full flex flex-col'>
             <Tabs/>
         {   (data?.searchBlog.length !== 0)?
             data?.searchBlog.map((el:searchblogs) => {
@@ -49,7 +51,7 @@ const Posts = () => {
                                         <img src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1656086069/e0gy9inebvobnauo1um2.gif`} alt="Default img (Grow Media)" className='ml-3 rounded-full object-cover h-4 w-4 sm:h-5 sm:w-5'/>
                                     }
                                         
-                                        <h1 className='ml-3 text-xs font-light sm:text-xl'>{el.username}</h1>
+                                        <h1 className='ml-3 text-xs font-light sm:text-xl lg:text-base'>{el.username}</h1>
                                     </div>
                                     <div className='col-span-3 row-span-4  grid grid-rows-6 '>
                                         <h1 className=' text-sm font-medium sm:text-xl row-start-1 row-span-3 pl-3 flex items-center'>{el.heading}</h1>
@@ -90,7 +92,6 @@ const Posts = () => {
         </div>
 
       
-      </>
     )
 
 };

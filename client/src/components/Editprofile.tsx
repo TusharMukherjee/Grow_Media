@@ -173,7 +173,7 @@ const Editprofile:React.FC = () => {
 
                         </>)
                 }
-            <div className='grid grid-cols-8 '> <Sidebar/> <div className=' col-span-8 sm:col-span-8 flex flex-col sm:mt-20'>
+            <div className='grid grid-cols-8 '> <Sidebar/> <div className=' col-span-8 sm:col-span-8 lg:col-start-3 lg:col-span-6 flex flex-col sm:mt-20'>
                 <div className=' flex justify-center items-center h-full'>
                     <div className=' mb-24 w-screen sm:w-3/4 sm:border-[1px] sm:border-teal-500 sm:rounded-md flex flex-col justify-center items-center'>
                         <div className=' w-full sm:w-3/4 grid gap-8 p-5'>
