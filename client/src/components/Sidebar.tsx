@@ -23,8 +23,8 @@ const Sidebar: React.FC = () => {
   }
 
   return (
-        <div className=' lg:col-start-1 lg:row-span-6 lg:col-span-2 lg:flex lg:h-screen lg:justify-center lg:bg-teal-600 lg:sticky lg:top-12 lg:bottom-0 lg:z-10'>
-            <div className=' z-[70] lg:z-10 bg-teal-600 justify-center items-center w-screen lg:w-60 sm:w-screen mt-8 lg:pt-1 h-16 lg:h-1/2 sm:h-20 fixed sm:bottom-0 sm:grid gap-12 sm:gap-28 lg:gap-4 sm:grid-flow-col bottom-0 lg:top-12 grid grid-flow-col lg:flex lg:flex-col'>
+        <div className=' lg:col-start-1 lg:row-span-6 lg:col-span-2 lg:flex lg:h-screen lg:justify-center lg:bg-teal-500 lg:sticky lg:top-12 lg:bottom-0 lg:z-10'>
+            <div className=' z-[70] lg:z-10 bg-teal-600 lg:bg-teal-500 justify-center items-center w-screen lg:w-60 sm:w-screen mt-8 lg:pt-1 h-16 lg:h-1/2 sm:h-20 fixed sm:bottom-0 sm:grid gap-12 sm:gap-28 lg:gap-4 sm:grid-flow-col bottom-0 lg:top-12 grid grid-flow-col lg:flex lg:flex-col'>
 
               <NavLink to="/home" style={navLinkStyle} className={` z-10 hover:drop-shadow font-medium bg-white hover:border-teal-600 border text-teal-500 mb-3 h-12 w-48 pl-3 rounded-lg items-center hidden lg:flex lg:flex-row `}>
                 <svg xmlns="http://www.w3.org/2000/svg" className="sm:h-6 sm:w-6 h-4 w-4 " fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>

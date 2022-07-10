@@ -47,7 +47,7 @@ const Userhome: React.FC = () => {
 
     const {data:data_isFollowing,refetch:refetch_isFollowing} = useQuery<isFollow>(IS_FOLLOWING,{
         variables:{
-            userId:selector.user_id,
+            userId:selector?.user_id,
             followersId: Number(profile_id)
         }
     });
@@ -60,7 +60,7 @@ const Userhome: React.FC = () => {
             refetch_followers();
         },
         variables:{
-            userId:selector.user_id,
+            userId:selector?.user_id,
             followersId:Number(profile_id)
         }
     });
@@ -72,7 +72,7 @@ const Userhome: React.FC = () => {
             refetch_followers();
         },
         variables:{
-            userId:selector.user_id,
+            userId:selector?.user_id,
             followersId:Number(profile_id)
         }
     })
@@ -81,7 +81,7 @@ const Userhome: React.FC = () => {
 
   return (
       <>
-        <div className='grid grid-cols-12 sm:grid-cols-8 mt-2 sm:mt-6'>
+        <div className='grid grid-cols-12 sm:grid-cols-8 sm:mt-6'>
             <div className='col-start-2 col-span-10 sm:col-start-2 sm:col-span-6 lg:col-start-3 lg:col-span-4 grid grid-cols-5 h-56'>
                 <div className=' col-span-2 h-56 flex justify-center items-center'>
                     {
@@ -94,7 +94,7 @@ const Userhome: React.FC = () => {
                 <div className='col-span-3 flex flex-col justify-center '>
                     <div className='w-full sm:w-4/6 flex items-center font-semibold my-2 justify-between' ><h1 className='ml-2 sm:ml-0'>{data?.user[0]?.username}</h1>
                     {
-                        (Number(selector.user_id) === Number(profile_id))
+                        (Number(selector?.user_id) === Number(profile_id))
                         ?
                         <></>
                         :

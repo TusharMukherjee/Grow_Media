@@ -7,7 +7,8 @@ type usersslogin = {
 const initialState:any = {
     users: {},
     toggleSearch: false,
-    mobile: false
+    mobile: false,
+    online: false
 }
 
 export const userSlice = createSlice({
@@ -22,12 +23,16 @@ export const userSlice = createSlice({
         },
         mobiledis:(state, actions: PayloadAction<boolean>) => {
             state.mobile = actions.payload
+        },
+        onlinedis:(state, actions: PayloadAction<boolean>) => {
+            state.online = actions.payload
         }
     }
 });
 
-export const { logIn, toggleSearchdis, mobiledis } = userSlice.actions;
+export const { logIn, toggleSearchdis, mobiledis, onlinedis } = userSlice.actions;
 export const userLoginInfo = (state:any) => state.userSlice.users;
 export const toggleSearchInfo = (state:any) => state.userSlice.toggleSearch;
 export const mobileInfo = (state:any) => state.userSlice.mobile;
+export const onlineInfo = (state:any) => state.userSlice.online;
 export default userSlice.reducer;

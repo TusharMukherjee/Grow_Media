@@ -123,15 +123,15 @@ const Readblog = () => {
                   (<>
                     <div className=' sm:bg-white sm:col-start-2 sm:col-span-6 col-start-1 col-span-12 sm:py-16 lg:py-6 lg:col-span-8 lg:col-start-1'>
                         <div className=' sm:grid sm:grid-cols-11 items-center mt-12'>
-                            <h1 className='  sm:col-start-2 sm:col-span-9 mx-10 sm:text-justify text-xl sm:text-3xl font-bold'>{data_onlyblog?.blog[0].heading}</h1>
+                            <h1 className='  sm:col-start-2 sm:col-span-9 mx-10 sm:text-center text-xl sm:text-3xl font-bold'>{data_onlyblog?.blog[0].heading}</h1>
                             <div className='  sm:col-start-2 sm:col-span-9 mx-10 grid place-items-center  my-12'>
                                 {/* <div className='h-60 w-96 bg-teal-700'></div> */}
-                                <img className='h-60 w-96 object-cover' src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1652613376/${data_onlyblog?.blog[0].b_image}`} alt="" />
+                                <img className='h-60 object-cover' src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1652613376/${data_onlyblog?.blog[0].b_image}`} alt="" />
                             </div>
                             <p className='sm:col-start-2 sm:col-span-9 mx-10 text-lg sm:text-xl mb-8'>{data_onlyblog?.blog[0].content}</p>
                         </div>
                     </div>
-                    <div className='col-start-1 col-span-12 sm:col-start-2 sm:col-span-8 lg:col-start-9 lg:col-span-4 bg-teal-400 grid justify-center py-14 lg:z-10 h-screen lg:top-12 lg:right-0 sticky overflow-y-hidden scrollbar'>
+                    <div className='col-start-1 col-span-12 sm:col-start-0 sm:col-span-8 lg:col-start-9 lg:col-span-4 bg-teal-400 grid justify-center py-14 lg:z-10 h-full sm:h-screen lg:top-12 lg:right-0 lg:sticky lg:overflow-y-hidden lg:scrollbar'>
                         {/* <Readwithcomment bcomments = {selector} users = {ownerInfo} /> */}
                         <Readwithcomment refetch_followers={refetch_followers} data_followers={data_followers} refetch_total={refetch_total} refetch_isliked={refetch_isliked} is_liked={is_liked} data_onlyblog ={data_onlyblog} repTOTAL= {repTOTAL} onlyCMNT={onlyCMNT} refetch_isFollowing={refetch_isFollowing} refetchMut={refetch_onlycmnt} isFollow = {isFollow}/>
                     </div> 
