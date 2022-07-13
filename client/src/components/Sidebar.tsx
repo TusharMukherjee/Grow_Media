@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { toggleSearchdis } from '../features/UserSlice';
 
 const Sidebar: React.FC = () => {
 
   const dispatch = useDispatch();
+
+  const param = useLocation();
+
 
   const navLinkStyle = ({isActive}:any) =>{
     return{
@@ -15,12 +18,18 @@ const Sidebar: React.FC = () => {
   }
 
   function toggleSe(){
-    dispatch(toggleSearchdis(true))
+    dispatch(toggleSearchdis(true));
   }
 
   function toggleSeFalse(){
     dispatch(toggleSearchdis(false))
   }
+
+  useEffect(()=>{
+    if(param.pathname === "/explore"){
+      dispatch(toggleSearchdis(true));
+    }
+  },[param.pathname,dispatch]);
 
   return (
         <div className=' lg:col-start-1 lg:row-span-6 lg:col-span-2 lg:flex lg:h-screen lg:justify-center lg:bg-teal-500 lg:sticky lg:top-12 lg:bottom-0 lg:z-10'>

@@ -33,9 +33,11 @@ const Userhome: React.FC = () => {
 
     const {profile_id} = useParams();
 
-    const{data} = useQuery<UserInfoType>(PROFILE_INFO,{variables:{
-        userId: Number(profile_id)
-    }});
+    const{data} = useQuery<UserInfoType>(PROFILE_INFO,{
+        variables:{
+            userId: Number(profile_id)
+        }
+    });
 
     const selector = useSelector(userLoginInfo);
 
@@ -80,7 +82,20 @@ const Userhome: React.FC = () => {
     // console.log(data);
 
   return (
-      <>
+        (data?.user[0]?.user_id === null)
+        ?
+        <>
+        <div className=" h-screen grid place-content-center bg-white text-teal-600">
+            <div className="grid place-items-center gap-8">
+                <h1 className=" text-4xl font-bold ">
+                    💀 User not found
+                </h1>
+                <button onClick={()=> navigate(-1)} className=" font-light bg-teal-600 text-white w-fit px-4 py-2 rounded-md hover:shadow-xl hover:shadow-teal-800 ">Click to go back</button>
+            </div>
+        </div>
+        </>
+        :
+        <>
         <div className='grid grid-cols-12 sm:grid-cols-8 sm:mt-6'>
             <div className='col-start-2 col-span-10 sm:col-start-2 sm:col-span-6 lg:col-start-3 lg:col-span-4 grid grid-cols-5 h-56'>
                 <div className=' col-span-2 h-56 flex justify-center items-center'>
@@ -123,7 +138,6 @@ const Userhome: React.FC = () => {
         </div>
         <Outlet/>
       </>
-    
   )
 }
 

@@ -2,7 +2,7 @@
 const staticCacheName = 'site-static-v1';
 const dynamicCacheName = 'site-dynamic-v1';
 
-const asset = ['index.html','offline.html'];
+const asset = ['index.html'];
 
 
 // Install service worker
