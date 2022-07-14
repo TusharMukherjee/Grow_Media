@@ -1,5 +1,5 @@
 import Readwithcomment from './Readwithcomment'
-import {useParams} from 'react-router-dom'
+import {useNavigate, useParams} from 'react-router-dom'
 import { useQuery } from '@apollo/client'
 
 import { FOLLOWERS, IS_FOLLOWING, IS_LIKED, ONLYCMNT, REPTOTAL, SINGLE_BLOG} from '../gqlQueries/queries/Explorequery';
@@ -39,6 +39,7 @@ type data_onlyblog_users = {
 const Readblog = () => {
 
     const {blog_id} = useParams<string>();
+    const navigate = useNavigate();
     const selector = useSelector(userLoginInfo);
     const [isFollow,setIsFollow] = useState<isFollow>();
     const [onlybluser_id, setOnlybluser_id] = useState<string>();
@@ -54,7 +55,7 @@ const Readblog = () => {
       const {loading, data:data_onlyblog} = useQuery<data_onlyblog>(SINGLE_BLOG,{
         onCompleted:(data)=>{
           // console.log(data?.blog[0].bluser_id);
-          setOnlybluser_id(data?.blog[0].bluser_id);
+          setOnlybluser_id(data?.blog[0]?.bluser_id);
         },
         variables:{
           blogId: Number(blog_id)
@@ -62,7 +63,7 @@ const Readblog = () => {
       });
 //       dispatch(bluser_id(data_onlyblog.blog[0].bluser_id));
 
-      // const commSelector = useSelector(userOwnerId);
+      // const commSelector = useSelector(userOwnerId)
       // console.log(commSelector)
       // console.log(onlybluser_id);
     
@@ -101,7 +102,7 @@ const Readblog = () => {
 
       const {data:data_followers, refetch:refetch_followers} = useQuery(FOLLOWERS,{
           variables:{
-              userId: Number(data_onlyblog?.blog[0].users[0].user_id)
+              userId: Number(data_onlyblog?.blog[0]?.users[0]?.user_id)
           }
       });
 
@@ -120,15 +121,33 @@ const Readblog = () => {
                   loading ?
                   (<div className='bg-teal-500 w-screen h-screen grid place-items-center'><div className=' h-32 w-32 border-white rounded-full border-t-[1rem] border-[0.5rem] border-t-teal-900 animate-spin ' ></div></div>)
                   :
-                  (<>
+                  (
+                    (data_onlyblog?.blog[0]?.blog_id === undefined && navigator.onLine === true)
+                    ?
+                    <>
+                    <div className=" h-screen grid place-content-center fixed w-screen col-span-12 bg-white text-teal-600">
+                        <div className="grid place-items-center gap-8">
+                            <h1 className=" text-4xl font-bold ">
+                                💀 Blog not found
+                            </h1>
+                            <button onClick={()=> navigate(-1)} className=" font-light bg-teal-600 text-white w-fit px-4 py-2 rounded-md hover:shadow-xl hover:shadow-teal-800 ">Click to go back</button>
+                        </div>
+                    </div>
+                    <div className=' lg:hidden sm:col-span-8 grid grid-cols-8'>
+                      <Sidebar/>
+                    </div>
+                    </>
+                    :
+                  
+                  <>
                     <div className=' sm:bg-white sm:col-start-2 sm:col-span-6 col-start-1 col-span-12 sm:py-16 lg:py-6 lg:col-span-8 lg:col-start-1'>
                         <div className=' sm:grid sm:grid-cols-11 items-center mt-12'>
-                            <h1 className='  sm:col-start-2 sm:col-span-9 mx-10 sm:text-center text-xl sm:text-3xl font-bold'>{data_onlyblog?.blog[0].heading}</h1>
+                            <h1 className='  sm:col-start-2 sm:col-span-9 mx-10 sm:text-center text-xl sm:text-3xl font-bold'>{data_onlyblog?.blog[0]?.heading}</h1>
                             <div className='  sm:col-start-2 sm:col-span-9 mx-10 grid place-items-center  my-12'>
                                 {/* <div className='h-60 w-96 bg-teal-700'></div> */}
-                                <img className='h-60 object-cover' src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1652613376/${data_onlyblog?.blog[0].b_image}`} alt="" />
+                                <img className='h-60 object-cover' src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1652613376/${data_onlyblog?.blog[0]?.b_image}`} alt="" />
                             </div>
-                            <p className='sm:col-start-2 sm:col-span-9 mx-10 text-lg sm:text-xl mb-8'>{data_onlyblog?.blog[0].content}</p>
+                            <p className='sm:col-start-2 sm:col-span-9 mx-10 text-lg sm:text-xl mb-8'>{data_onlyblog?.blog[0]?.content}</p>
                         </div>
                     </div>
                     <div className='col-start-1 col-span-12 sm:col-start-0 sm:col-span-8 lg:col-start-9 lg:col-span-4 bg-teal-400 grid justify-center py-14 lg:z-10 h-full sm:h-screen lg:top-12 lg:right-0 lg:sticky lg:overflow-y-hidden lg:scrollbar'>

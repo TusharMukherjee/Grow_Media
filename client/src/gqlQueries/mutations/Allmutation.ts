@@ -168,3 +168,35 @@ mutation UnlikecommentMutation($userId: ID, $bcommentIdLike: ID) {
 }
 
 `
+
+export const DELETECOMMENT = gql `
+
+mutation Mutation($userId: ID!, $bcommentId: ID!, $blogId: ID!) {
+  deleteComment(user_id: $userId, bcomment_id: $bcommentId, blog_id: $blogId) {
+    bcomment_id
+  }
+}
+
+`
+
+export const DELETEREPLYCOMMENT = gql`
+
+mutation Mutation($rcommentId: ID!, $replyUserId: ID!) {
+  deleteReplyComment(rcomment_id: $rcommentId, replyUser_id: $replyUserId) {
+    status
+    message
+  }
+}
+
+`
+
+export const DELETEBLOG = gql `
+
+mutation Mutation($userId: ID!, $blogId: String!) {
+  deleteBlog(user_id: $userId, blog_id: $blogId) {
+    status
+    message
+  }
+}
+
+`

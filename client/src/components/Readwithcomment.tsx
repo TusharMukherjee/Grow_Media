@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import { useMutation, useQuery } from "@apollo/client";
-import { LIKEBLOG, UNLIKEBLOG, COMMENT, FOLLOW, LIKECMNT, REPLY_COMMENTS, UNFOLLOW, UNLIKECMNT } from "../gqlQueries/mutations/Allmutation";
+import { LIKEBLOG, UNLIKEBLOG, COMMENT, FOLLOW, LIKECMNT, REPLY_COMMENTS, UNFOLLOW, UNLIKECMNT, DELETECOMMENT, DELETEREPLYCOMMENT, DELETEBLOG } from "../gqlQueries/mutations/Allmutation";
 import { userLoginInfo } from "../features/UserSlice";
 import { BLOGS_LIKES } from "../gqlQueries/queries/Explorequery";
 
@@ -101,6 +101,7 @@ const Readwithcomment = ({data_followers,refetch_followers,refetch_total,is_like
     
     const param = useParams();
     const selector = useSelector(userLoginInfo);
+    const navigate = useNavigate();
 
     // console.log(repTOTAL?.totalcomment?.[0].bcomments);
     // console.log(is_liked?.onlycomments[1].bcommentLikesb[0]?.bluser_id); alt=
@@ -115,6 +116,12 @@ const Readwithcomment = ({data_followers,refetch_followers,refetch_total,is_like
             userId: selector.user_id
         }
     });
+
+    const [deleteBlog] = useMutation(DELETEBLOG,{
+        onCompleted:()=>{
+            navigate(-1);
+        }
+    })
 
     // Likeblog -------------------------------------------
 
@@ -159,6 +166,18 @@ const Readwithcomment = ({data_followers,refetch_followers,refetch_total,is_like
             refetchMut();
         }
     });
+
+    const [deleteComment] = useMutation(DELETECOMMENT,{
+        onCompleted:() => {
+            refetchMut();
+        },
+    })
+
+    const [deletReplyComment] = useMutation(DELETEREPLYCOMMENT,{
+        onCompleted:() => {
+            refetchMut();
+        },
+    })
 
     // Follow related functions -------------------------------
 
@@ -207,6 +226,7 @@ const Readwithcomment = ({data_followers,refetch_followers,refetch_total,is_like
 
 
   return (
+    <>
       <div className='sm:mb-40 mb-20 sticky flex flex-col items-center'>
             <div className='flex flex-col items-center'>
             <div className=' h-auto w-80 flex flex-col bg-white rounded-md'>
@@ -226,7 +246,9 @@ const Readwithcomment = ({data_followers,refetch_followers,refetch_total,is_like
                 {
                     (Number(data_onlyblog?.blog[0].users[0].user_id) === Number(selector.user_id))
                     ?
-                    <></>
+                    <div className='pl-4 pb-4'>
+                        <button onClick={() => deleteBlog({variables:{userId: String(selector.user_id), blogId:String(param.blog_id)}})} className=' bg-white border-2 border-teal-500 text-teal-500 hover:bg-teal-500 hover:text-white px-2 py-1 rounded-md'>Delete Blog</button> 
+                    </div>
                     :
                     (isFollow?.isFollowing.status)
                     ?
@@ -272,16 +294,27 @@ const Readwithcomment = ({data_followers,refetch_followers,refetch_total,is_like
                         return(
                         
                             <div className='w-80 my-2 rounded-md bg-white flex flex-col justify-center' key={el?.bcomment_id}>
-                                <div className='flex flex-row p-4'>
-                                    {(el.blogsComUsers[0].profile_img !== null)?
-                                        <img src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1652613376/${el.blogsComUsers[0].profile_img}`} alt={el.blogsComUsers[0].profile_img} className=' rounded-full h-6 w-6 '/>
-                                        :
-                                        <img src="https://res.cloudinary.com/dmtfoyuuq/image/upload/v1656086069/e0gy9inebvobnauo1um2.gif" alt={el.blogsComUsers[0].profile_img} className=' rounded-full h-6 w-6 '/>
-                                    }
-                                    
-                                    <div className='ml-4'>
-                                        <h1>{el?.blogsComUsers[0].username}</h1>
+                                <div className='flex flex-row p-4 justify-between'>
+                                    <div className="flex flex-row" >
+                                        {(el.blogsComUsers[0].profile_img !== null)?
+                                            <img src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1652613376/${el.blogsComUsers[0].profile_img}`} alt={el.blogsComUsers[0].profile_img} className=' rounded-full h-6 w-6 '/>
+                                            :
+                                            <img src="https://res.cloudinary.com/dmtfoyuuq/image/upload/v1656086069/e0gy9inebvobnauo1um2.gif" alt={"default_grow_media_image"} className=' rounded-full h-6 w-6 '/>
+                                        }
+                                        
+                                        <div className='ml-4'>
+                                            <h1>{el?.blogsComUsers[0].username}</h1>
+                                        </div>
                                     </div>
+                                    {(el.blogsComUsers[0].user_id === String(selector.user_id))?
+                                    
+                                    <svg onClick={()=>deleteComment({variables:{userId:selector.user_id, bcommentId:el?.bcomment_id,blogId:param.blog_id}})} xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-teal-800 cursor-pointer " fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                    :
+                                    <></>
+                                
+                                    }  
                                 </div>
                                 <div className='px-4 pb-4'>
                                     <p className='w-72'>{el?.blcomment}</p>
@@ -318,7 +351,8 @@ const Readwithcomment = ({data_followers,refetch_followers,refetch_total,is_like
                                                                         <div className=" bg-white my-4" key={allrep.rcomment_id}>
                                                                             {allrep.replyUsers.map((replyUser) => {
                                                                                 return(
-                                                                                    <div className="flex flex-row items-center bg-white" key={replyUser.user_id}>
+                                                                                    <div className="flex flex-row items-center bg-white justify-between" key={replyUser.user_id}>
+                                                                                        <div className="flex flex-row">
                                                                                         {
                                                                                             (replyUser.profile_img !== null)?
                                                                                             <img src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1652613376/${replyUser.profile_img}`} alt={replyUser.profile_img} className='rounded-full h-5 w-5 '/>
@@ -327,6 +361,16 @@ const Readwithcomment = ({data_followers,refetch_followers,refetch_total,is_like
                                                                                         }
                                                                                         
                                                                                         <h1 className='ml-2 text-base'>{replyUser.username}</h1>
+                                                                                        </div>
+                                                                                        {(replyUser.user_id === String(selector.user_id))?
+                                    
+                                                                                            <svg onClick={()=>deletReplyComment({variables:{rcommentId:allrep.rcomment_id, replyUserId:replyUser.user_id}})} xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-teal-800 cursor-pointer " fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                                                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                                                            </svg>
+                                                                                            :
+                                                                                            <></>
+                                                                                        
+                                                                                        }
                                                                                     </div>
                                                                                 )
                                                                             })}
@@ -352,7 +396,7 @@ const Readwithcomment = ({data_followers,refetch_followers,refetch_total,is_like
             
         </div>
       </div>
-    
+    </>
   )
 }
 

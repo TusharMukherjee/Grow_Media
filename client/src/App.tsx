@@ -18,7 +18,7 @@ import Readblog from './components/Readblog';
 import { useLazyQuery } from '@apollo/client';
 import { FROM_COOKIE } from './gqlQueries/queries/Explorequery';
 import { useDispatch } from 'react-redux'
-import { logIn, mobiledis } from './features/UserSlice'
+import { logIn, mobiledis} from './features/UserSlice'
 import PrivateRoute from './PrivateRoute';
 import Notfound from './components/Notfound';
 

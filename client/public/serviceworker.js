@@ -1,8 +1,8 @@
 // every time changing the file change version
-const staticCacheName = 'site-static-v1';
-const dynamicCacheName = 'site-dynamic-v1';
+const staticCacheName = 'site-static-v2';
+const dynamicCacheName = 'site-dynamic-v2';
 
-const asset = ['index.html'];
+const asset = ['/static/js/bundle.js','/index.html','/'];
 
 
 // Install service worker

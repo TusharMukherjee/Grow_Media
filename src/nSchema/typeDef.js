@@ -329,7 +329,7 @@ const typeDefs = gql`
 
 
         createBlog(user_id: ID!, b_image: String, heading: String!, content:String!): Blogs
-        deleteBlog(user_id: ID!, blog_id: String!): Blogs
+        deleteBlog(user_id: ID!, blog_id: String!): likeMutation
 
         likeBlog(user_id: Int, blog_id: Int): likeblogmut
         unlikeBlog(user_id: Int, blog_id: Int): likeblogmut
@@ -337,8 +337,8 @@ const typeDefs = gql`
         likecommentMutation(user_id:ID, bcomment_idLike:ID): likeMutation
         unlikecommentMutation(user_id:ID,bcomment_idLike:ID):likeMutation
         replyComm(user_id: ID!, parentComment_id: ID!, commentContent: String!): ReplyComm
-        deleteComment(rcomment_id: ID!, user_id: ID!, bcomment_id: ID!): Comment
-        deleteReplyComment(user_id: ID!, blog_id: ID!, parentComment_id: ID!): ReplyComm
+        deleteComment(blog_id: ID!, user_id: ID!, bcomment_id: ID!): Comment
+        deleteReplyComment(rcomment_id: ID!, replyUser_id: ID!): likeMutation
 
         toFollow(user_id: ID!, followers_id: ID!): follow
         toUnfollow(user_id: ID!, followers_id: ID!): follow

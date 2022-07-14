@@ -323,7 +323,8 @@ const resolvers = {
             return {"isUploaded": true};
         },
         deleteBlog: async(parent,args) => {
-            return BlogsModel.query().delete().where('bluser_id',args.user_id).where('blog_id',args.blog_id);
+            await BlogsModel.query().delete().where('bluser_id',args.user_id).where('blog_id',args.blog_id);
+            return {"status":true, "message": "deleted!"};
         },
 
 
@@ -395,7 +396,9 @@ const resolvers = {
             return await replyCommentModel.query().insert({"replyUser_id": args.user_id, "parentComment_id": args.parentComment_id, "replied_comment": args.commentContent});
         },
         deleteReplyComment: async (parents,args) => {
-            return BlogCommentsModel.query().delete().where('rcomment_id',args.rcomment_id).where('replyUser_id',args.user_id).where('parentComment_id',args.parentComment_id);
+            console.log(args);
+            await replyCommentModel.query().delete().where('rcomment_id',args.rcomment_id).where('replyUser_id',args.replyUser_id);
+            return {"status":true, "message": "deleted!"};
         },
 
 
