@@ -235,7 +235,7 @@ const Readwithcomment = ({data_followers,refetch_followers,refetch_total,is_like
                         (data_onlyblog?.blog[0]?.users[0]?.profile_img !== null)?
                         <img src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1652613376/${data_onlyblog?.blog[0]?.users[0]?.profile_img}`} alt={data_onlyblog?.blog[0]?.users[0]?.profile_img} className='h-20 w-20 rounded-md'/>
                         :
-                        <img src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1656086069/e0gy9inebvobnauo1um2.gif`} alt="Default img (Grow_Media)" className='h-20 w-20 rounded-md'/>
+                        <img src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1657824330/e0gy9inebvobnauo1um2.gif`} alt="Default img (Grow_Media)" className='h-20 w-20 rounded-md'/>
                     }
                     <div className='flex flex-col'>
                     <h1 className='pl-4'><Link to= {`/profile/${data_onlyblog?.blog[0].users[0].user_id}`}>{data_onlyblog?.blog[0].users[0].username}</Link></h1>
@@ -299,7 +299,7 @@ const Readwithcomment = ({data_followers,refetch_followers,refetch_total,is_like
                                         {(el.blogsComUsers[0].profile_img !== null)?
                                             <img src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1652613376/${el.blogsComUsers[0].profile_img}`} alt={el.blogsComUsers[0].profile_img} className=' rounded-full h-6 w-6 '/>
                                             :
-                                            <img src="https://res.cloudinary.com/dmtfoyuuq/image/upload/v1656086069/e0gy9inebvobnauo1um2.gif" alt={"default_grow_media_image"} className=' rounded-full h-6 w-6 '/>
+                                            <img src="https://res.cloudinary.com/dmtfoyuuq/image/upload/v1657824330/e0gy9inebvobnauo1um2.gif" alt={"default_grow_media_image"} className=' rounded-full h-6 w-6 '/>
                                         }
                                         
                                         <div className='ml-4'>
@@ -357,7 +357,7 @@ const Readwithcomment = ({data_followers,refetch_followers,refetch_total,is_like
                                                                                             (replyUser.profile_img !== null)?
                                                                                             <img src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1652613376/${replyUser.profile_img}`} alt={replyUser.profile_img} className='rounded-full h-5 w-5 '/>
                                                                                             :
-                                                                                            <img src="https://res.cloudinary.com/dmtfoyuuq/image/upload/v1656086069/e0gy9inebvobnauo1um2.gif" alt="Default img (Grow_Media)" className='rounded-full h-5 w-5 '/>
+                                                                                            <img src="https://res.cloudinary.com/dmtfoyuuq/image/upload/v1657824330/e0gy9inebvobnauo1um2.gif" alt="Default img (Grow_Media)" className='rounded-full h-5 w-5 '/>
                                                                                         }
                                                                                         
                                                                                         <h1 className='ml-2 text-base'>{replyUser.username}</h1>

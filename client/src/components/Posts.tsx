@@ -58,7 +58,7 @@ const Followingspost:React.FC = () => {
                                         (el.profile_img !== null)?
                                         <img src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1652613376/${el.profile_img}`} alt={el.profile_img} className='ml-3 rounded-full object-cover h-4 w-4 sm:h-5 sm:w-5'/>
                                         :
-                                        <img src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1656086069/e0gy9inebvobnauo1um2.gif`} alt="Default img (Grow Media)" className='ml-3 rounded-full object-cover h-4 w-4 sm:h-5 sm:w-5'/>
+                                        <img src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1657824330/e0gy9inebvobnauo1um2.gif`} alt="Default img (Grow Media)" className='ml-3 rounded-full object-cover h-4 w-4 sm:h-5 sm:w-5'/>
                                     }
                                         
                                         <h1 className='ml-3 text-xs font-light sm:text-xl lg:text-base'>{el.username}</h1>

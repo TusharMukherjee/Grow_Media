@@ -103,7 +103,7 @@ const Userhome: React.FC = () => {
                         (data?.user[0]?.profile_img !== null)?
                         <img src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1652613376/${data?.user[0]?.profile_img}`} alt={data?.user[0]?.profile_img} className='rounded-lg h-20 sm:h-32'/>
                         :
-                        <img src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1656086069/e0gy9inebvobnauo1um2.gif`} alt="Default img (Grow_Media)" className='rounded-lg h-20 sm:h-32'/>
+                        <img src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1657824330/e0gy9inebvobnauo1um2.gif`} alt="Default img (Grow_Media)" className='rounded-lg h-20 sm:h-32'/>
                     }
                 </div>
                 <div className='col-span-3 flex flex-col justify-center '>
@@ -126,8 +126,14 @@ const Userhome: React.FC = () => {
                         <div className=" text-center sm:text-left sm:text-base text-sm"> {data_followers?.followers[0]?.followers} &nbsp; Followers </div>
                         <div className=" text-center sm:text-left sm:text-base text-sm"> {data?.user[0]?.no_followingbyuser} &nbsp; Following </div>
                     </div>
-                    <p className=' ml-2 sm:ml-0 sm:text-base text-sm w-full sm:w-4/6 flex items-center '>{data?.user[0]?.bio == null ? '' : data?.user[0]?.bio}</p>
-                    <a href={data?.user[0]?.link} className=' text-blue-800 inline-block break-words ml-2 sm:ml-0 sm:text-base text-sm w-full sm:w-4/6 my-1 sm:flex items-center' >{data?.user[0]?.link}</a>
+                    <p className=' ml-2 sm:ml-0 sm:text-base text-sm w-full sm:w-4/6 flex items-center '>{data?.user[0]?.bio === null ? '' : data?.user[0]?.bio}</p>
+                    {
+                        (data?.user[0]?.link !== null)
+                        ?
+                        <a target="_blank" rel="noopener noreferrer" href={`//`+data?.user[0]?.link.replace(/(^\w+:|^)\/\//, '')} className=' text-blue-800 inline-block break-words ml-2 sm:ml-0 sm:text-base text-sm w-full sm:w-4/6 my-1 sm:flex items-center' >{data?.user[0]?.link}</a>
+                        :
+                        <></>
+                    }
                 </div>
             </div>
             <hr className=' col-start-2 col-span-10 sm:col-start-2 sm:col-span-6 lg:col-start-3 lg:col-span-4'/>

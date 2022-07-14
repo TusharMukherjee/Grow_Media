@@ -1,8 +1,10 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Rootpage from './Rootpage'
 import { SIGN_UP_MUTATION } from '../gqlQueries/mutations/Allmutation'
 import { useMutation } from '@apollo/client';
+import { useSelector } from 'react-redux';
+import { userLoginInfo } from '../features/UserSlice';
 
 type mutationType = {
     user_id: Number
@@ -21,6 +23,7 @@ type mutationVar = {
 
 const Signup = () => {
 
+    const selector:{user_id:number} = useSelector(userLoginInfo);
     const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [email, setEmail] = useState<string>('');
@@ -65,6 +68,12 @@ const Signup = () => {
             console.log("email not authorized")
         }
     }
+
+    useEffect(()=>{
+        if(selector?.user_id !== undefined){
+            navigate('/home', {replace: true});
+        }
+    },[selector, navigate]);
 
 
   return (

@@ -45,7 +45,7 @@ const main = async () => {
 
     const checkContext = ( req ) => {
         // const token = req.headers.authorization;
-        const token = req.headers.cookie.replace(/aces_token=/g,'');
+        const token = req.headers.cookie?.replace(/aces_token=/g,'');
         // console.log(token);
         // const pureToken = token.split(" ")[1];
         // console.log("first");

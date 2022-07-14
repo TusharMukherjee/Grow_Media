@@ -38,12 +38,14 @@ const Editprofile:React.FC = () => {
 
     // const [username, setUsername] = useState<string>();
     const [selectedImage, setSelectedImage] = useState<ArrayBuffer | string | null>("");
-    const [bio, setBio] = useState<string>("");
-    const [link, setLink] = useState<string>("");
-    const [qualification, setQualification] = useState<string>("");
-    const [work, setWork] = useState<string>("");
-    const [college, setCollege] = useState<string>("");
-    const [hometown, setHometown] = useState<string>("");
+    const [grpData, setgrpData] = useState({
+        bio:"",
+        link:"",
+        qualification:"",
+        work:"",
+        college:"",
+        hometown: ""
+    })
 
     const [delCover, setDelCover] = useState<boolean>(false);
 
@@ -52,21 +54,21 @@ const Editprofile:React.FC = () => {
     const selector:selectortype = useSelector(userLoginInfo);
     // console.log(selector);
     const {data} = useQuery<infoquery, queryvar>(EDIT_QUERY,{ onCompleted(data){
-        // console.log(data);
+        console.log(data);
         // setUsername(`${data.infoquery[0].username}`);
-        (data?.infoquery[0]?.bio !== undefined || data?.infoquery[0]?.bio!=="")?setBio(`${data?.infoquery[0]?.bio}`):setBio("");
-        (data?.infoquery[0]?.link !== undefined || data?.infoquery[0]?.link!=="")?setLink(`${data?.infoquery[0]?.link}`):setLink("");
-        (data?.infoquery[0]?.usersExtraInfo[0]?.qualification !== undefined || data?.infoquery[0]?.usersExtraInfo[0]?.qualification!=="")?setQualification(`${data?.infoquery[0]?.usersExtraInfo[0]?.qualification}`):setQualification("");
-        (data?.infoquery[0]?.usersExtraInfo[0]?.work!==undefined || data?.infoquery[0]?.usersExtraInfo[0]?.work!=="")?setWork(`${data?.infoquery[0]?.usersExtraInfo[0]?.work}`):setWork("");
-        (data?.infoquery[0]?.usersExtraInfo[0]?.college!==undefined||data?.infoquery[0]?.usersExtraInfo[0]?.college!=="")?setCollege(`${data?.infoquery[0]?.usersExtraInfo[0]?.college}`):setCollege("");
-        (data?.infoquery[0]?.usersExtraInfo[0]?.hometown!==undefined||data?.infoquery[0]?.usersExtraInfo[0]?.hometown!=="")?setHometown(`${data?.infoquery[0]?.usersExtraInfo[0]?.hometown}`):setHometown("");
+        (data?.infoquery[0]?.bio === undefined )?setgrpData(prevData => ({ ...prevData, bio:""})):setgrpData(prevData => ({ ...prevData, bio:`${data?.infoquery[0]?.bio}`}));
+        (data?.infoquery[0]?.link === undefined )?setgrpData(prevData => ({ ...prevData, link:""})):setgrpData(prevData => ({ ...prevData, link:`${data?.infoquery[0]?.link}`}));
+        (data?.infoquery[0]?.usersExtraInfo[0]?.qualification === undefined )?setgrpData(prevData => ({ ...prevData, qualification:""})):setgrpData(prevData => ({ ...prevData, qualification:`${data?.infoquery[0]?.usersExtraInfo[0]?.qualification}`}));
+        (data?.infoquery[0]?.usersExtraInfo[0]?.work===undefined )?setgrpData(prevData => ({ ...prevData, work:""})):setgrpData(prevData => ({ ...prevData, work:`${data?.infoquery[0]?.usersExtraInfo[0]?.work}`}));
+        (data?.infoquery[0]?.usersExtraInfo[0]?.college===undefined)?setgrpData(prevData => ({ ...prevData, college:""})):setgrpData(prevData => ({ ...prevData, college:`${data?.infoquery[0]?.usersExtraInfo[0]?.college}`}));
+        (data?.infoquery[0]?.usersExtraInfo[0]?.hometown===undefined)?setgrpData(prevData => ({ ...prevData, hometown:""})):setgrpData(prevData => ({ ...prevData, hometown:`${data?.infoquery[0]?.usersExtraInfo[0]?.hometown}`}));
     } ,variables:{infoqueryId: Number(selector.user_id)}});
 
     const [updateBio,{loading:loadingbio}] = useMutation (EDITPROFILE_MUTATION,{
         onCompleted(){
-            navigate('/home')
+            navigate(`/profile/about/${selector.user_id}`)
         },
-        variables: { userId: selector.user_id, bio: bio, link: link, qualification: qualification, hometown: hometown, work: work, college: college}
+        variables: { userId: selector.user_id, bio: grpData.bio.trim(), link: grpData.link.trim(), qualification: grpData.qualification.trim(), hometown: grpData.hometown.trim(), work: grpData.work.trim(), college: grpData.college.trim()}
     });
 
     const [updatePfp] = useMutation(UPDATEPFP,{
@@ -131,6 +133,17 @@ const Editprofile:React.FC = () => {
         
     // }
 
+    function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>){
+		const { name, value } = e.target;
+        console.log(e.target.value);
+		setgrpData({
+			...grpData,
+			[name]: value,
+		});
+	};
+
+
+
     function delToggelOff(){
         setDelCover(false);
     }
@@ -187,13 +200,13 @@ const Editprofile:React.FC = () => {
                             <div className='sm:pl-4'>
                                 <div className='flex flex-row justify-between w-full sm:w-10/12'>
                                     <label className='col-span-1' htmlFor="bio">Bio</label>
-                                    <textarea maxLength={149} placeholder='Bio' value= {`${bio}`} onChange={e => {setBio(e.target.value)}} id='bio'  className=' bg-slate-200 text-sm resize-none h-24 px-3 pt-2 w-48 rounded-md border-[1px] border-gray-400 focus:border-teal-500 outline-0 col-span-1'/>
+                                    <textarea maxLength={149} placeholder='Bio' name='bio' value= {grpData.bio} onChange={(e)=>handleChange(e)} id='bio'  className=' bg-slate-200 text-sm resize-none h-24 px-3 pt-2 w-48 rounded-md border-[1px] border-gray-400 focus:border-teal-500 outline-0 col-span-1'/>
                                 </div>
                             </div>
                             <div className='sm:pl-4'>
                                 <div className='flex flex-row justify-between w-full sm:w-10/12'>
                                     <label className='col-span-1' htmlFor="website">Website</label>
-                                    <input maxLength={149} placeholder='Website' value= {`${link}`} onChange={e => {setLink(e.target.value)}} type="text" id='website'  className=' px-3 w-48 text-sm rounded-md h-8 border-[1px] border-gray-400 focus:border-teal-500 bg-slate-200 outline-0 col-span-1'/>
+                                    <input maxLength={149} placeholder='Website' name='link' value= {grpData.link} onChange={(e)=>handleChange(e)} type="text" id='website'  className=' text-blue-800 px-3 w-48 text-sm rounded-md h-8 border-[1px] border-gray-400 focus:border-teal-500 bg-slate-200 outline-0 col-span-1'/>
                                 </div>
                             </div> 
                         </div>
@@ -203,19 +216,19 @@ const Editprofile:React.FC = () => {
                                 </div>
                                         <div className=' sm:pl-4 flex flex-row justify-between w-full sm:w-10/12'>
                                             <label className='col-span-1' htmlFor="qualificaton">Qualification</label>
-                                            <input maxLength={9} placeholder='Qualification' value= {`${qualification}`} onChange={e => {setQualification(e.target.value)}} type="text" id='qualificaton'  className=' px-3 w-48 text-sm rounded-md h-8 border-[1px] border-gray-400 focus:border-teal-500 bg-slate-200 outline-0 col-span-1'/>
+                                            <input maxLength={9} placeholder='Qualification' name='qualification' value= {grpData.qualification} onChange={(e)=>handleChange(e)} type="text" id='qualificaton'  className=' px-3 w-48 text-sm rounded-md h-8 border-[1px] border-gray-400 focus:border-teal-500 bg-slate-200 outline-0 col-span-1'/>
                                         </div>
                                         <div className=' sm:pl-4 flex flex-row justify-between w-full sm:w-10/12'>
                                             <label className='col-span-1' htmlFor="work">Work</label>
-                                            <input maxLength={14} placeholder='Work' value= {`${work}`} onChange={e => {setWork(e.target.value)}} type="text" id='work' className=' px-3 w-48 text-sm rounded-md h-8 border-[1px] border-gray-400 focus:border-teal-500 bg-slate-200 outline-0 col-span-1'/>
+                                            <input maxLength={14} placeholder='Work' name='work' value= {grpData.work} onChange={(e)=>handleChange(e)} type="text" id='work' className=' px-3 w-48 text-sm rounded-md h-8 border-[1px] border-gray-400 focus:border-teal-500 bg-slate-200 outline-0 col-span-1'/>
                                         </div>
                                         <div className=' sm:pl-4 flex flex-row justify-between w-full sm:w-10/12'>
                                             <label className='col-span-1' htmlFor="college">College</label>
-                                            <input maxLength={14} placeholder='College' value= {`${college}`} onChange={e => {setCollege(e.target.value)}} type="text" id='college' className=' px-3 w-48 text-sm rounded-md h-8 border-[1px] border-gray-400 focus:border-teal-500 bg-slate-200 outline-0 col-span-1'/>
+                                            <input maxLength={14} placeholder='College' name='college' value= {grpData.college} onChange={(e)=>handleChange(e)} type="text" id='college' className=' px-3 w-48 text-sm rounded-md h-8 border-[1px] border-gray-400 focus:border-teal-500 bg-slate-200 outline-0 col-span-1'/>
                                         </div>
                                         <div className=' sm:pl-4 flex flex-row justify-between w-full sm:w-10/12'>
                                             <label className='col-span-1' htmlFor="hometown">Hometown</label>
-                                            <input maxLength={14} placeholder='Hometown' value= {`${hometown}`} onChange={e => {setHometown(e.target.value)}} type="text" id='hometown' className=' px-3 w-48 text-sm rounded-md h-8 border-[1px] border-gray-400 focus:border-teal-500 bg-slate-200 outline-0 col-span-1'/>
+                                            <input maxLength={14} placeholder='Hometown' name='hometown' value= {grpData.hometown} onChange={(e)=>handleChange(e)} type="text" id='hometown' className=' px-3 w-48 text-sm rounded-md h-8 border-[1px] border-gray-400 focus:border-teal-500 bg-slate-200 outline-0 col-span-1'/>
                                         </div>
                             </div>
                             <div className=' w-3/4 grid gap-8 p-3 m-6'>

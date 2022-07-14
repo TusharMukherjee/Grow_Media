@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { EDIT_QUERY } from '../gqlQueries/queries/Explorequery'
 import Sidebar from './Sidebar'
@@ -25,8 +25,12 @@ type usersExtraInfo = {
 const About:React.FC = () => {
     const {profile_id} = useParams();
 
-    const {data} = useQuery<infoquery>(EDIT_QUERY,{variables:{infoqueryId: Number(profile_id)}});
+    const {data,refetch} = useQuery<infoquery>(EDIT_QUERY,{variables:{infoqueryId: Number(profile_id)}});
     console.log(data);
+
+    useEffect(()=>{
+        refetch();
+    },[refetch])
 
   return (
     <div className=' col-span-12 sm:col-start-2 sm:col-span-6 grid grid-cols-8 my-12'> 

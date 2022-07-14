@@ -45,7 +45,7 @@ const People:React.FC = () => {
                     (el.profile_img !== null)?
                     <img src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1652613376/${el.profile_img}`} alt={el.profile_img} className='col-span-1 object-cover rounded-full h-16 w-16 ml-10 place-self-center'/>
                     :
-                    <img src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1656086069/e0gy9inebvobnauo1um2.gif`} alt="Default img (Grow_Media)" className='col-span-1 object-cover rounded-full h-16 w-16 ml-10 place-self-center'/>
+                    <img src={`https://res.cloudinary.com/dmtfoyuuq/image/upload/v1657824330/e0gy9inebvobnauo1um2.gif`} alt="Default img (Grow_Media)" className='col-span-1 object-cover rounded-full h-16 w-16 ml-10 place-self-center'/>
                 }
                     <div className=' ml-8 col-span-5 flex flex-col justify-center pl-5'>
                         <h1 className='font-medium'>{el.username}</h1>

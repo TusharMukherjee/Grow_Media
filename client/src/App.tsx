@@ -33,10 +33,11 @@ function App() {
 
   const dispatchJwt = useDispatch();
 
-  const [callLazy,{data, loading}]=useLazyQuery<verifyjwtFunc>(FROM_COOKIE);
+  const [callLazy,{data, loading,error}]=useLazyQuery<verifyjwtFunc>(FROM_COOKIE);
 
   useEffect(()=>{
     callLazy();
+    console.log(error,data);
     if(data){
       dispatchJwt(logIn(data?.verifyjwtFunc))
     }
