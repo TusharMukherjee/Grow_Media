@@ -56,8 +56,8 @@ const Editprofile:React.FC = () => {
     const {data} = useQuery<infoquery, queryvar>(EDIT_QUERY,{ onCompleted(data){
         console.log(data);
         // setUsername(`${data.infoquery[0].username}`);
-        (data?.infoquery[0]?.bio === undefined )?setgrpData(prevData => ({ ...prevData, bio:""})):setgrpData(prevData => ({ ...prevData, bio:`${data?.infoquery[0]?.bio}`}));
-        (data?.infoquery[0]?.link === undefined )?setgrpData(prevData => ({ ...prevData, link:""})):setgrpData(prevData => ({ ...prevData, link:`${data?.infoquery[0]?.link}`}));
+        (data?.infoquery[0]?.bio === undefined || data?.infoquery[0]?.bio === null )?setgrpData(prevData => ({ ...prevData, bio:""})):setgrpData(prevData => ({ ...prevData, bio:`${data?.infoquery[0]?.bio}`}));
+        (data?.infoquery[0]?.link === undefined || data?.infoquery[0]?.link === null )?setgrpData(prevData => ({ ...prevData, link:""})):setgrpData(prevData => ({ ...prevData, link:`${data?.infoquery[0]?.link}`}));
         (data?.infoquery[0]?.usersExtraInfo[0]?.qualification === undefined )?setgrpData(prevData => ({ ...prevData, qualification:""})):setgrpData(prevData => ({ ...prevData, qualification:`${data?.infoquery[0]?.usersExtraInfo[0]?.qualification}`}));
         (data?.infoquery[0]?.usersExtraInfo[0]?.work===undefined )?setgrpData(prevData => ({ ...prevData, work:""})):setgrpData(prevData => ({ ...prevData, work:`${data?.infoquery[0]?.usersExtraInfo[0]?.work}`}));
         (data?.infoquery[0]?.usersExtraInfo[0]?.college===undefined)?setgrpData(prevData => ({ ...prevData, college:""})):setgrpData(prevData => ({ ...prevData, college:`${data?.infoquery[0]?.usersExtraInfo[0]?.college}`}));

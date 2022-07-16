@@ -69,6 +69,14 @@ const Sidebar: React.FC = () => {
                   <h1>Edit Profile</h1>
               </NavLink>
 
+              <NavLink target="_blank" rel="noopener noreferrer" to="//github.com/tusharmukherjee/Grow_Media" style={navLinkStyle} className={` z-10 hover:drop-shadow font-medium bg-white hover:border-teal-600 border text-teal-500 mb-3 h-12 w-48 pl-3 rounded-lg items-center hidden lg:flex lg:flex-row `}>
+              <svg xmlns="http://www.w3.org/2000/svg" className="sm:h-6 sm:w-6 h-6 w-6"fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+                  &nbsp;&nbsp;
+                  <h1>App Info</h1>
+              </NavLink>
+
               <NavLink to="/home" onClick={toggleSeFalse} style={navLinkStyle} className=' border-[0.25px] z-10 hover:drop-shadow font-medium bg-white lg:hover:border-teal-600 lg:border text-teal-500 sm:my-3 w-auto sm:w-auto p-2 sm:p-3 rounded-full flex justify-center justify-items-center lg:hidden '>
                 <svg xmlns="http://www.w3.org/2000/svg" className="sm:h-6 sm:w-6 h-4 w-4 " fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />

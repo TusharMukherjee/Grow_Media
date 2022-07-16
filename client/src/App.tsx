@@ -21,6 +21,7 @@ import { useDispatch } from 'react-redux'
 import { logIn, mobiledis} from './features/UserSlice'
 import PrivateRoute from './PrivateRoute';
 import Notfound from './components/Notfound';
+import Appinfo from './components/Appinfo';
 
 type verifyjwtFunc = {
   verifyjwtFunc:{
@@ -44,7 +45,8 @@ function App() {
 
   },[data,callLazy,dispatchJwt])
 
-  return ( loading ? <div className='bg-teal-500 w-screen h-screen grid place-items-center'><div className=' h-32 w-32 border-white rounded-full border-t-[1rem] border-[1rem] border-t-teal-900 animate-spin ' ></div></div>:
+  // return ( loading ? <div className='bg-teal-500 w-screen h-screen grid place-items-center'><div className=' h-32 w-32 border-white rounded-full border-t-[1rem] border-[1rem] border-t-teal-900 animate-spin ' ></div></div>:
+        return (
           <Router>
               <Routes>
                 <Route path='/' element={ <Signup/> }/>
@@ -63,6 +65,7 @@ function App() {
                     <Route path = "/home" element={<><PrivateRoute path="/home"><Followingspost/></PrivateRoute></>}/>
                     <Route path = "/editprofile" element={<><PrivateRoute path="/editprofile"><Editprofile/></PrivateRoute></>}/>
                     <Route path = "/addblog" element={<><PrivateRoute path="/addblog"><Addblog/></PrivateRoute></>}/>
+                    <Route path = "/appinfo" element={<><PrivateRoute path="/appinfo"><Appinfo/></PrivateRoute></>}/>
                 </Route>
                 <Route path='*' element={<Notfound/>} />
               </Routes>

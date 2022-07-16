@@ -8,9 +8,9 @@ const asset = ['/static/js/bundle.js','/index.html','/'];
 // Install service worker
 self.addEventListener('install', evt =>{
     evt.waitUntil(
-        caches.open(staticCacheName).then(cache => {
+        caches.open(staticCacheName).then((cache) => {
             console.log('caching shell asset');
-            cache.addAll(asset);
+            return cache.addAll(asset);
         })
     )
     console.log("service worker installed");
@@ -36,8 +36,8 @@ self.addEventListener('activate', evt =>{
 self.addEventListener('fetch', evt => {
     console.log("fetch event", evt);
     evt.respondWith(
-        caches.match(evt.request).then(cacheRes => {
-                return cacheRes || fetch(evt.request).then(fetchRes => {
+        caches.match(evt.request).then((cacheRes) => {
+                return cacheRes || fetch(evt.request).then(function(fetchRes){
                         return caches.open(dynamicCacheName).then(cache => {
                             cache.put(evt.request.url,fetchRes.clone());
                             return fetchRes;
