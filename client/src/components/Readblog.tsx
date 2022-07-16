@@ -117,9 +117,12 @@ const Readblog = () => {
     return (
             <div>
                 <div className='grid grid-cols-12 sm:grid-cols-8 lg:grid-cols-12'>
+                <div className=' lg:hidden sm:col-span-8 grid grid-cols-8'>
+                      <Sidebar/>
+                </div>
                   { 
                   loading ?
-                  (<div className='bg-teal-500 w-screen h-screen grid place-items-center'><div className=' h-32 w-32 border-white rounded-full border-t-[1rem] border-[0.5rem] border-t-teal-900 animate-spin ' ></div></div>)
+                  (<div className='bg-teal-200 h-screen fixed top-0 left-0 bottom-0 right-0 w-screen grid place-items-center'><div className=' h-28 w-28 border-white rounded-full border-t-[0.5rem] border-[0.5rem] border-t-teal-500 animate-spin ' ></div></div>)
                   :
                   (
                     (data_onlyblog?.blog[0]?.blog_id === undefined && navigator.onLine === true)
@@ -150,13 +153,11 @@ const Readblog = () => {
                             <p className='sm:col-start-2 sm:col-span-9 mx-10 text-lg sm:text-xl mb-8'>{data_onlyblog?.blog[0]?.content}</p>
                         </div>
                     </div>
-                    <div className='col-start-1 col-span-12 sm:col-start-0 sm:col-span-8 lg:col-start-9 lg:col-span-4 bg-teal-400 grid justify-center py-14 lg:z-10 h-full sm:h-screen lg:top-12 lg:right-0 lg:sticky lg:overflow-y-hidden lg:scrollbar'>
+                    <div className='col-start-1 col-span-12 sm:col-start-0 sm:col-span-8 lg:col-start-9 lg:col-span-4 bg-teal-400 grid justify-center py-14 lg:z-10 h-full lg:h-screen lg:top-12 lg:right-0 lg:sticky lg:overflow-y-hidden lg:scrollbar'>
                         {/* <Readwithcomment bcomments = {selector} users = {ownerInfo} /> */}
                         <Readwithcomment refetch_followers={refetch_followers} data_followers={data_followers} refetch_total={refetch_total} refetch_isliked={refetch_isliked} is_liked={is_liked} data_onlyblog ={data_onlyblog} repTOTAL= {repTOTAL} onlyCMNT={onlyCMNT} refetch_isFollowing={refetch_isFollowing} refetchMut={refetch_onlycmnt} isFollow = {isFollow}/>
                     </div> 
-                    <div className=' lg:hidden sm:col-span-8 grid grid-cols-8'>
-                      <Sidebar/>
-                    </div>
+                    
                   </>)
                   }
                     

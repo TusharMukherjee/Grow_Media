@@ -6,6 +6,7 @@ import { Provider } from 'react-redux';
 import {store} from './astore/store'
 import {ApolloClient, InMemoryCache, ApolloProvider, createHttpLink} from '@apollo/client'
 import App from './App';
+import * as serviceWorkeRegistration from "./serviceWorkerRegistration";
 
 const link = createHttpLink({
   uri: 'http://localhost:3001/graphql',
@@ -13,14 +14,6 @@ const link = createHttpLink({
 })
 
 // #Apollographql authentication
-
-function installSW(){
-  if('serviceWorker' in navigator){
-    navigator.serviceWorker.register('/serviceworker.js')
-    .then((reg) => console.log('service worker registered',reg))
-    .catch((err) => console.log('service worker not registered',err))
-  }
-}
 
 const client = new ApolloClient({
   cache: new InMemoryCache(),
@@ -38,7 +31,7 @@ ReactDOM.render(
   document.getElementById('root')
 );
 
-installSW();
+serviceWorkeRegistration.register();
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

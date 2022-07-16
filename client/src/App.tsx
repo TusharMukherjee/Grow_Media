@@ -18,7 +18,7 @@ import Readblog from './components/Readblog';
 import { useLazyQuery } from '@apollo/client';
 import { FROM_COOKIE } from './gqlQueries/queries/Explorequery';
 import { useDispatch } from 'react-redux'
-import { logIn, mobiledis} from './features/UserSlice'
+import { logIn, mobiledis, onlinedis } from './features/UserSlice'
 import PrivateRoute from './PrivateRoute';
 import Notfound from './components/Notfound';
 import Appinfo from './components/Appinfo';
@@ -34,7 +34,7 @@ function App() {
 
   const dispatchJwt = useDispatch();
 
-  const [callLazy,{data, loading}]=useLazyQuery<verifyjwtFunc>(FROM_COOKIE);
+  const [callLazy,{data}]=useLazyQuery<verifyjwtFunc>(FROM_COOKIE);
 
   useEffect(()=>{
     callLazy();
@@ -42,7 +42,7 @@ function App() {
       dispatchJwt(logIn(data?.verifyjwtFunc))
     }
     (window.innerWidth < 640)? dispatchJwt(mobiledis(true)):dispatchJwt(mobiledis(false))
-
+    dispatchJwt(onlinedis(navigator.onLine));
   },[data,callLazy,dispatchJwt])
 
   // return ( loading ? <div className='bg-teal-500 w-screen h-screen grid place-items-center'><div className=' h-32 w-32 border-white rounded-full border-t-[1rem] border-[1rem] border-t-teal-900 animate-spin ' ></div></div>:

@@ -1,6 +1,6 @@
 {
-  "short_name": "Create blogs!",
-  "name": "Grow Media ",
+  "short_name": "Grow Media",
+  "name": "Grow Media",
   "icons": [
     {
       "src": "./favicon/android-chrome-192x192.png",
@@ -27,6 +27,6 @@
   "start_url": "/home",
   "orientation": "potrait-primary",
   "display": "standalone",
-  "theme_color": "#FFFFFF",
+  "theme_color": "#0D9488",
   "background_color": "#009688"
 }

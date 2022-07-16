@@ -2,12 +2,13 @@ import { useMutation } from '@apollo/client';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { logIn, mobileInfo, toggleSearchdis, toggleSearchInfo, userLoginInfo } from '../features/UserSlice';
+import { logIn, mobileInfo, onlineInfo, toggleSearchdis, toggleSearchInfo, userLoginInfo } from '../features/UserSlice';
 import { LOG_OUT } from '../gqlQueries/mutations/Allmutation';
 
 const Navbar: React.FC = () => {
 
   const selector = useSelector(userLoginInfo);
+  const selectOnline = useSelector(onlineInfo);
   const mobile = useSelector(mobileInfo);
   const dispatchJwt = useDispatch();
 
@@ -36,6 +37,9 @@ const Navbar: React.FC = () => {
       navigate('/login');
       dispatchJwt(logIn(undefined));
     }
+    if(window.location.href.match(/http:\/\/localhost:3000\/search\/blogs\//g) !== null || window.location.href.match(/http:\/\/localhost:3000\/search\/people\//g)){
+      dispatchJwt(toggleSearchdis(true));
+    }
     
     // if(window.innerWidth < 640){
     //   setMobile(true);
@@ -52,8 +56,7 @@ const Navbar: React.FC = () => {
   }
 
   function toggleSeFalse(){
-    dispatchJwt(toggleSearchdis(false))
-    console.log(toggleSearch);
+    dispatchJwt(toggleSearchdis(false));
   }
 
   function searchandremove(){
@@ -115,26 +118,36 @@ const Navbar: React.FC = () => {
         </div>
       </div>
 
-      <div className=' sticky left-0 top-12 right-0 status text-center bg-red-600 text-white z-20'></div>
+      <div className=' sticky left-0 top-12 right-0 status text-center bg-red-600 text-white z-20'>{(selectOnline===false)?"Offline":""}</div>
 
       {
         mobile?
-        <div className={` z-[60] fixed top-0 right-0 h-screen bg-teal-500 w-2/5 flex flex-col px-5 justify-center justify-items-center ease-in-out duration-300 ${toggleSide?" translate-x-0 ":" translate-x-full "}`}>
+        <div className={` z-[70] fixed top-0 right-0 h-screen bg-teal-500 w-2/5 flex flex-col px-5 justify-center justify-items-center ease-in-out duration-300 ${toggleSide?" translate-x-0 ":" translate-x-full "}`}>
         <NavLink onClick={()=>{settoggleSide(!toggleSide); toggleSeFalse();}} to={`/profile/${selector?.user_id}`} style={navLinkStyle} >
           <div className={` mb-8 font-light hover:drop-shadow bg-white hover:border-teal-600 border text-teal-500 h-10 w-28 pl-3 flex justify-items-center rounded-lg items-center `}>
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
             </svg>
             <span>&nbsp;Profile</span>
           </div>
         </NavLink>
 
-        <div onClick={() => { toggleSeFalse(); handleLogout();}} className={`mt-8 font-light hover:drop-shadow bg-white hover:border-teal-600 border text-teal-500 h-10 w-28 pl-3 flex justify-items-center rounded-lg items-center `}>
-          <svg xmlns="http://www.w3.org/2000/svg" className="  h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <div onClick={() => { toggleSeFalse(); handleLogout();}} className={`mb-8 font-light hover:drop-shadow bg-white hover:border-teal-600 border text-teal-500 h-10 w-28 pl-3 flex justify-items-center rounded-lg items-center `}>
+          <svg xmlns="http://www.w3.org/2000/svg" className="  h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
           </svg>
           <span>&nbsp;Logout</span>
         </div>
+
+        <NavLink onClick={()=>{settoggleSide(!toggleSide); toggleSeFalse();}} to={`/appinfo`} style={navLinkStyle} >
+          <div className={`font-light hover:drop-shadow bg-white hover:border-teal-600 border text-teal-500 h-10 w-28 pl-3 flex justify-items-center rounded-lg items-center `}>
+              <svg xmlns="http://www.w3.org/2000/svg" className="sm:h-6 sm:w-6 h-6 w-6"fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            <span>&nbsp;About</span>
+          </div>
+        </NavLink>
+
       </div>
       :
       <></>
