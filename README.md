@@ -3,7 +3,7 @@
 ### About
 
 Grow Media is an open platform where people can share their writing on any topic.
-![GrowMedia Demo](https://lh6.googleusercontent.com/tNbJfcRwu54mcfk-lPZZu43EDh-ixe24icDPjTZVcXxUa-yXJUDC7m75xZ5BZczGx4_1ZCBm7F2YL9F2Pxaa=w1365-h670-rw)
+<img src="https://lh6.googleusercontent.com/tNbJfcRwu54mcfk-lPZZu43EDh-ixe24icDPjTZVcXxUa-yXJUDC7m75xZ5BZczGx4_1ZCBm7F2YL9F2Pxaa=w1365-h670-rw"/>
 
 ### Skills
 
