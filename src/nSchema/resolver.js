@@ -14,7 +14,7 @@ const salt = bcrypt.genSaltSync(10);
 
 const jwtToken = (value) =>  {
     const giveToken = jwt.sign({"user_id": value},
-                        `tKBw+m]$#VC"&P3_Lq:u`, { expiresIn: '1d' })
+                        process.env.VERIFICATIONTOKEN, { expiresIn: '1d' })
     return giveToken;
     
 }
