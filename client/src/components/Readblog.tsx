@@ -128,7 +128,7 @@ const Readblog = () => {
                     (data_onlyblog?.blog[0]?.blog_id === undefined && navigator.onLine === true)
                     ?
                     <>
-                    <div className=" h-screen grid place-content-center fixed w-screen col-span-12 bg-white text-teal-600">
+                    <div className=" py-60 grid place-content-center w-screen col-span-12 bg-white text-teal-600">
                         <div className="grid place-items-center gap-8">
                             <h1 className=" text-4xl font-bold ">
                                 💀 Blog not found
