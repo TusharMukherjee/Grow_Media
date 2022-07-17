@@ -34,7 +34,7 @@ const main = async () => {
         // context : ({ req }) => {
         //     const token = req.headers.authorization || ''
         //   try {
-        //   return { id, email } = jwt.verify(token.split(' ')[1], `tKBw+m]$#VC"&P3_Lq:u`)
+        //   return { id, email } = jwt.verify(token.split(' ')[1], `keycheck`)
         //   } catch (e) {
         //     throw new AuthenticationError(
         //     'Authentication token is invalid, please log in',)
