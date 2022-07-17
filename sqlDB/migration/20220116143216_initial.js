@@ -32,8 +32,6 @@ exports.up = async (knex) => {
           table.string('b_image',30);
           table.string('heading',75).notNullable();
           table.string('content',1000); //.notNullable();
-          table.string('tb_likes',5);
-          table.string('tb_comments',5);
           table.timestamp('created_at').defaultTo(knex.fn.now());
           table.timestamp('updated_at').defaultTo(knex.fn.now());
         })
@@ -115,10 +113,6 @@ exports.up = async (knex) => {
 exports.down = async (knex) => {
   // await knex.schema.dropTable('users');
   return knex.schema
-      .dropTable("rcommentLikes", function(table) {
-        table.dropForeign('rcommentLikes_bluser_id_foreign');
-        table.dropForeign('rcommentLikes_rcomment_id_foreign');
-      })
       .dropTable("bcommentLikes", function(table) {
         table.dropForeign('bcommentLikes_bluser_id_foreign');
         table.dropForeign('bcommentLikes_bcomment_id_foreign');
