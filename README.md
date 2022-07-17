@@ -3,7 +3,7 @@
 ### About
 
 Grow Media is an open platform where people can share their writing on any topic.
-<img src="https://lh6.googleusercontent.com/tNbJfcRwu54mcfk-lPZZu43EDh-ixe24icDPjTZVcXxUa-yXJUDC7m75xZ5BZczGx4_1ZCBm7F2YL9F2Pxaa=w1365-h670-rw"/>
+![growmediademo](https://user-images.githubusercontent.com/74879193/179424020-586aad1f-2c78-4430-8e32-ecdcac32b94c.gif)
 
 ### Skills
 
@@ -26,7 +26,7 @@ Grow Media is an open platform where people can share their writing on any topic
 9. Add/Remove Easily Image in Blog.
 10. Fully Responsive with great UI.
 11. This is a Progressive web App (**PWA**).
-    > Improvement is necessary, let me know where I am lagging out 😀
+> Improvement is necessary, let me know where I am lagging out 😀
 
 ### Connect with me
 
