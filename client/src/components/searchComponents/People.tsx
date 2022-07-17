@@ -29,7 +29,7 @@ const People:React.FC = () => {
 
   return (
 
-    (loading)?(<div className='bg-teal-200 h-screen fixed z-[60] top-0 left-0 bottom-0 right-0 w-screen grid place-items-center'><div className=' h-28 w-28 border-white rounded-full border-t-[0.5rem] border-[0.5rem] border-t-teal-500 animate-spin ' ></div></div>):
+    (loading)?(<div className='bg-teal-200 h-screen fixed top-0 left-0 bottom-0 right-0 w-screen grid place-items-center'><div className=' h-28 w-28 border-white rounded-full border-t-[0.5rem] border-[0.5rem] border-t-teal-500 animate-spin ' ></div></div>):
 
       <div className='grid grid-cols-8'> <Sidebar/> <div className=' sm:col-start-1 sm:col-span-8 lg:col-start-3 lg:col-span-6 col-start-1 col-span-8 flex flex-col '>
       <Tabs/>
