@@ -3,15 +3,15 @@
 ### About
 
 Grow Media is an open platform where people can share their writing on any topic.
-![GrowMedia Demo](https://webmobilefirst-screencasts.s3.eu-west-3.amazonaws.com/Mp5rKQ81qG.gif)
+![GrowMedia Demo](https://drive.google.com/file/d/1flzEgTsQVED4YGLlz226VR8OoixdGbtc/preview)
 
 ### Skills
 
-`Frontend`: React | Redux | Typescript | Service-Workers | Apollo GraphQL (Client) | Tailwind 
+`Frontend` React | Redux | Typescript | Service-Workers | Apollo GraphQL (Client) | Tailwind 
 
-`Backend`: Node JS | Express | Graphql | Objection & Knex | JWT
+`Backend` Node JS | Express | Graphql | Objection & Knex | JWT
 
-`Database`: MySQL
+`Database` MySQL
 
 ### Higlights
 
