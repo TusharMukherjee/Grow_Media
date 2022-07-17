@@ -7,9 +7,11 @@ Grow Media is an open platform where people can share their writing on any topic
 
 ### Skills
 
-> `Frontend`: React | Redux | Typescript | Service-Workers | Apollo GraphQL (Client) | Tailwind 
-> `Backend`: Node JS | Express | Graphql | Objection & Knex | JWT
-> `Database`: MySQL
+`Frontend`: React | Redux | Typescript | Service-Workers | Apollo GraphQL (Client) | Tailwind 
+
+`Backend`: Node JS | Express | Graphql | Objection & Knex | JWT
+
+`Database`: MySQL
 
 ### Higlights
 
