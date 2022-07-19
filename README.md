@@ -35,5 +35,5 @@ Grow Media is an open platform where people can share their writing on any topic
 - [LinkedIn](https://www.linkedin.com/in/tusharmkj/)
 - [Twitter](https://twitter.com/tushar_mkj)
 ___
-![mobile](https://user-images.githubusercontent.com/74879193/179822410-ad54e8b9-c215-4ded-913c-69eb27fbf4b9.png)
 ![mobile (1)](https://user-images.githubusercontent.com/74879193/179822363-7060a796-0f00-4fb0-bc37-8e0c1273b04e.png)
+![mobile](https://user-images.githubusercontent.com/74879193/179822410-ad54e8b9-c215-4ded-913c-69eb27fbf4b9.png)
