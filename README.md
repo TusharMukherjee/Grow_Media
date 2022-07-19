@@ -5,6 +5,9 @@
 Grow Media is an open platform where people can share their writing on any topic.
 
 ![gm](https://user-images.githubusercontent.com/74879193/179797154-5dfe1218-f8df-4baa-bc68-3c23b46cfaef.gif)
+![mobile](https://user-images.githubusercontent.com/74879193/179822410-ad54e8b9-c215-4ded-913c-69eb27fbf4b9.png)
+![mobile (1)](https://user-images.githubusercontent.com/74879193/179822363-7060a796-0f00-4fb0-bc37-8e0c1273b04e.png)
+---
 
 ### Skills
 
